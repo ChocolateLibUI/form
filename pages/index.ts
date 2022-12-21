@@ -1,2 +1,4 @@
-document.body.appendChild(document.createElement('div')).innerHTML = 'Test'
-document.body.appendChild(document.createElement('div')).innerHTML = 'Test2'
+import { Button } from "../src"
+
+let butt = new Button();
+document.body.appendChild(butt);
