@@ -11,21 +11,7 @@ export let componentNameStart = 'comp-'
  * @enum {number}*/
 export let Way = { UP: 0, DOWN: 1, LEFT: 2, RIGHT: 3 }
 
-addThemeVariable('componentLabelTextColor', ['Components'], grey['700'], grey['300']);
-addThemeVariable('componentBorderColor', ['Components'], grey['700'], grey['300']);
-addThemeVariable('componentTextColor', ['Components'], grey['800'], grey['200']);
-addThemeVariable('componentSymbolColor', ['Components'], grey['800'], grey['200']);
-addThemeVariable('componentBackGroundColor', ['Components'], grey['50'], grey['900']);
-addThemeVariable('componentHoverBackGroundColor', ['Components'], grey['400'], grey['700']);
-addThemeVariable('componentFocusOutlineColor', ['Components'], orange['600'], orange['300']);
-addThemeVariable('componentUnselectedBorderColor', ['Components'], grey['700'], grey['300']);
-addThemeVariable('componentUnselectedTextColor', ['Components'], grey['600'], grey['400']);
-addThemeVariable('componentUnselectedSymbolColor', ['Components'], grey['600'], grey['400']);
-addThemeVariable('componentUnselectedBackGroundColor', ['Components'], grey['300'], grey['800']);
-addThemeVariable('componentGreenColor', ['Components'], green['300'], green['900']);
-addThemeVariable('componentRedColor', ['Components'], red['300'], red['900']);
-addThemeVariable('componentBlueColor', ['Components'], blue['300'], blue['900']);
-addThemeVariable('componentYellowColor', ['Components'], yellow['300'], yellow['900']);
+
 
 //###################################
 //#    ____                         #
