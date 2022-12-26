@@ -1,17 +1,16 @@
-@import "./base.scss";
+@import "../base.scss";
 
 chocolatelibui-form-button {
     $height: 2.5rem;
     $touchHeight: 3rem;
-
+    background-color: $backColor;
+    border: 1px solid $borderColor;
+    border-radius: $cornerRadius;
+    box-shadow: $shadowOut;
     display: flex;
     box-sizing: border-box;
-    box-shadow: var(--componentShadowOut);
     -webkit-user-select: none;
     user-select: none;
-    border-radius: var(--componentCornerRadius);
-    border: 1px solid var(--componentBorderColor);
-    background-color: var(--componentBackGroundColor);
     position: relative;
     min-height: $height;
     flex-direction: row;
@@ -30,16 +29,16 @@ chocolatelibui-form-button {
 
     @media(pointer: fine) {
         &:hover {
-            background-color: var(--componentHoverBackGroundColor);
+            background-color: $hoverColor;
         }
 
         &:focus-visible {
-            box-shadow: var(--componentShadowFocus), var(--componentShadowOut);
+            box-shadow: $shadowFocusOut, $shadowOut;
         }
 
         &.active {
             &:focus-visible {
-                box-shadow: var(--componentShadowFocus), 0px 0px 3px 0px var(--componentBorderColor);
+                box-shadow: $shadowFocusOut, 0px 0px 3px 0px $borderColor;
             }
         }
     }
@@ -54,7 +53,7 @@ chocolatelibui-form-button {
     }
 
     &.active {
-        box-shadow: 0px 0px 3px 0px var(--componentBorderColor);
+        box-shadow: 0px 0px 3px 0px $borderColor;
     }
 
     .anim & {
@@ -68,7 +67,7 @@ chocolatelibui-form-button {
         padding: 0.4rem;
         flex-shrink: 0;
         background-color: initial;
-        fill: var(--componentSymbolColor);
+        fill: $textColor;
 
         .touch & {
             height: $touchHeight;
@@ -83,7 +82,7 @@ chocolatelibui-form-button {
 
     >div {
         flex-grow: 1;
-        color: var(--componentTextColor);
+        color: $textColor;
         text-align: center;
 
         &:not(:empty) {
@@ -96,19 +95,23 @@ chocolatelibui-form-button {
         }
     }
 
+    &[color="black"] {
+        background-color: $blackColor;
+    }
+
     &[color="green"] {
-        background-color: var(--componentGreenColor);
+        background-color: $greenColor;
     }
 
     &[color="red"] {
-        background-color: var(--componentRedColor);
+        background-color: $redColor;
     }
 
     &[color="blue"] {
-        background-color: var(--componentBlueColor);
+        background-color: $blueColor;
     }
 
     &[color="yellow"] {
-        background-color: var(--componentYellowColor);
+        background-color: $yellowColor;
     }
 }

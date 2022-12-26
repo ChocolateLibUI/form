@@ -2,11 +2,21 @@
     display: none;
 }
 
-:root {
-    --componentTitleTextPadding: 0.1rem 0.5rem 0.1rem 0.5rem;
-    --componentCornerRadius: 0.4rem;
-    --componentShadowOut: 0 0.125rem 0.1875rem 0 var(--componentBorderColor);
-    --componentShadowIn: inset 0 0.125rem 0.1875rem 0 var(--componentBorderColor);
-    --componentShadowFocus: 0 0 0 0.2rem var(--componentFocusOutlineColor);
-    --componentShadowFocusIn: inset 0 0 0 0.2rem var(--componentFocusOutlineColor);
-}
+$labelPadding: 0.1rem 0.5rem 0.1rem 0.5rem;
+
+$shadowOut: 0 0.125rem 0.1875rem 0 var(--\@chocolatelibui\/form\/borderColor);
+$shadowIn: inset 0 0.125rem 0.1875rem 0 var(--\@chocolatelibui\/form\/borderColor);
+$shadowFocusOut: 0 0 0 0.2rem var(--\@chocolatelibui\/form\/focusColor);
+$shadowFocusIn: inset 0 0 0 0.2rem var(--\@chocolatelibui\/form\/focusColor);
+
+$cornerRadius: 0.4rem;
+$backColor: var(--\@chocolatelibui\/form\/backColor);
+$borderColor: var(--\@chocolatelibui\/form\/borderColor);
+$hoverColor: var(--\@chocolatelibui\/form\/hoverColor);
+$textColor: var(--\@chocolatelibui\/form\/color);
+
+$blackColor: var(--\@chocolatelibui\/form\/colors\/blackColor);
+$greenColor: var(--\@chocolatelibui\/form\/colors\/greenColor);
+$redColor: var(--\@chocolatelibui\/form\/colors\/redColor);
+$blueColor: var(--\@chocolatelibui\/form\/colors\/blueColor);
+$yellowColor: var(--\@chocolatelibui\/form\/colors\/yellowColor);
