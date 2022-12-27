@@ -115,7 +115,7 @@ export class Button extends FormBase<boolean> {
                             switch (e.key) {
                                 case 'Enter':
                                 case ' ': {
-                                    this.__setValue(!this.__valueBuffer);
+                                    this._valueSet(!this._value);
                                     if (this._click) {
                                         this._click();
                                     }
@@ -130,7 +130,7 @@ export class Button extends FormBase<boolean> {
             };
             this.onclick = (e) => {
                 e.stopPropagation();
-                this.__setValue(!this.__valueBuffer);
+                this._valueSet(!this._value);
                 if (this._click) {
                     this._click();
                 }
@@ -142,11 +142,11 @@ export class Button extends FormBase<boolean> {
                     e.preventDefault();
                 }
                 this.setPointerCapture(e.pointerId);
-                this.__setValue(true);
+                this._valueSet(true);
                 this.onpointerup = (ev) => {
                     ev.stopPropagation();
                     this.releasePointerCapture(ev.pointerId);
-                    this.__setValue(false);
+                    this._valueSet(false);
                     if (this._click) {
                         this._click();
                     }
@@ -158,13 +158,13 @@ export class Button extends FormBase<boolean> {
                 switch (e.key) {
                     case 'Enter':
                     case ' ': {
-                        this.__setValue(true);
+                        this._valueSet(true);
                         this.onkeyup = (e) => {
                             e.stopPropagation();
                             switch (e.key) {
                                 case 'Enter':
                                 case ' ': {
-                                    this.__setValue(false);
+                                    this._valueSet(false);
                                     if (this._click) {
                                         this._click();
                                     }

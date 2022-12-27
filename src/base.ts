@@ -1,4 +1,4 @@
-import { Value } from "@chocolatelib/value";
+import { Listener, Value } from "@chocolatelib/value";
 import { Base } from "@chocolatelibui/core";
 import { grey, orange, green, red, blue, yellow } from "@chocolatelib/colors"
 import { initVariableRoot } from "@chocolatelibui/theme"
@@ -41,10 +41,16 @@ export interface BaseOptions<T> {
 
 /** Base class for form elements for shared properties and methods*/
 export abstract class FormBase<ValueType> extends Base {
-    //Returns the name used to define the element 
+    /**Returns the name used to define the element*/
     static elementName() { return '@abstract@' }
-    //Returns the namespace override for the element
+    /**Returns the namespace override for the element*/
     static elementNameSpace() { return name.replace('@', '').replace('/', '-') }
+    /**Stores local copy of form element value*/
+    _value: ValueType | undefined
+    /**Stores reference to Value when used*/
+    _Value: Value<ValueType> | undefined
+    /**Listener for Value*/
+    _listener: Listener<ValueType> | undefined
 
     /**Sets options for the element*/
     options(options: BaseOptions<ValueType>) {
@@ -53,13 +59,48 @@ export abstract class FormBase<ValueType> extends Base {
         return this;
     }
 
-    _value: Value<ValueType> | ValueType | undefined
+    /**Returns value of form element*/
     get value() {
         return this._value;
     }
+    /**Changes value of form element*/
     set value(value: Value<ValueType> | ValueType | undefined) {
-        this._value = value
+        if (this._Value) {
+            // @ts-expect-error
+            this._Value.removeListener(this._listener)
+            delete this._Value;
+            delete this._listener;
+        }
+        if (typeof value === 'object' && value instanceof Value) {
+            this.events.on('connect', () => {
+                this._listener = value.addListener((val) => {
+                    this._valueUpdate(val);
+                    this._value = val
+                });
+            });
+        } else {
+            this._valueUpdate(value);
+            this._value = value
+        }
     }
+    /**Called when value is changed */
+    protected _valueUpdate(value: ValueType | undefined) {
+        value;
+    }
+    /**Called when value cleared */
+    protected _valueClear(value: ValueType | undefined) {
+        value;
+    }
+    /**Called to change value*/
+    protected _valueSet(value: ValueType) {
+        if (this._Value) {
+            this._Value.set = value;
+        } else {
+            this._valueUpdate(value);
+            this._value = value
+        }
+    }
+
 
     get label() {
         return '';
