@@ -66,31 +66,37 @@ export abstract class FormBase<ValueType> extends Base {
     /**Changes value of form element*/
     set value(value: Value<ValueType> | ValueType | undefined) {
         if (this._Value) {
-            // @ts-expect-error
-            this._Value.removeListener(this._listener)
+            if (this._listener) {
+                this._Value.removeListener(this._listener)
+                delete this._listener;
+            }
             delete this._Value;
-            delete this._listener;
         }
         if (typeof value === 'object' && value instanceof Value) {
-            this.events.on('connect', () => {
-                this._listener = value.addListener((val) => {
+            this._listener = value.addListener((val) => {
+                if (value) {
                     this._valueUpdate(val);
-                    this._value = val
-                });
+                    this._value = val;
+                } else {
+                    this._valueClear();
+                    delete this._value;
+                }
             });
-        } else {
+        } else if (value) {
             this._valueUpdate(value);
-            this._value = value
+            this._value = value;
+        } else {
+            this._valueClear();
+            delete this._value;
         }
     }
     /**Called when value is changed */
-    protected _valueUpdate(value: ValueType | undefined) {
+    protected _valueUpdate(value: ValueType) {
         value;
     }
     /**Called when value cleared */
-    protected _valueClear(value: ValueType | undefined) {
-        value;
-    }
+    protected _valueClear() { }
+
     /**Called to change value*/
     protected _valueSet(value: ValueType) {
         if (this._Value) {

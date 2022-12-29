@@ -100,6 +100,19 @@ export class Button extends FormBase<boolean> {
         }
     }
 
+    /**Called when value is changed */
+    protected _valueUpdate(value: Boolean) {
+        if (value) {
+            this.classList.add('active');
+        } else {
+            this.classList.remove('active');
+        }
+    }
+    /**Called when value cleared */
+    protected _valueClear() {
+        this.classList.remove('active');
+    }
+
     /**Changes whether the button is maintained or momentary*/
     set toggle(toggle: boolean | undefined) {
         if (toggle) {

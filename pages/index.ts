@@ -11,5 +11,6 @@ let butt = (new Button()).options({
     text: 'YOYOYO',
     clickAction: () => { console.warn('test'); },
     color: BasicColors.Blue,
+    toggle: true,
 });
 document.body.appendChild(butt);
