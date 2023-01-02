@@ -1,8 +1,8 @@
 import "./button.scss"
 import { defineElement } from "@chocolatelibui/core";
-import { BaseOptions, BasicColors, FormBase } from "../base";
+import { FormBaseOptions, BasicColors, FormBase } from "../base";
 
-interface ButtonOptions extends BaseOptions<boolean> {
+interface ButtonOptions extends FormBaseOptions<boolean> {
     /**Buttons text */
     text?: string
     /**Icon for button */

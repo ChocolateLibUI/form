@@ -1,5 +1,5 @@
 import { Listener, Value } from "@chocolatelib/value";
-import { Base } from "@chocolatelibui/core";
+import { Base, BaseOptions } from "@chocolatelibui/core";
 import { grey, orange, green, red, blue, yellow } from "@chocolatelib/colors"
 import { initVariableRoot } from "@chocolatelibui/theme"
 import { name } from "../package.json";
@@ -11,7 +11,7 @@ variables.makeVariable('backColor', 'Body Color', 'Standard body color', grey['5
 variables.makeVariable('hoverColor', 'Hover Color', 'Color of body at mouse hover', grey['400'], grey['700'], 'Color', undefined);
 variables.makeVariable('borderColor', 'Border Color', 'Standard border color', grey['700'], grey['300'], 'Color', undefined);
 variables.makeVariable('focusColor', 'Focus Color', 'Color added to selected element', orange['600'], orange['300'], 'Color', undefined);
-let colors = variables.makeSubGroup('colors', 'Colors', 'Base colors used by some form elements')
+let colors = variables.makeSubGroup('colors', 'Colors', 'Base colors used by form elements')
 colors.makeVariable('blackColor', 'Black', 'Basic Black', grey['600'], grey['300'], 'Color', undefined);
 colors.makeVariable('greenColor', 'Green', 'Basic Green', green['300'], green['900'], 'Color', undefined);
 colors.makeVariable('redColor', 'Red', 'Basic Red', red['300'], red['900'], 'Color', undefined);
@@ -32,7 +32,7 @@ export const enum BasicColors {
     Yellow = 'yellow',
 };
 
-export interface BaseOptions<T> {
+export interface FormBaseOptions<T> extends BaseOptions {
     /**Value for form element */
     value?: Value<T> | T
     /**Text for label above form element */
@@ -44,16 +44,19 @@ export abstract class FormBase<ValueType> extends Base {
     /**Returns the name used to define the element*/
     static elementName() { return '@abstract@' }
     /**Returns the namespace override for the element*/
-    static elementNameSpace() { return name.replace('@', '').replace('/', '-') }
+    static elementNameSpace() { return 'chocolatelibui-form'; }
     /**Stores local copy of form element value*/
-    _value: ValueType | undefined
+    protected _value: ValueType | undefined
     /**Stores reference to Value when used*/
-    _Value: Value<ValueType> | undefined
+    private _Value: Value<ValueType> | undefined
     /**Listener for Value*/
-    _listener: Listener<ValueType> | undefined
+    private _valueListener: Listener<ValueType> | undefined
+    /**Listener for Value*/
+    private _labelListener: Listener<string> | undefined
 
     /**Sets options for the element*/
-    options(options: BaseOptions<ValueType>) {
+    options(options: FormBaseOptions<ValueType>) {
+        super.options(options);
         this.value = options.value;
         this.label = options.label;
         return this;
@@ -65,15 +68,12 @@ export abstract class FormBase<ValueType> extends Base {
     }
     /**Changes value of form element*/
     set value(value: Value<ValueType> | ValueType | undefined) {
-        if (this._Value) {
-            if (this._listener) {
-                this._Value.removeListener(this._listener)
-                delete this._listener;
-            }
-            delete this._Value;
+        if (this._valueListener) {
+            this.dettachValue(this._valueListener);
+            delete this._valueListener;
         }
         if (typeof value === 'object' && value instanceof Value) {
-            this._listener = value.addListener((val) => {
+            this._valueListener = this.attachValue(value, (val) => {
                 if (value) {
                     this._valueUpdate(val);
                     this._value = val;
@@ -111,7 +111,27 @@ export abstract class FormBase<ValueType> extends Base {
     get label() {
         return '';
     }
-    set label(value: string | undefined) {
-        value;
+    set label(value: Value<string> | string | undefined) {
+        if (this._labelListener) {
+            this.dettachValue(this._labelListener);
+            delete this._labelListener;
+        }
+        if (typeof value === 'object' && value instanceof Value) {
+            this._labelListener = this.attachValue(value, (val) => {
+                if (val) {
+                    this._labelChange(val);
+                } else {
+                    this._labelClear();
+                }
+            });
+        } else if (value) {
+            this._labelChange(value);
+        } else {
+            this._labelClear();
+        }
     }
+    protected _labelChange(label: string) {
+        label;
+    }
+    protected _labelClear() { }
 }
