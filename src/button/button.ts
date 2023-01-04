@@ -58,11 +58,11 @@ export class Button extends FormBase<boolean> {
         }
     }
 
-    /**Returns current symbol of button*/
+    /**Returns current icon of button*/
     get icon() {
         return this._icon;
     }
-    /**Changes the symbol of the button*/
+    /**Changes the icon of the button*/
     set icon(icon: SVGSVGElement | undefined) {
         if (icon) {
             if (this._icon) {

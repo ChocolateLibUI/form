@@ -51,7 +51,9 @@ export abstract class FormBase<ValueType> extends Base {
     private _Value: Value<ValueType> | undefined
     /**Listener for Value*/
     private _valueListener: Listener<ValueType> | undefined
-    /**Listener for Value*/
+    /**Label container*/
+    protected _label: HTMLSpanElement = document.createElement('span');
+    /**Listener for label change*/
     private _labelListener: Listener<string> | undefined
 
     /**Sets options for the element*/
@@ -71,8 +73,10 @@ export abstract class FormBase<ValueType> extends Base {
         if (this._valueListener) {
             this.dettachValue(this._valueListener);
             delete this._valueListener;
+            delete this._Value;
         }
         if (typeof value === 'object' && value instanceof Value) {
+            this._Value = value;
             this._valueListener = this.attachValue(value, (val) => {
                 if (value) {
                     this._valueUpdate(val);
@@ -107,10 +111,11 @@ export abstract class FormBase<ValueType> extends Base {
         }
     }
 
-
+    /**Gets the current label of the element*/
     get label() {
-        return '';
+        return this._label.innerHTML;
     }
+    /**Sets the current label of the element*/
     set label(value: Value<string> | string | undefined) {
         if (this._labelListener) {
             this.dettachValue(this._labelListener);
@@ -119,19 +124,15 @@ export abstract class FormBase<ValueType> extends Base {
         if (typeof value === 'object' && value instanceof Value) {
             this._labelListener = this.attachValue(value, (val) => {
                 if (val) {
-                    this._labelChange(val);
+                    this._label.innerHTML = val;
                 } else {
-                    this._labelClear();
+                    this._label.innerHTML = '';
                 }
             });
         } else if (value) {
-            this._labelChange(value);
+            this._label.innerHTML = value;
         } else {
-            this._labelClear();
+            this._label.innerHTML = '';
         }
     }
-    protected _labelChange(label: string) {
-        label;
-    }
-    protected _labelClear() { }
 }

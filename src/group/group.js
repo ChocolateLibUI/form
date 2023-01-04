@@ -1,5 +1,5 @@
 import "./group.scss"
-import { Component, componentNameStart, ComponentBaseOptions, Way, ValueComponent } from "./common";
+import { Component, componentNameStart, ComponentBaseOptions, Way, ValueComponent } from "../common";
 import { unfold_less, unfold_more } from "../icons/icons";
 import { AccessTypes } from "../values/access";
 

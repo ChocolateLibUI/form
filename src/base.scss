@@ -2,6 +2,9 @@
     display: none;
 }
 
+$height: 1.8rem;
+$touchHeight: 3rem;
+
 $labelPadding: 0.1rem 0.5rem 0.1rem 0.5rem;
 
 $shadowOut: 0 0.125rem 0.1875rem 0 var(--\@chocolatelibui\/form\/borderColor);
@@ -10,6 +13,7 @@ $shadowFocusOut: 0 0 0 0.2rem var(--\@chocolatelibui\/form\/focusColor);
 $shadowFocusIn: inset 0 0 0 0.2rem var(--\@chocolatelibui\/form\/focusColor);
 
 $cornerRadius: 0.4rem;
+$cornerRadiusBig: calc($height / 2);
 $backColor: var(--\@chocolatelibui\/form\/backColor);
 $borderColor: var(--\@chocolatelibui\/form\/borderColor);
 $hoverColor: var(--\@chocolatelibui\/form\/hoverColor);

@@ -1,0 +1,87 @@
+@import "../base.scss";
+
+chocolatelibui-form-lamp {
+    display: flex;
+    flex-direction: column;
+
+    >span {
+        display: block;
+        padding: $labelPadding;
+        color: $textColor;
+
+        .anim & {
+            transition: color var(--colorTransitionType) var(--colorTransitionTime);
+        }
+    }
+
+    >div {
+        display: flex;
+        box-sizing: border-box;
+        min-height: $height;
+        background-color: $backColor;
+        border: 1px solid $borderColor;
+        border-radius: $cornerRadiusBig;
+        box-shadow: $shadowOut;
+        -webkit-user-select: none;
+        user-select: none;
+        align-items: center;
+
+        .touch & {
+            min-height: $touchHeight;
+        }
+
+        >svg {
+            box-sizing: border-box;
+            height: calc($height - 2px);
+            width: auto;
+            flex-shrink: 0;
+            background-color: initial;
+            fill: $textColor;
+            padding: 0.3rem;
+
+            .touch & {
+                height: $touchHeight;
+                padding: 0.6rem;
+            }
+
+            .anim & {
+                transition: fill var(--colorTransitionType) var(--colorTransitionTime), height var(--sizeTransitionType) var(--sizeTransitionTime), max-width var(--sizeTransitionType) var(--sizeTransitionTime);
+            }
+        }
+
+        >div {
+            flex-grow: 1;
+            color: $textColor;
+            text-align: center;
+
+            &:not(:empty) {
+                min-width: 6rem;
+                padding: 0.0rem;
+            }
+
+            .anim & {
+                transition: color var(--colorTransitionType) var(--colorTransitionTime);
+            }
+        }
+    }
+
+    &[color="green"] {
+        background-color: var(--componentGreenColor);
+    }
+
+    &[color="red"] {
+        background-color: var(--componentRedColor);
+    }
+
+    &[color="blue"] {
+        background-color: var(--componentBlueColor);
+    }
+
+    &[color="yellow"] {
+        background-color: var(--componentYellowColor);
+    }
+
+    .anim & {
+        transition: min-height var(--sizeTransitionType) var(--sizeTransitionTime), box-shadow ease 200ms, border-color var(--colorTransitionType) var(--colorTransitionTime), background-color var(--colorTransitionType) var(--colorTransitionTime);
+    }
+}

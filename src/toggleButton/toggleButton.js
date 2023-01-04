@@ -1,5 +1,5 @@
 import "./toggleButton.scss"
-import { componentNameStart, SelectorComponent, Way, SelectorComponentOptions } from "./common";
+import { componentNameStart, SelectorComponent, Way, SelectorComponentOptions } from "../common";
 import { initWebComponentWithOptions } from "../common/webComponent";
 
 /**Defines options for toggle button component 
@@ -40,7 +40,7 @@ export class ToggleButton extends SelectorComponent {
     /**Creates an instance of the text element
      * @param {ToggleButtonOptions} options
      * @returns {ToggleButton}*/
-    static create(options) {};
+    static create(options) { };
 
     /**This adds an option to the selector component 
      * @param {string} text text for options

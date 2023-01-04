@@ -1,7 +1,7 @@
 import "./toggleSwitch.scss"
 import { grey } from "../ui/colors";
 import { addThemeVariable } from "../styling/theme";
-import { componentNameStart, ValueComponent, ValueComponentOptions } from "./common";
+import { componentNameStart, ValueComponent, ValueComponentOptions } from "../common";
 import { AccessTypes } from "../values/access";
 import { initWebComponentWithOptions } from "../common/webComponent";
 
@@ -124,7 +124,7 @@ export class ToggleSwitch extends ValueComponent {
     /**Creates an instance of the toggle button element
      * @param {ToggleSwitchOptions} options
      * @returns {ToggleSwitch}*/
-    static create(options) {}
+    static create(options) { }
 
     /**Changes the icon of the switch
      * @param {SVGElement} sym */

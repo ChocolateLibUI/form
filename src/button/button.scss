@@ -1,8 +1,6 @@
 @import "../base.scss";
 
 chocolatelibui-form-button {
-    $height: 2.5rem;
-    $touchHeight: 3rem;
     background-color: $backColor;
     border: 1px solid $borderColor;
     border-radius: $cornerRadius;
@@ -33,7 +31,7 @@ chocolatelibui-form-button {
         }
 
         &:focus-visible {
-            box-shadow: $shadowFocusOut, $shadowOut;
+            box-shadow: $shadowOut, $shadowFocusOut;
         }
 
         &.active {

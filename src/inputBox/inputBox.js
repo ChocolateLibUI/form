@@ -1,5 +1,5 @@
 import "./inputBox.scss"
-import { componentNameStart, ValueComponent, ValueComponentOptions } from "./common";
+import { componentNameStart, ValueComponent, ValueComponentOptions } from "../common";
 import { AccessTypes } from "../values/access";
 import { stringByteLength } from "../common/formatting";
 import { initWebComponentWithOptions } from "../common/webComponent";
@@ -196,7 +196,7 @@ export class InputBox extends ValueComponent {
     /**Creates an instance of the input box element
      * @param {InputBoxOptions} options
      * @returns {InputBox}*/
-    static create(options) {}
+    static create(options) { }
 
     /**Method to focus input box */
     focus() {
@@ -328,11 +328,11 @@ export class InputBox extends ValueComponent {
 
     /**Sets the unit of the inputbox
      * @param {string|Value} */
-    set unit(unit) {}
+    set unit(unit) { }
 
     /**Returns the current unit
      * @returns {string} */
-    get unit() {}
+    get unit() { }
 
     /**Internal unit setter
      * @param {string} val 

@@ -1,0 +1,113 @@
+@import "../base.scss";
+
+chocolatelibui-form-slider {
+    display: flex;
+    flex-direction: column;
+
+    >span {
+        display: block;
+        padding: $labelPadding;
+        color: $textColor;
+
+        .anim & {
+            transition: color var(--colorTransitionType) var(--colorTransitionTime);
+        }
+    }
+
+    >div {
+        height: $height;
+        min-width: 12rem;
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        background-color: $backColor;
+        border-radius: $cornerRadius;
+        border: 1px solid $borderColor;
+
+        .touch & {
+            height: $touchHeight;
+        }
+
+        .anim & {
+            transition: height var(--sizeTransitionType) var(--sizeTransitionTime), background-color var(--colorTransitionType) var(--colorTransitionTime);
+        }
+
+        >div {
+            height: 100%;
+            left: 2.5rem;
+            width: calc(100% - 5rem);
+            position: absolute;
+
+            >div {
+                color: $textColor;
+                background-color: $backColor;
+                border-radius: $cornerRadius;
+                box-shadow: inset 0 0 0px 1px $borderColor, $shadowOut;
+                height: 100%;
+                width: 5rem;
+                transform: translateX(-50%);
+                touch-action: none;
+                position: absolute;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                text-align: center;
+                -webkit-user-select: none;
+                user-select: none;
+                outline: none;
+                line-height: 0.8rem;
+                box-sizing: border-box;
+
+                >div {
+                    font-size: 0.8rem;
+                }
+
+                .anim & {
+                    transition: color var(--colorTransitionType) var(--colorTransitionTime), background-color var(--colorTransitionType) var(--colorTransitionTime), box-shadow var(--colorTransitionType) var(--colorTransitionTime);
+                }
+
+                @media(hover: hover) and (pointer: fine) {
+                    &:hover {
+                        background-color: var(--componentHoverBackGroundColor);
+                    }
+
+                    &:focus-visible::after {
+                        content: '';
+                        width: 100%;
+                        height: 100%;
+                        position: absolute;
+                        z-index: 1;
+                        border-radius: inherit;
+                        box-shadow: var(--componentShadowFocus);
+                    }
+                }
+            }
+        }
+
+        >svg {
+            height: 100%;
+            width: auto;
+            max-width: $height;
+            padding: 0.3rem;
+            fill: $textColor;
+            border-radius: $cornerRadius;
+
+            .touch & {
+                padding: 0.4rem;
+                max-width: $touchHeight;
+            }
+
+            .anim & {
+                transition: height var(--sizeTransitionType) var(--sizeTransitionTime), max-width var(--sizeTransitionType) var(--sizeTransitionTime), padding var(--sizeTransitionType) var(--sizeTransitionTime), fill var(--colorTransitionType) var(--colorTransitionTime);
+            }
+
+
+            @media(hover: hover) and (pointer: fine) {
+                &:hover {
+                    background-color: var(--componentHoverBackGroundColor);
+                }
+            }
+        }
+    }
+}

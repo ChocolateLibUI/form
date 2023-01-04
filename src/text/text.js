@@ -1,5 +1,5 @@
 import "./text.scss"
-import { Component, ComponentBaseOptions, componentNameStart, ValueComponent, ValueComponentOptions } from "./common";
+import { Component, ComponentBaseOptions, componentNameStart, ValueComponent, ValueComponentOptions } from "../common";
 import { initWebComponentWithOptions } from "../common/webComponent";
 
 /**Defines options for text component  
@@ -184,11 +184,11 @@ export class TextBoxValue extends ValueComponent {
 
     /**Sets the unit of the inputbox
      * @param {string|Value} */
-    set unit(unit) {}
+    set unit(unit) { }
 
     /**Returns the current unit
      * @returns {string} */
-    get unit() {}
+    get unit() { }
 
     /**Internal unit setter
      * @param {string} val 
