@@ -1,8 +1,8 @@
 import "./lamp.scss"
 import { defineElement } from "@chocolatelibui/core";
-import { FormBaseOptions, BasicColors, FormBase } from "../base";
+import { FormElementOptions, BasicColors, FormElement } from "../base";
 
-interface LampOptions extends FormBaseOptions<number | boolean> {
+interface LampOptions extends FormElementOptions<number | boolean> {
     /**Lamp text */
     text?: string
     /**Icon for lamp */
@@ -12,7 +12,7 @@ interface LampOptions extends FormBaseOptions<number | boolean> {
 }
 
 /**Lamp for clicking*/
-export class Lamp extends FormBase<number | boolean> {
+export class Lamp extends FormElement<number | boolean> {
     private _text: HTMLDivElement | undefined;
     private _icon: SVGSVGElement | undefined;
     private _colors: BasicColors[] = [];

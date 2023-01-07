@@ -1,8 +1,8 @@
 import "./button.scss"
 import { defineElement } from "@chocolatelibui/core";
-import { FormBaseOptions, BasicColors, FormBase } from "../base";
+import { FormElementOptions, BasicColors, FormElement } from "../base";
 
-interface ButtonOptions extends FormBaseOptions<boolean> {
+interface ButtonOptions extends FormElementOptions<boolean> {
     /**Buttons text */
     text?: string
     /**Icon for button */
@@ -16,7 +16,7 @@ interface ButtonOptions extends FormBaseOptions<boolean> {
 }
 
 /**Button for clicking*/
-export class Button extends FormBase<boolean> {
+export class Button extends FormElement<boolean> {
     private _text: HTMLDivElement | undefined;
     private _icon: SVGSVGElement | undefined;
     private _click: (() => void) | undefined;

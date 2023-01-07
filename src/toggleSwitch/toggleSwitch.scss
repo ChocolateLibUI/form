@@ -1,85 +1,34 @@
-@use "sass:math";
-@import "../components/common.scss";
+@import "../base.scss";
 
-comp-toggleswitch {
-    $height: 2rem;
-    $touchHeight: 2.5rem;
-
+chocolatelibui-form-toggleswitch {
     position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    -webkit-user-select: none;
     user-select: none;
 
-    &.READ {
-        filter: var(--readOpacityFilter);
-        pointer-events: none;
-    }
-
-    &.NONE {
-        display: none;
-    }
-
-    &.horz {
-        min-height: $height;
-        max-height: 100%;
-
-        .touch & {
-            min-height: $touchHeight;
+    @media(pointer: fine) {
+        &:hover>div::after {
+            background-color: $hoverColor;
         }
-
-        >span {
-            text-align: center;
-        }
-    }
-
-
-    &.vert {
-        min-width: min-content;
-        min-height: $height;
-        flex-shrink: 0;
-    }
-
-    &.left {
-        flex-direction: row;
-
-        >div {
-            margin-left: auto;
-        }
-    }
-
-    &.right {
-        flex-direction: row-reverse;
-
-        >div {
-            margin-right: auto;
-        }
-    }
-
-    &.up {
-        flex-direction: column;
-    }
-
-    &.down {
-        flex-direction: column-reverse;
     }
 
     >span {
-        color: var(--componentLabelTextColor);
+        color: $textColor;
         display: flex;
         flex-direction: column;
         justify-content: center;
         padding: 0.2rem;
         min-width: 5rem;
+        flex-grow: 1;
 
         .anim & {
             transition: color var(--colorTransitionType) var(--colorTransitionTime);
         }
-    }
 
-    @media(hover: hover) and (pointer: fine) {
-        &:hover>div::after {
-            background-color: var(--componentHoverBackGroundColor);
+        &:empty {
+            display: none;
         }
     }
 
@@ -87,30 +36,28 @@ comp-toggleswitch {
         touch-action: none;
         flex-shrink: 0;
         position: relative;
-        background-color: var(--componentRedColor);
+        background-color: $backColor;
+        box-shadow: $shadowIn;
+        border-radius: $height;
         width: $height * 2;
         height: $height;
-        border-radius: math.div($height, 2);
-        box-shadow: var(--componentShadowIn);
-
-        &:focus {
-            outline: none;
-        }
-
-        @media(hover: hover) and (pointer: fine) {
-            &:focus {
-                outline: none;
-                box-shadow: var(--componentShadowFocus), var(--componentShadowIn);
-                z-index: 2;
-            }
-        }
-
 
 
         .touch & {
             width: $touchHeight * 2;
             height: $touchHeight;
-            border-radius: math.div($touchHeight, 2);
+        }
+
+        &:focus {
+            outline: none;
+        }
+
+        @media(pointer: fine) {
+            &:focus-visible {
+                outline: none;
+                box-shadow: $shadowFocusOut, $shadowIn;
+                z-index: 2;
+            }
         }
 
         .anim & {
@@ -122,16 +69,15 @@ comp-toggleswitch {
             content: '';
             left: 0rem;
             position: absolute;
-            background-color: var(--componentToggleSwitchColor);
+            background-color: $backColor;
+            box-shadow: inset 0 0 0px 2px $borderColor, $shadowOut;
             width: $height;
             height: $height;
-            border-radius: math.div($height, 2);
-            box-shadow: inset 0 0 0px 2px var(--componentToggleSwitchBorderColor), var(--componentShadowOut);
+            border-radius: $height;
 
             .touch & {
                 width: $touchHeight;
                 height: $touchHeight;
-                border-radius: math.div($touchHeight, 2);
             }
 
             .anim & {
@@ -140,7 +86,7 @@ comp-toggleswitch {
         }
 
         &.on {
-            background-color: var(--componentGreenColor);
+            background-color: $greenColor;
 
             &::after {
                 left: $height;
@@ -153,16 +99,18 @@ comp-toggleswitch {
     }
 
     >svg {
-        flex-shrink: 0;
+        box-sizing: border-box;
+        fill: $textColor;
         height: $height;
-        width: auto;
         max-width: $height;
-        padding: 0.3rem;
-        fill: var(--componentSymbolColor);
+        width: auto;
+        padding: 0.2rem;
+        flex-shrink: 0;
 
         .touch & {
             height: $touchHeight;
             max-width: $touchHeight;
+            padding: 0.3rem;
         }
 
         .anim & {

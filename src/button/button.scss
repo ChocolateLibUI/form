@@ -41,15 +41,6 @@ chocolatelibui-form-button {
         }
     }
 
-    &.READ {
-        filter: var(--readOpacityFilter);
-        pointer-events: none;
-    }
-
-    &.NONE {
-        display: none;
-    }
-
     &.active {
         box-shadow: 0px 0px 3px 0px $borderColor;
     }

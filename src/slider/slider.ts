@@ -1,10 +1,10 @@
 import "./slider.scss"
 import { defineElement } from "@chocolatelibui/core";
 import { material_navigation_chevron_left_rounded, material_navigation_chevron_right_rounded } from "@chocolatelibui/icons";
-import { FormBaseOptions, FormBase } from "../base";
+import { FormElementOptions, FormElement } from "../base";
 import { Value } from "@chocolatelib/value";
 
-interface SliderOptions extends FormBaseOptions<number> {
+interface SliderOptions extends FormElementOptions<number> {
     /**Lower limit for slider value*/
     min?: number,
     /**Upper limit for slider value*/
@@ -25,7 +25,7 @@ interface SliderOptions extends FormBaseOptions<number> {
 
 
 /**Slide Selector, displays all options in a slider*/
-export class Slider extends FormBase<number> {
+export class Slider extends FormElement<number> {
     private _body: HTMLDivElement;
     private _slide: HTMLDivElement;
     private _slider: HTMLDivElement;
