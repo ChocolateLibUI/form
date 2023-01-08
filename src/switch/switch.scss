@@ -42,7 +42,6 @@ chocolatelibui-form-switch {
 
             @media(pointer: fine) {
                 &:focus-visible {
-                    outline: none;
                     box-shadow: $shadowFocusOut, $shadowIn;
                     z-index: 2;
                 }

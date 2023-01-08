@@ -53,6 +53,7 @@ export class Slider extends FormElement<number> {
         this._iconLeft = this._body.appendChild(material_navigation_chevron_left_rounded());
         this._iconRight = this._body.appendChild(material_navigation_chevron_right_rounded());
         this._slider = this._slide.appendChild(document.createElement('div'));
+        this._slider.setAttribute('tabindex', '0');
         this._sliderVal = this._slider.appendChild(document.createTextNode(''));
         this._sliderUnit = this._slider.appendChild(document.createElement('div'));
 
