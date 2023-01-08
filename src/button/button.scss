@@ -1,106 +1,111 @@
 @import "../base.scss";
 
 chocolatelibui-form-button {
-    background-color: $backColor;
-    border: 1px solid $borderColor;
-    border-radius: $cornerRadius;
-    box-shadow: $shadowOut;
     display: flex;
-    box-sizing: border-box;
-    -webkit-user-select: none;
-    user-select: none;
-    position: relative;
-    min-height: $height;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding: 0rem;
-    min-width: min-content;
+    flex-direction: column;
 
-    .touch & {
-        min-height: $touchHeight;
-    }
 
-    &:focus {
-        outline: none;
-    }
-
-    @media(pointer: fine) {
-        &:hover {
-            background-color: $hoverColor;
-        }
-
-        &:focus-visible {
-            box-shadow: $shadowOut, $shadowFocusOut;
-        }
-
-        &.active {
-            &:focus-visible {
-                box-shadow: $shadowFocusOut, 0px 0px 3px 0px $borderColor;
-            }
-        }
-    }
-
-    &.active {
-        box-shadow: 0px 0px 3px 0px $borderColor;
-    }
-
-    .anim & {
-        transition: min-height var(--sizeTransitionType) var(--sizeTransitionTime), box-shadow ease 200ms, border-color var(--colorTransitionType) var(--colorTransitionTime), background-color var(--colorTransitionType) var(--colorTransitionTime);
-    }
-
-    >svg {
-        height: $height;
-        width: auto;
-        max-width: $height + 1rem;
-        padding: 0.4rem;
-        flex-shrink: 0;
-        background-color: initial;
-        fill: $textColor;
-
-        .touch & {
-            height: $touchHeight;
-            max-width: $touchHeight + 1rem;
-            padding: 0.6rem;
-        }
-
-        .anim & {
-            transition: fill var(--colorTransitionType) var(--colorTransitionTime), height var(--sizeTransitionType) var(--sizeTransitionTime), max-width var(--sizeTransitionType) var(--sizeTransitionTime);
-        }
+    >span {
+        @include label;
     }
 
     >div {
-        flex-grow: 1;
-        color: $textColor;
-        text-align: center;
+        display: flex;
+        align-items: center;
+        background-color: $backColor;
+        border: $border;
+        border-radius: $cornerRadius;
+        box-shadow: $shadowOut;
+        box-sizing: border-box;
+        -webkit-user-select: none;
+        user-select: none;
+        min-height: $height;
 
-        &:not(:empty) {
-            min-width: 6rem;
-            padding: 0.2rem;
+        .touch & {
+            min-height: $touchHeight;
+        }
+
+        &:focus {
+            outline: none;
+        }
+
+        @media(pointer: fine) {
+            &:hover {
+                background-color: $hoverColor;
+            }
+
+            &:focus-visible {
+                box-shadow: $shadowOut, $shadowFocusOut;
+            }
+
+            &.active {
+                &:focus-visible {
+                    box-shadow: $shadowFocusOut, 0px 0px 3px 0px $borderColor;
+                }
+            }
+        }
+
+        &.active {
+            box-shadow: 0px 0px 3px 0px $borderColor;
         }
 
         .anim & {
-            transition: color var(--colorTransitionType) var(--colorTransitionTime);
+            transition: min-height var(--sizeTransitionType) var(--sizeTransitionTime), box-shadow ease 200ms, border-color var(--colorTransitionType) var(--colorTransitionTime), background-color var(--colorTransitionType) var(--colorTransitionTime);
         }
-    }
 
-    &[color="black"] {
-        background-color: $blackColor;
-    }
+        >svg {
+            box-sizing: border-box;
+            fill: $textColor;
+            height: calc($height - 2px);
+            max-width: $height;
+            width: auto;
+            padding: 0.14rem;
+            flex-shrink: 0;
 
-    &[color="green"] {
-        background-color: $greenColor;
-    }
+            .touch & {
+                height: $touchHeight;
+                max-width: $touchHeight + 1rem;
+                padding: 0.4rem;
+            }
 
-    &[color="red"] {
-        background-color: $redColor;
-    }
+            .anim & {
+                transition: fill var(--colorTransitionType) var(--colorTransitionTime), height var(--sizeTransitionType) var(--sizeTransitionTime), max-width var(--sizeTransitionType) var(--sizeTransitionTime);
+            }
+        }
 
-    &[color="blue"] {
-        background-color: $blueColor;
-    }
+        >span {
+            flex-grow: 1;
+            color: $textColor;
+            text-align: center;
 
-    &[color="yellow"] {
-        background-color: $yellowColor;
+            &:not(:empty) {
+                min-width: 6rem;
+                padding: 0.2rem;
+            }
+
+            .anim & {
+                transition: color var(--colorTransitionType) var(--colorTransitionTime);
+            }
+        }
+
+        &[color="black"] {
+            background-color: $blackColor;
+        }
+
+        &[color="green"] {
+            background-color: $greenColor;
+        }
+
+        &[color="red"] {
+            background-color: $redColor;
+        }
+
+        &[color="blue"] {
+            background-color: $blueColor;
+        }
+
+        &[color="yellow"] {
+            background-color: $yellowColor;
+        }
     }
 }

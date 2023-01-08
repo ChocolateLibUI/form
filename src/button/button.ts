@@ -1,6 +1,7 @@
 import "./button.scss"
 import { defineElement } from "@chocolatelibui/core";
 import { FormElementOptions, BasicColors, FormElement } from "../base";
+import { Listener, Value } from "@chocolatelib/value";
 
 interface ButtonOptions extends FormElementOptions<boolean> {
     /**Buttons text */
@@ -17,7 +18,9 @@ interface ButtonOptions extends FormElementOptions<boolean> {
 
 /**Button for clicking*/
 export class Button extends FormElement<boolean> {
-    private _text: HTMLDivElement | undefined;
+    private _body: HTMLDivElement;
+    private _text: HTMLSpanElement;
+    private _textListener: Listener<string> | undefined
     private _icon: SVGSVGElement | undefined;
     private _click: (() => void) | undefined;
     private _color: BasicColors | undefined;
@@ -27,55 +30,72 @@ export class Button extends FormElement<boolean> {
 
     constructor() {
         super();
-        this.setAttribute('tabindex', '0');
+        this.appendChild(this._label);
+        this._body = this.appendChild(document.createElement('div'));
+        this._body.setAttribute('tabindex', '0');
+        this._text = this._body.appendChild(document.createElement('span'));
     }
 
     /**Sets options for the button*/
     options(options: ButtonOptions) {
         super.options(options)
-        this.text = options.text;
-        this.icon = options.icon;
-        this.clickAction = options.clickAction;
-        this.color = options.color;
+        if (options.text) {
+            this.text = options.text;
+        }
+        if (options.icon) {
+            this.icon = options.icon;
+        }
+        if (options.clickAction) {
+            this.clickAction = options.clickAction;
+        }
+        if (options.color) {
+            this.color = options.color;
+        }
         this.toggle = options.toggle;
         return this;
     }
 
-    /**Returns current text of button*/
+    /**Gets the current text of the button*/
     get text() {
-        return this._text?.innerHTML;
+        return this._text.innerHTML;
     }
-    /**Changes the text of the button*/
-    set text(text: string | undefined) {
-        if (text) {
-            if (!this._text) {
-                this._text = this.appendChild(document.createElement('div'));
-            }
-            this._text.innerHTML = text;
-        } else if (this._text) {
-            this.removeChild(this._text);
-            delete this._text;
+    /**Sets the current text of the button*/
+    set text(value: Value<string> | string | undefined) {
+        if (this._textListener) {
+            this.dettachValue(this._textListener);
+            delete this._textListener;
+        }
+        if (typeof value === 'object' && value instanceof Value) {
+            this._textListener = this.attachValue(value, (val) => {
+                if (val) {
+                    this._text.innerHTML = val;
+                } else {
+                    this._text.innerHTML = '';
+                }
+            });
+        } else if (value) {
+            this._text.innerHTML = value;
+        } else {
+            this._text.innerHTML = '';
         }
     }
 
-    /**Returns current icon of button*/
+
+    /**Returns the icon of the button */
     get icon() {
         return this._icon;
     }
+
     /**Changes the icon of the button*/
     set icon(icon: SVGSVGElement | undefined) {
         if (icon) {
-            if (this._icon) {
-                this.replaceChild(icon, this._icon);
-                this._icon = icon;
-            } else {
-                this._icon = this.insertBefore(icon, this.firstChild);
-            }
+            this._icon = this._body.insertBefore(icon, this._text);
         } else if (this._icon) {
-            this.removeChild(this._icon);
+            this._body.removeChild(this._icon);
             delete this._icon;
         }
     }
+
 
     /**Returns the button click action */
     get clickAction() {
@@ -93,9 +113,9 @@ export class Button extends FormElement<boolean> {
     /**Changes the color of the button*/
     set color(color: BasicColors | undefined) {
         if (color) {
-            this.setAttribute('color', color);
+            this._body.setAttribute('color', color);
         } else if (this._color) {
-            this.removeAttribute('color');
+            this._body.removeAttribute('color');
             delete this._color;
         }
     }
@@ -103,14 +123,14 @@ export class Button extends FormElement<boolean> {
     /**Called when value is changed */
     protected _valueUpdate(value: Boolean) {
         if (value) {
-            this.classList.add('active');
+            this._body.classList.add('active');
         } else {
-            this.classList.remove('active');
+            this._body.classList.remove('active');
         }
     }
     /**Called when value cleared */
     protected _valueClear() {
-        this.classList.remove('active');
+        this._body.classList.remove('active');
     }
 
     /**Changes whether the button is maintained or momentary*/

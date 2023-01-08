@@ -59,8 +59,12 @@ export abstract class FormElement<ValueType> extends Base {
     /**Sets options for the element*/
     options(options: FormElementOptions<ValueType>) {
         super.options(options);
-        this.value = options.value;
-        this.label = options.label;
+        if (options.value) {
+            this.value = options.value;
+        }
+        if (options.label) {
+            this.label = options.label;
+        }
         return this;
     }
 

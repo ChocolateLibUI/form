@@ -5,13 +5,7 @@ chocolatelibui-form-slider {
     flex-direction: column;
 
     >span {
-        display: block;
-        padding: $labelPadding;
-        color: $textColor;
-
-        .anim & {
-            transition: color var(--colorTransitionType) var(--colorTransitionTime);
-        }
+        @include label;
     }
 
     >div {

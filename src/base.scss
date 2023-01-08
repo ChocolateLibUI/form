@@ -5,8 +5,6 @@
 $height: 1.8rem;
 $touchHeight: 3rem;
 
-$labelPadding: 0.1rem 0.5rem 0.1rem 0.5rem;
-
 $shadowOut: 0 0.125rem 0.1875rem 0 var(--\@chocolatelibui\/form\/borderColor);
 $shadowIn: inset 0 0.125rem 0.1875rem 0 var(--\@chocolatelibui\/form\/borderColor);
 $shadowFocusOut: 0 0 0 0.2rem var(--\@chocolatelibui\/form\/focusColor);
@@ -19,8 +17,28 @@ $borderColor: var(--\@chocolatelibui\/form\/borderColor);
 $hoverColor: var(--\@chocolatelibui\/form\/hoverColor);
 $textColor: var(--\@chocolatelibui\/form\/color);
 
+$border: 1px solid $borderColor;
+
 $blackColor: var(--\@chocolatelibui\/form\/colors\/blackColor);
 $greenColor: var(--\@chocolatelibui\/form\/colors\/greenColor);
 $redColor: var(--\@chocolatelibui\/form\/colors\/redColor);
 $blueColor: var(--\@chocolatelibui\/form\/colors\/blueColor);
 $yellowColor: var(--\@chocolatelibui\/form\/colors\/yellowColor);
+
+@mixin label {
+    display: block;
+    padding: 0.1rem 0.1rem 0.1rem 0.4rem;
+    color: $textColor;
+
+    &:empty() {
+        display: none;
+    }
+
+    .anim & {
+        transition: color var(--colorTransitionType) var(--colorTransitionTime);
+    }
+
+    .touch & {
+        font-size: 1.1rem;
+    }
+}

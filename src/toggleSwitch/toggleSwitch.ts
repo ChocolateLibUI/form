@@ -1,29 +1,35 @@
 import "./toggleSwitch.scss"
 import { defineElement } from "@chocolatelibui/core";
 import { FormElementOptions, FormElement } from "../base";
+import { Listener, Value } from "@chocolatelib/value";
 
 interface ToggleSwitchOptions extends FormElementOptions<boolean> {
-    /**Lower limit for slider value*/
-    text?: number,
     /**Icon to use for left side*/
     icon?: SVGSVGElement,
+    /**Text besides toggleswitch */
+    text?: Value<string> | string,
 }
 
 /**Toggle Switch, switches between on and off*/
 export class ToggleSwitch extends FormElement<boolean> {
+    private _body: HTMLDivElement;
     private _switch: HTMLDivElement;
     private _icon: SVGSVGElement | undefined;
     private _preventClick: boolean = false;
+    private _text: HTMLSpanElement;
+    private _textListener: Listener<string> | undefined
 
     /**Returns the name used to define the element*/
     static elementName() { return 'toggleswitch' }
 
-
     constructor() {
         super();
         this.appendChild(this._label);
-        this._switch = this.appendChild(document.createElement('div'));
+        this._body = this.appendChild(document.createElement('div'));
+        this._switch = this._body.appendChild(document.createElement('div'));
         this._switch.setAttribute('tabindex', '0');
+        this._text = this._body.appendChild(document.createElement('span'));
+
         this._switch.onkeydown = (e) => {
             e.stopPropagation();
             switch (e.key) {
@@ -88,7 +94,7 @@ export class ToggleSwitch extends FormElement<boolean> {
             e.stopPropagation();
         }
 
-        this.onclick = (e) => {
+        this._body.onclick = (e) => {
             e.preventDefault();
             e.stopPropagation();
             if (this._preventClick) {
@@ -106,32 +112,51 @@ export class ToggleSwitch extends FormElement<boolean> {
         if (options.icon) {
             this.icon = options.icon;
         }
+        if (options.text) {
+            this.text = options.text;
+        }
         return this;
+    }
+
+    /**Gets the current label of switch*/
+    get text() {
+        return this._text.innerHTML;
+    }
+    /**Sets the current label of switch*/
+    set text(value: Value<string> | string | undefined) {
+        if (this._textListener) {
+            this.dettachValue(this._textListener);
+            delete this._textListener;
+        }
+        if (typeof value === 'object' && value instanceof Value) {
+            this._textListener = this.attachValue(value, (val) => {
+                if (val) {
+                    this._text.innerHTML = val;
+                } else {
+                    this._text.innerHTML = '';
+                }
+            });
+        } else if (value) {
+            this._text.innerHTML = value;
+        } else {
+            this._text.innerHTML = '';
+        }
+    }
+
+    /**Returns the icon of the switch */
+    get icon() {
+        return this._icon;
     }
 
     /**Changes the icon of the switch*/
     set icon(icon: SVGSVGElement | undefined) {
         if (icon) {
-            this._icon = this.insertBefore(icon, this.firstChild);
+            this._icon = this._body.insertBefore(icon, this._text);
         } else if (this._icon) {
-            this.removeChild(this._icon);
+            this._body.removeChild(this._icon);
             delete this._icon;
         }
     }
-
-    // /**Set text of switch
-    //  * @param {string} text */
-    // set text(text) {
-    //     if (typeof text == 'string') {
-    //         if (!this.__text) {
-    //             this.__text = this.insertBefore(document.createElement('span'), this.__switch);
-    //         }
-    //         this.__text.innerHTML = text;
-    //     } else if (this.__text) {
-    //         this.removeChild(this.__text);
-    //         delete this.__text;
-    //     }
-    // }
 
     /**Called when value is changed */
     protected _valueUpdate(value: boolean) {
