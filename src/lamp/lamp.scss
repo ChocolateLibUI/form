@@ -24,6 +24,10 @@ chocolatelibui-form-lamp {
             min-height: $touchHeight;
         }
 
+        .anim & {
+            transition: min-height var(--sizeTransitionType) var(--sizeTransitionTime), box-shadow ease 200ms, border-color var(--colorTransitionType) var(--colorTransitionTime), background-color var(--colorTransitionType) var(--colorTransitionTime);
+        }
+
         >svg {
             box-sizing: border-box;
             height: calc($height - 2px);
@@ -43,39 +47,40 @@ chocolatelibui-form-lamp {
             }
         }
 
-        >div {
+        >span {
             flex-grow: 1;
             color: $textColor;
             text-align: center;
+            min-width: 6rem;
+            padding: 0.2rem;
 
-            &:not(:empty) {
-                min-width: 6rem;
-                padding: 0.0rem;
+            &:empty {
+                display: none;
             }
 
             .anim & {
                 transition: color var(--colorTransitionType) var(--colorTransitionTime);
             }
         }
-    }
 
-    &[color="green"] {
-        background-color: var(--componentGreenColor);
-    }
+        &[color="black"] {
+            background-color: $blackColor;
+        }
 
-    &[color="red"] {
-        background-color: var(--componentRedColor);
-    }
+        &[color="green"] {
+            background-color: $greenColor;
+        }
 
-    &[color="blue"] {
-        background-color: var(--componentBlueColor);
-    }
+        &[color="red"] {
+            background-color: $redColor;
+        }
 
-    &[color="yellow"] {
-        background-color: var(--componentYellowColor);
-    }
+        &[color="blue"] {
+            background-color: $blueColor;
+        }
 
-    .anim & {
-        transition: min-height var(--sizeTransitionType) var(--sizeTransitionTime), box-shadow ease 200ms, border-color var(--colorTransitionType) var(--colorTransitionTime), background-color var(--colorTransitionType) var(--colorTransitionTime);
+        &[color="yellow"] {
+            background-color: $yellowColor;
+        }
     }
 }

@@ -1,14 +1,66 @@
 import "./index.scss"
 import { grey } from "@chocolatelib/colors";
 import { material_action_3d_rotation_rounded } from "@chocolatelibui/icons";
-import { Button, Lamp, Slider, DropDown, ToggleSwitch, TextField, TitleField } from "../src"
+import { Button, Lamp, Slider, DropDown, Switch, TextField, TitleField } from "../src"
 import { BasicColors, variables } from "../src/base"
 
 variables.makeVariable('testBackground', 'TEST', '', grey['100'], grey['800'], 'Color', undefined);
 
+let slider1 = document.body.appendChild(new Slider().options({
+    label: 'Accumsan sit amet nulla',
+}));
+
+
+let lamp1 = document.body.appendChild(new Lamp());
+let lamp2 = document.body.appendChild(new Lamp().options({ label: 'Accumsan sit amet nulla', }));
+let lamp3 = document.body.appendChild(new Lamp().options({ label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis', }));
+let lamp4 = document.body.appendChild(new Lamp().options({ icon: material_action_3d_rotation_rounded(), }));
+let lamp5 = document.body.appendChild(new Lamp().options({ text: 'Accumsan sit amet nulla', }));
+let lamp6 = document.body.appendChild(new Lamp().options({ text: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis', }));
+let lamp7 = document.body.appendChild(new Lamp().options({
+    label: 'Accumsan sit amet nulla',
+    icon: material_action_3d_rotation_rounded(),
+}));
+let lamp8 = document.body.appendChild(new Lamp().options({
+    label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
+    icon: material_action_3d_rotation_rounded(),
+}));
+let lamp9 = document.body.appendChild(new Lamp().options({
+    text: 'Accumsan sit amet nulla',
+    icon: material_action_3d_rotation_rounded(),
+}));
+let lamp10 = document.body.appendChild(new Lamp().options({
+    text: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
+    icon: material_action_3d_rotation_rounded(),
+}));
+let lamp11 = document.body.appendChild(new Lamp().options({
+    label: 'Accumsan sit amet nulla',
+    icon: material_action_3d_rotation_rounded(),
+    text: 'Accumsan sit amet nulla',
+}));
+let lamp12 = document.body.appendChild(new Lamp().options({
+    label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
+    icon: material_action_3d_rotation_rounded(),
+    text: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
+}));
+let lamp13 = document.body.appendChild(new Lamp().options({
+    label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
+    icon: material_action_3d_rotation_rounded(),
+    text: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
+    colors: [BasicColors.Black, BasicColors.Blue, BasicColors.Green, BasicColors.Red, BasicColors.Yellow]
+}));
+{
+    let prog = 0;
+    setInterval(() => {
+        lamp13.value = prog;
+        prog++
+        if (prog === 4) { prog = 0; }
+    }, 1000)
+}
+
 let button1 = document.body.appendChild(new Button());
-let button2 = document.body.appendChild(new Button().options({ label: 'Accumsan sit amet nulla' }));
-let button3 = document.body.appendChild(new Button().options({ label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis' }));
+let button2 = document.body.appendChild(new Button().options({ label: 'Accumsan sit amet nulla', }));
+let button3 = document.body.appendChild(new Button().options({ label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis', }));
 let button4 = document.body.appendChild(new Button().options({ icon: material_action_3d_rotation_rounded(), }));
 let button5 = document.body.appendChild(new Button().options({ text: 'Accumsan sit amet nulla', }));
 let button6 = document.body.appendChild(new Button().options({ text: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis', }));
@@ -50,69 +102,46 @@ setInterval(() => {
     if (prog === 4) { prog = 0; }
 }, 1000)
 
-
-
-
-let lamp = (new Lamp()).options({
-    label: 'YOYO',
-    icon: material_action_3d_rotation_rounded(),
-    text: 'YOYOYO',
-});
-document.body.appendChild(lamp);
-
-let slider = (new Slider()).options({
-    label: 'YOYO',
-});
-document.body.appendChild(slider);
-
-let dropdown = (new DropDown()).options({
-    label: 'YOYO',
-});
-document.body.appendChild(dropdown);
-
-let toggleSwitch14 = document.body.appendChild(new ToggleSwitch());
-let toggleSwitch1 = document.body.appendChild(new ToggleSwitch().options({ label: 'Accumsan sit amet nulla' }));
-let toggleSwitch2 = document.body.appendChild(new ToggleSwitch().options({ label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis' }));
-let toggleSwitch3 = document.body.appendChild(new ToggleSwitch().options({
+let switch1 = document.body.appendChild(new Switch());
+let switch2 = document.body.appendChild(new Switch().options({ label: 'Accumsan sit amet nulla' }));
+let switch3 = document.body.appendChild(new Switch().options({ label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis' }));
+let switch4 = document.body.appendChild(new Switch().options({ icon: material_action_3d_rotation_rounded(), }));
+let switch5 = document.body.appendChild(new Switch().options({ text: 'Accumsan sit amet nulla', }));
+let switch6 = document.body.appendChild(new Switch().options({ text: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis', }));
+let switch7 = document.body.appendChild(new Switch().options({
     label: 'Accumsan sit amet nulla',
     icon: material_action_3d_rotation_rounded(),
 }));
-let toggleSwitch4 = document.body.appendChild(new ToggleSwitch().options({
+let switch8 = document.body.appendChild(new Switch().options({
     label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
     icon: material_action_3d_rotation_rounded(),
 }));
-let toggleSwitch5 = document.body.appendChild(new ToggleSwitch().options({
+let switch9 = document.body.appendChild(new Switch().options({
     label: 'Accumsan sit amet nulla',
     text: 'Accumsan sit amet nulla',
 }));
-let toggleSwitch6 = document.body.appendChild(new ToggleSwitch().options({
+let switch10 = document.body.appendChild(new Switch().options({
     label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
     text: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
 }));
-let toggleSwitch7 = document.body.appendChild(new ToggleSwitch().options({
+let switch11 = document.body.appendChild(new Switch().options({
     label: 'Accumsan sit amet nulla',
     icon: material_action_3d_rotation_rounded(),
     text: 'Accumsan sit amet nulla',
 }));
-let toggleSwitch8 = document.body.appendChild(new ToggleSwitch().options({
+let switch12 = document.body.appendChild(new Switch().options({
     label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
     icon: material_action_3d_rotation_rounded(),
     text: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
 }));
-let toggleSwitch9 = document.body.appendChild(new ToggleSwitch().options({ icon: material_action_3d_rotation_rounded(), }));
-let toggleSwitch10 = document.body.appendChild(new ToggleSwitch().options({
+let switch13 = document.body.appendChild(new Switch().options({
     icon: material_action_3d_rotation_rounded(),
-
     text: 'Accumsan sit amet nulla',
 }));
-let toggleSwitch11 = document.body.appendChild(new ToggleSwitch().options({
+let switch14 = document.body.appendChild(new Switch().options({
     icon: material_action_3d_rotation_rounded(),
-
     text: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
 }));
-let toggleSwitch12 = document.body.appendChild(new ToggleSwitch().options({ text: 'Accumsan sit amet nulla', }));
-let toggleSwitch13 = document.body.appendChild(new ToggleSwitch().options({ text: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis', }));
-
 
 let text1 = new TextField();
 document.body.appendChild(text1);
@@ -127,3 +156,15 @@ let title2 = new TitleField().options({ label: 'Accumsan sit amet nulla' });
 document.body.appendChild(title2);
 let title3 = new TitleField().options({ label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis' });
 document.body.appendChild(title3);
+
+
+
+
+let dropdown = (new DropDown()).options({
+    label: 'YOYO',
+});
+document.body.appendChild(dropdown);
+
+
+
+

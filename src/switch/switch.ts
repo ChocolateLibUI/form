@@ -1,4 +1,4 @@
-import "./toggleSwitch.scss"
+import "./switch.scss"
 import { defineElement } from "@chocolatelibui/core";
 import { FormElementOptions, FormElement } from "../base";
 import { Listener, Value } from "@chocolatelib/value";
@@ -11,7 +11,7 @@ interface ToggleSwitchOptions extends FormElementOptions<boolean> {
 }
 
 /**Toggle Switch, switches between on and off*/
-export class ToggleSwitch extends FormElement<boolean> {
+export class Switch extends FormElement<boolean> {
     private _body: HTMLDivElement;
     private _switch: HTMLDivElement;
     private _icon: SVGSVGElement | undefined;
@@ -20,7 +20,7 @@ export class ToggleSwitch extends FormElement<boolean> {
     private _textListener: Listener<string> | undefined
 
     /**Returns the name used to define the element*/
-    static elementName() { return 'toggleswitch' }
+    static elementName() { return 'switch' }
 
     constructor() {
         super();
@@ -169,4 +169,4 @@ export class ToggleSwitch extends FormElement<boolean> {
     /**Called when value cleared */
     protected _valueClear() { }
 }
-defineElement(ToggleSwitch);
+defineElement(Switch);

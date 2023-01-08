@@ -17,7 +17,8 @@ chocolatelibui-form-slider {
         justify-content: space-between;
         background-color: $backColor;
         border-radius: $cornerRadius;
-        border: 1px solid $borderColor;
+        border: $border;
+        box-shadow: $shadowIn;
 
         .touch & {
             height: $touchHeight;

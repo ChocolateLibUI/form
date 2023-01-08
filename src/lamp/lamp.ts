@@ -1,6 +1,7 @@
 import "./lamp.scss"
 import { defineElement } from "@chocolatelibui/core";
 import { FormElementOptions, BasicColors, FormElement } from "../base";
+import { Listener, Value } from "@chocolatelib/value";
 
 interface LampOptions extends FormElementOptions<number | boolean> {
     /**Lamp text */
@@ -13,10 +14,11 @@ interface LampOptions extends FormElementOptions<number | boolean> {
 
 /**Lamp for clicking*/
 export class Lamp extends FormElement<number | boolean> {
-    private _text: HTMLDivElement | undefined;
+    private _body: HTMLDivElement;
+    private _text: HTMLSpanElement;
+    private _textListener: Listener<string> | undefined
     private _icon: SVGSVGElement | undefined;
     private _colors: BasicColors[] = [];
-    private _body: HTMLDivElement;
 
     /**Returns the name used to define the element*/
     static elementName() { return 'lamp' }
@@ -25,6 +27,7 @@ export class Lamp extends FormElement<number | boolean> {
         super();
         this.appendChild(this._label);
         this._body = this.appendChild(document.createElement('div'));
+        this._text = this._body.appendChild(document.createElement('span'));
     }
 
     /**Sets options for the lamp*/
@@ -36,20 +39,28 @@ export class Lamp extends FormElement<number | boolean> {
         return this;
     }
 
-    /**Returns current text of lamp*/
+    /**Gets the current text of the button*/
     get text() {
-        return this._text?.innerHTML;
+        return this._text.innerHTML;
     }
-    /**Changes the text of the lamp*/
-    set text(text: string | undefined) {
-        if (text) {
-            if (!this._text) {
-                this._text = this._body.appendChild(document.createElement('div'));
-            }
-            this._text.innerHTML = text;
-        } else if (this._text) {
-            this._body.removeChild(this._text);
-            delete this._text;
+    /**Sets the current text of the button*/
+    set text(value: Value<string> | string | undefined) {
+        if (this._textListener) {
+            this.dettachValue(this._textListener);
+            delete this._textListener;
+        }
+        if (typeof value === 'object' && value instanceof Value) {
+            this._textListener = this.attachValue(value, (val) => {
+                if (val) {
+                    this._text.innerHTML = val;
+                } else {
+                    this._text.innerHTML = '';
+                }
+            });
+        } else if (value) {
+            this._text.innerHTML = value;
+        } else {
+            this._text.innerHTML = '';
         }
     }
 
@@ -86,9 +97,9 @@ export class Lamp extends FormElement<number | boolean> {
     protected _valueUpdate(value: number | boolean) {
         let color = this._colors[Number(value)];
         if (color) {
-            this.setAttribute('color', <string>color);
+            this._body.setAttribute('color', <string>color);
         } else {
-            this.removeAttribute('color');
+            this._body.removeAttribute('color');
         }
     }
     /**Called when value cleared */

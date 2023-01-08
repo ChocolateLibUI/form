@@ -136,14 +136,14 @@ export class Button extends FormElement<boolean> {
     /**Changes whether the button is maintained or momentary*/
     set toggle(toggle: boolean | undefined) {
         if (toggle) {
-            this.onpointerdown = null;
-            this.onpointerup = null;
-            this.onkeydown = (e) => {
+            this._body.onpointerdown = null;
+            this._body.onpointerup = null;
+            this._body.onkeydown = (e) => {
                 e.stopPropagation();
                 switch (e.key) {
                     case 'Enter':
                     case ' ': {
-                        this.onkeyup = (e) => {
+                        this._body.onkeyup = (e) => {
                             e.stopPropagation();
                             switch (e.key) {
                                 case 'Enter':
@@ -155,13 +155,13 @@ export class Button extends FormElement<boolean> {
                                     break;
                                 }
                             }
-                            this.onkeyup = null;
+                            this._body.onkeyup = null;
                         }
                         break;
                     }
                 }
             };
-            this.onclick = (e) => {
+            this._body.onclick = (e) => {
                 e.stopPropagation();
                 this._valueSet(!this._value);
                 if (this._click) {
@@ -169,30 +169,30 @@ export class Button extends FormElement<boolean> {
                 }
             }
         } else {
-            this.onpointerdown = (e) => {
+            this._body.onpointerdown = (e) => {
                 e.stopPropagation();
                 if (e.pointerType == 'touch') {
                     e.preventDefault();
                 }
-                this.setPointerCapture(e.pointerId);
+                this._body.setPointerCapture(e.pointerId);
                 this._valueSet(true);
-                this.onpointerup = (ev) => {
+                this._body.onpointerup = (ev) => {
                     ev.stopPropagation();
-                    this.releasePointerCapture(ev.pointerId);
+                    this._body.releasePointerCapture(ev.pointerId);
                     this._valueSet(false);
                     if (this._click) {
                         this._click();
                     }
-                    this.onpointerup = null;
+                    this._body.onpointerup = null;
                 }
             }
-            this.onkeydown = (e) => {
+            this._body.onkeydown = (e) => {
                 e.stopPropagation();
                 switch (e.key) {
                     case 'Enter':
                     case ' ': {
                         this._valueSet(true);
-                        this.onkeyup = (e) => {
+                        this._body.onkeyup = (e) => {
                             e.stopPropagation();
                             switch (e.key) {
                                 case 'Enter':
@@ -204,13 +204,13 @@ export class Button extends FormElement<boolean> {
                                     break;
                                 }
                             }
-                            this.onkeyup = null;
+                            this._body.onkeyup = null;
                         }
                         break;
                     }
                 }
             };
-            this.onclick = null;
+            this._body.onclick = null;
         }
     }
 }
