@@ -20,6 +20,7 @@ chocolatelibui-form-button {
         -webkit-user-select: none;
         user-select: none;
         min-height: $height;
+        min-width: min-content;
 
         .touch & {
             min-height: $touchHeight;
@@ -29,25 +30,24 @@ chocolatelibui-form-button {
             outline: none;
         }
 
+        &.active {
+            box-shadow: $shadowOutActive;
+        }
+
         @media(pointer: fine) {
             &:hover {
                 background-color: $hoverColor;
             }
 
             &:focus-visible {
-                box-shadow: $shadowOut, $shadowFocusOut;
-            }
+                box-shadow: $shadowOutFocusOut;
 
-            &.active {
-                &:focus-visible {
-                    box-shadow: $shadowFocusOut, 0px 0px 3px 0px $borderColor;
+                &.active {
+                    box-shadow: $shadowOutActiveFocusOut;
                 }
             }
         }
 
-        &.active {
-            box-shadow: 0px 0px 3px 0px $borderColor;
-        }
 
         .anim & {
             transition: min-height var(--sizeTransitionType) var(--sizeTransitionTime), box-shadow ease 200ms, border-color var(--colorTransitionType) var(--colorTransitionTime), background-color var(--colorTransitionType) var(--colorTransitionTime);
@@ -59,13 +59,14 @@ chocolatelibui-form-button {
             height: calc($height - 2px);
             max-width: $height;
             width: auto;
-            padding: 0.14rem;
+            padding: 0.2rem;
+            padding-left: 0.4rem;
             flex-shrink: 0;
 
             .touch & {
                 height: $touchHeight;
                 max-width: $touchHeight + 1rem;
-                padding: 0.4rem;
+                padding: 0.5rem;
             }
 
             .anim & {
@@ -74,18 +75,28 @@ chocolatelibui-form-button {
         }
 
         >span {
-            flex-grow: 1;
             color: $textColor;
-            text-align: center;
+            justify-content: center;
+            min-width: 10rem;
+            padding-inline: 0.8rem;
+            padding-block: 0.2rem;
 
-            &:not(:empty) {
-                min-width: 6rem;
-                padding: 0.2rem;
+            &:empty {
+                display: none;
+            }
+
+            .touch & {
+                width: $touchHeight;
+                height: $touchHeight;
             }
 
             .anim & {
                 transition: color var(--colorTransitionType) var(--colorTransitionTime);
             }
+        }
+
+        >svg+span {
+            padding-left: 0.4rem !important;
         }
 
         &[color="black"] {

@@ -26,20 +26,23 @@ export class Switch extends FormElement<boolean> {
         super();
         this.appendChild(this._label);
         this._body = this.appendChild(document.createElement('div'));
+        this._body.oncontextmenu = (e) => { e.preventDefault(); };
         this._switch = this._body.appendChild(document.createElement('div'));
         this._switch.setAttribute('tabindex', '0');
         this._text = this._body.appendChild(document.createElement('span'));
 
         this._switch.onkeydown = (e) => {
-            e.stopPropagation();
             switch (e.key) {
                 case 'Enter':
                 case ' ': {
+                    e.stopPropagation();
+                    e.preventDefault();
                     this.onkeyup = (e) => {
-                        e.stopPropagation();
                         switch (e.key) {
                             case 'Enter':
                             case ' ': {
+                                e.stopPropagation();
+                                e.preventDefault();
                                 this._valueSet(!this._value);
                                 break;
                             }

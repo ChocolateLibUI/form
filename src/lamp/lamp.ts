@@ -27,6 +27,7 @@ export class Lamp extends FormElement<number | boolean> {
         super();
         this.appendChild(this._label);
         this._body = this.appendChild(document.createElement('div'));
+        this._body.oncontextmenu = (e) => { e.preventDefault(); };
         this._text = this._body.appendChild(document.createElement('span'));
     }
 

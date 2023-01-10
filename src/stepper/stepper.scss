@@ -1,197 +1,91 @@
-@import "../components/common.scss";
+@import "../base.scss";
 
-comp-stepper {
-    $basis: 2rem;
-    $touchBasis: 2.5rem;
+chocolatelibui-form-stepper {
     display: flex;
     flex-direction: column;
-    user-select: none;
-
-    &.READ {
-        filter: var(--readOpacityFilter);
-        pointer-events: none;
-    }
-
-    &.NONE {
-        display: none;
-    }
+    min-width: 10rem;
 
     >span {
-        color: var(--componentTextColor);
-        margin-left: 0.3rem;
-        margin-bottom: 0.1rem;
-
-        .anim & {
-            transition: color var(--colorTransitionType) var(--colorTransitionTime);
-        }
+        @include label;
     }
 
     >div {
-        display: flex;
-        background-color: var(--componentBackGroundColor);
-        border: 1px solid var(--componentBorderColor);
-        border-radius: var(--componentCornerRadius);
-        justify-content: space-between;
         box-sizing: border-box;
-        overflow: hidden;
-        box-shadow: var(--componentShadowOut);
-        z-index: 1;
+        min-width: min-content;
+        display: flex;
+        justify-content: space-between;
+        align-items: stretch;
+        height: $height;
+        background-color: $backColor;
+        border-radius: $cornerRadius;
+        border: $border;
+        box-shadow: $shadowIn;
+        -webkit-user-select: none;
+        user-select: none;
+        cursor: ew-resize;
+        touch-action: none;
+        outline: none;
 
-        .anim & {
-            transition: height var(--sizeTransitionType) var(--sizeTransitionTime), width var(--sizeTransitionType) var(--sizeTransitionTime), background-color var(--colorTransitionType) var(--colorTransitionTime), border-color var(--colorTransitionType) var(--colorTransitionTime);
+        .touch & {
+            min-width: 14rem;
+            height: $touchHeight;
         }
 
+        @media(pointer: fine) {
+            &:hover {
+                background-color: $hoverColor;
+            }
 
-        @media(hover: hover) and (pointer: fine) {
-            >*:hover {
-                background-color: var(--componentHoverBackGroundColor);
+            &:focus-visible {
+                box-shadow: $shadowInFocusOut;
             }
         }
 
         >span {
-            flex-basis: 0px;
-            flex-grow: 6;
-            flex-shrink: 1;
-            text-align: center;
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1;
-            color: var(--componentTextColor);
-
-            .anim & {
-                transition: color var(--colorTransitionType) var(--colorTransitionTime), box-shadow var(--colorTransitionType) var(--colorTransitionTime), background-color var(--colorTransitionType) var(--colorTransitionTime);
-            }
-
-            >span {
-                &:focus {
-                    outline: none;
-                }
-            }
-        }
-
-        >div {
-            padding: 0.3rem;
             flex-grow: 1;
+            padding-inline: 0.4rem;
+            outline: none;
+
+            >span {
+                padding-left: 0.3rem;
+            }
+        }
+
+        >svg {
+            background-color: $backColor;
+            border-radius: $cornerRadius;
+            border: $border;
+            box-shadow: $shadowOut;
+            box-sizing: border-box;
+            fill: $textColor;
+            height: calc($height - 2px);
+            width: calc($height - 2px);
+            padding: 0.14rem;
             flex-shrink: 0;
-            flex-basis: 1px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            cursor: auto;
 
             .touch & {
-                padding: 0.5rem;
+                height: calc($touchHeight - 2px);
+                width: calc($touchHeight - 2px);
+                padding: 0.2rem;
             }
 
             .anim & {
-                transition: padding var(--sizeTransitionType) var(--sizeTransitionTime), background-color var(--colorTransitionType) var(--colorTransitionTime);
+                transition: height var(--sizeTransitionType) var(--sizeTransitionTime), max-width var(--sizeTransitionType) var(--sizeTransitionTime), padding var(--sizeTransitionType) var(--sizeTransitionTime), fill var(--colorTransitionType) var(--colorTransitionTime);
             }
 
-            >svg {
-                box-sizing: border-box;
-                fill: var(--componentSymbolColor);
 
-                .anim & {
-                    transition: max-height var(--sizeTransitionType) var(--sizeTransitionTime), max-width var(--sizeTransitionType) var(--sizeTransitionTime), fill var(--colorTransitionType) var(--colorTransitionTime);
-                }
-            }
-        }
-
-        &:focus {
-            outline: none;
-        }
-
-        &:focus-visible {
-            outline: none;
-            box-shadow: var(--componentShadowFocus);
-        }
-    }
-
-    &.horz {
-        flex-direction: column;
-
-        >div {
-            flex-direction: row;
-            min-width: min-content;
-            height: $basis;
-
-            .touch & {
-                height: $touchBasis;
-            }
-
-            >span {
-                box-shadow: 8px 0px 0px -6.5px var(--componentBorderColor), -8px 0px 0px -6.5px var(--componentBorderColor);
-                flex-direction: row;
-
-                >span {
-                    line-height: $basis;
-                    padding: 0rem 0.4rem 0rem 0.4rem;
-
-                    .touch & {
-                        line-height: $touchBasis;
-                    }
+            @media(pointer: fine) {
+                &:hover {
+                    background-color: $hoverColor;
                 }
 
-                >div {
-                    line-height: $basis;
-                    padding: 0rem 0.4rem 0rem 0rem;
-
-                    .touch & {
-                        line-height: $touchBasis;
-                    }
-
-                }
-            }
-
-            >div {
-                >svg {
-                    height: 100%;
-                    width: auto;
-                    max-width: $basis;
-
-                    .touch & {
-                        max-width: $touchBasis;
-                    }
-                }
-            }
-        }
-    }
-
-    &.vert {
-        flex-direction: row;
-
-        >div {
-            flex-direction: column;
-            min-height: 12rem;
-            width: $basis;
-
-            .touch & {
-                width: $touchBasis;
-            }
-
-            >span {
-                box-shadow: 0px 8px 0px -6.5px var(--componentBorderColor), 0px -8px 0px -6.5px var(--componentBorderColor);
-                flex-direction: column;
-
-                >span {
-                    width: 100%;
-                    padding: 0.4rem 0rem 0.4rem 0rem;
-                }
-
-                >div {
-                    padding: 0.4rem 0rem 0rem 0rem;
-                }
-            }
-
-            >div {
-                >svg {
-                    width: 100%;
-                    height: auto;
-                    max-height: $basis;
-
-                    .touch & {
-                        max-height: $touchBasis;
-                    }
+                &:active {
+                    box-shadow: $shadowOutActive;
+                    background-color: $hoverColor;
                 }
             }
         }

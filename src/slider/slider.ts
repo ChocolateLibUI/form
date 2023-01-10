@@ -49,9 +49,12 @@ export class Slider extends FormElement<number> {
         super();
         this.appendChild(this._label);
         this._body = this.appendChild(document.createElement('div'));
+        this._body.oncontextmenu = (e) => { e.preventDefault(); };
         this._slide = this._body.appendChild(document.createElement('div'));
         this._iconLeft = this._body.appendChild(material_navigation_chevron_left_rounded());
+        this._iconLeft.onpointerdown = this._stepperFunc(false);
         this._iconRight = this._body.appendChild(material_navigation_chevron_right_rounded());
+        this._iconRight.onpointerdown = this._stepperFunc(true);
         this._slider = this._slide.appendChild(document.createElement('div'));
         this._slider.setAttribute('tabindex', '0');
         this._sliderVal = this._slider.appendChild(document.createTextNode(''));
@@ -82,14 +85,17 @@ export class Slider extends FormElement<number> {
         };
 
         this._slider.onkeydown = (e) => {
-            e.stopPropagation();
             switch (e.key) {
                 case 'ArrowRight':
                 case 'ArrowDown':
+                    e.stopPropagation();
+                    e.preventDefault();
                     this._stepValue(true);
                     break;
                 case 'ArrowLeft':
                 case 'ArrowUp':
+                    e.stopPropagation();
+                    e.preventDefault();
                     this._stepValue(false);
                     break;
             }
@@ -112,6 +118,27 @@ export class Slider extends FormElement<number> {
         }
         this.unit = options.unit;
         return this;
+    }
+
+    private _stepperFunc(dir: boolean): (e: PointerEvent) => void {
+        return (e) => {
+            this.setPointerCapture(e.pointerId);
+            let interval = 0;
+            let timeout = setTimeout(() => {
+                this._stepValue(dir);
+                interval = setInterval(() => {
+                    this._stepValue(dir);
+                }, 100)
+            }, 500);
+            this.onpointerup = (e) => {
+                if (interval === 0) {
+                    this._stepValue(dir);
+                }
+                clearInterval(interval);
+                clearTimeout(timeout);
+                this.onpointerup = null;
+            }
+        }
     }
 
     /**Moves the value to a position by the mouse x coordinates*/
@@ -222,10 +249,7 @@ export class Slider extends FormElement<number> {
         } else {
             this._iconLeft = this._slide.appendChild(icon);
         }
-        icon.onpointerdown = (e) => {
-            e.stopPropagation();
-            this._stepValue(false);
-        };
+        icon.onpointerdown = this._stepperFunc(false);
     }
 
     /**Changes the icon on the right of the slider*/
@@ -236,10 +260,7 @@ export class Slider extends FormElement<number> {
         } else {
             this._iconRight = this._slide.appendChild(icon);
         }
-        icon.onpointerdown = (e) => {
-            e.stopPropagation();
-            this._stepValue(true);
-        };
+        icon.onpointerdown = this._stepperFunc(true);
     }
 
     /**Called when value is changed */

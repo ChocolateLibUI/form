@@ -1,10 +1,16 @@
 import "./index.scss"
 import { grey } from "@chocolatelib/colors";
-import { material_action_3d_rotation_rounded } from "@chocolatelibui/icons";
-import { Button, Lamp, Slider, DropDown, Switch, TextField, TitleField } from "../src"
+import { material_action_3d_rotation_rounded, material_action_account_balance_rounded } from "@chocolatelibui/icons";
+import { Button, Lamp, Slider, DropDown, Switch, TextField, TitleField, Stepper } from "../src"
 import { BasicColors, variables } from "../src/base"
 
 variables.makeVariable('testBackground', 'TEST', '', grey['100'], grey['800'], 'Color', undefined);
+
+
+let stepper1 = document.body.appendChild(new Stepper().options({ unit: 'testUnit' }));
+let stepper2 = document.body.appendChild(new Stepper().options({ label: 'Accumsan sit amet nulla', }));
+let stepper3 = document.body.appendChild(new Stepper().options({ label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis', }));
+
 
 let slider1 = document.body.appendChild(new Slider().options({
     label: 'Accumsan sit amet nulla',
@@ -14,7 +20,7 @@ let slider1 = document.body.appendChild(new Slider().options({
 let lamp1 = document.body.appendChild(new Lamp());
 let lamp2 = document.body.appendChild(new Lamp().options({ label: 'Accumsan sit amet nulla', }));
 let lamp3 = document.body.appendChild(new Lamp().options({ label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis', }));
-let lamp4 = document.body.appendChild(new Lamp().options({ icon: material_action_3d_rotation_rounded(), }));
+let lamp4 = document.body.appendChild(new Lamp().options({ icon: material_action_account_balance_rounded(), }));
 let lamp5 = document.body.appendChild(new Lamp().options({ text: 'Accumsan sit amet nulla', }));
 let lamp6 = document.body.appendChild(new Lamp().options({ text: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis', }));
 let lamp7 = document.body.appendChild(new Lamp().options({

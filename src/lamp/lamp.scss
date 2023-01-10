@@ -12,15 +12,18 @@ chocolatelibui-form-lamp {
         display: flex;
         box-sizing: border-box;
         min-height: $height;
+        min-width: min-content;
         background-color: $backColor;
         border: 1px solid $borderColor;
-        border-radius: $cornerRadiusBig;
+        border-radius: $height;
         box-shadow: $shadowOut;
         -webkit-user-select: none;
         user-select: none;
         align-items: center;
 
+
         .touch & {
+            border-radius: $touchHeight;
             min-height: $touchHeight;
         }
 
@@ -35,11 +38,12 @@ chocolatelibui-form-lamp {
             flex-shrink: 0;
             background-color: initial;
             fill: $textColor;
-            padding: 0.3rem;
+            padding: 0.2rem;
+            padding-left: 0.4rem;
 
             .touch & {
-                height: $touchHeight;
-                padding: 0.6rem;
+                height: calc($touchHeight - 2px);
+                padding: 0.5rem;
             }
 
             .anim & {
@@ -47,21 +51,33 @@ chocolatelibui-form-lamp {
             }
         }
 
+
         >span {
-            flex-grow: 1;
+            display: flex;
+            justify-content: center;
             color: $textColor;
-            text-align: center;
-            min-width: 6rem;
-            padding: 0.2rem;
+            padding-inline: 0.8rem;
+            padding-block: 0.2rem;
+            min-width: 10rem;
 
             &:empty {
                 display: none;
+            }
+
+            .touch & {
+                padding-inline: 1.6rem;
+                padding-block: 0.5rem;
             }
 
             .anim & {
                 transition: color var(--colorTransitionType) var(--colorTransitionTime);
             }
         }
+
+        >svg+span {
+            padding-left: 0.4rem !important;
+        }
+
 
         &[color="black"] {
             background-color: $blackColor;

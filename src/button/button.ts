@@ -24,6 +24,7 @@ export class Button extends FormElement<boolean> {
     private _icon: SVGSVGElement | undefined;
     private _click: (() => void) | undefined;
     private _color: BasicColors | undefined;
+    private _toggle: boolean | undefined;
 
     /**Returns the name used to define the element*/
     static elementName() { return 'button' }
@@ -32,8 +33,64 @@ export class Button extends FormElement<boolean> {
         super();
         this.appendChild(this._label);
         this._body = this.appendChild(document.createElement('div'));
+        this._body.oncontextmenu = (e) => { e.preventDefault(); };
         this._body.setAttribute('tabindex', '0');
         this._text = this._body.appendChild(document.createElement('span'));
+        this._body.onpointerdown = (e) => {
+            e.stopPropagation();
+            if (e.pointerType == 'touch') {
+                e.preventDefault();
+            }
+            this._body.setPointerCapture(e.pointerId);
+            if (!this._toggle) {
+                this._valueSet(true);
+            }
+            this._body.onpointerup = (ev) => {
+                ev.stopPropagation();
+                this._body.releasePointerCapture(ev.pointerId);
+                if (this._toggle) {
+                    this._valueSet(!this._value);
+                } else {
+                    this._valueSet(false);
+                }
+                if (this._click) {
+                    this._click();
+                }
+                this._body.onpointerup = null;
+            }
+        }
+        this._body.onkeydown = (e) => {
+            switch (e.key) {
+                case ' ':
+                case 'Enter': {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    if (!this._toggle) {
+                        this._valueSet(true);
+                    }
+                    this._body.onkeyup = (e) => {
+                        switch (e.key) {
+                            case 'Enter':
+                            case ' ': {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                if (this._toggle) {
+                                    this._valueSet(!this._value);
+                                } else {
+                                    this._valueSet(false);
+                                }
+                                if (this._click) {
+                                    this._click();
+                                }
+                                break;
+                            }
+                        }
+                        this._body.onkeyup = null;
+                    }
+                    break;
+                }
+            }
+        };
     }
 
     /**Sets options for the button*/
@@ -133,85 +190,14 @@ export class Button extends FormElement<boolean> {
         this._body.classList.remove('active');
     }
 
+    /**Returns */
+    get toggle() {
+        return this._toggle;
+    }
+
     /**Changes whether the button is maintained or momentary*/
     set toggle(toggle: boolean | undefined) {
-        if (toggle) {
-            this._body.onpointerdown = null;
-            this._body.onpointerup = null;
-            this._body.onkeydown = (e) => {
-                e.stopPropagation();
-                switch (e.key) {
-                    case 'Enter':
-                    case ' ': {
-                        this._body.onkeyup = (e) => {
-                            e.stopPropagation();
-                            switch (e.key) {
-                                case 'Enter':
-                                case ' ': {
-                                    this._valueSet(!this._value);
-                                    if (this._click) {
-                                        this._click();
-                                    }
-                                    break;
-                                }
-                            }
-                            this._body.onkeyup = null;
-                        }
-                        break;
-                    }
-                }
-            };
-            this._body.onclick = (e) => {
-                e.stopPropagation();
-                this._valueSet(!this._value);
-                if (this._click) {
-                    this._click();
-                }
-            }
-        } else {
-            this._body.onpointerdown = (e) => {
-                e.stopPropagation();
-                if (e.pointerType == 'touch') {
-                    e.preventDefault();
-                }
-                this._body.setPointerCapture(e.pointerId);
-                this._valueSet(true);
-                this._body.onpointerup = (ev) => {
-                    ev.stopPropagation();
-                    this._body.releasePointerCapture(ev.pointerId);
-                    this._valueSet(false);
-                    if (this._click) {
-                        this._click();
-                    }
-                    this._body.onpointerup = null;
-                }
-            }
-            this._body.onkeydown = (e) => {
-                e.stopPropagation();
-                switch (e.key) {
-                    case 'Enter':
-                    case ' ': {
-                        this._valueSet(true);
-                        this._body.onkeyup = (e) => {
-                            e.stopPropagation();
-                            switch (e.key) {
-                                case 'Enter':
-                                case ' ': {
-                                    this._valueSet(false);
-                                    if (this._click) {
-                                        this._click();
-                                    }
-                                    break;
-                                }
-                            }
-                            this._body.onkeyup = null;
-                        }
-                        break;
-                    }
-                }
-            };
-            this._body.onclick = null;
-        }
+        this._toggle = Boolean(toggle);
     }
 }
 defineElement(Button);
