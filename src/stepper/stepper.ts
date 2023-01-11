@@ -27,8 +27,8 @@ export class Stepper extends FormElement<number> {
     private _iconLeft: SVGSVGElement;
     private _iconRight: SVGSVGElement;
     private _text: HTMLSpanElement;
-    private _valueNode: Text;
-    private _unit: HTMLSpanElement;
+    //private _valueBox: HTMLSpanElement;
+    // private _unit: HTMLSpanElement;
     private _unitListener: Listener<string> | undefined
 
     private _min: number = -Infinity;
@@ -49,17 +49,39 @@ export class Stepper extends FormElement<number> {
         this._iconLeft.onpointerdown = this._stepperFunc(false);
         this._text = this._body.appendChild(document.createElement('span'));
         this._text.contentEditable = 'true';
+        this._text.innerHTML = '0'
         this._text.setAttribute('tabindex', '-1');
-        this._valueNode = this._text.appendChild(document.createTextNode(''));
-        this._valueNode.nodeValue = '0'
-        this._unit = this._text.appendChild(document.createElement('span'));
-        this._unit.contentEditable = 'false';
+        // this._valueBox = this._text.appendChild(document.createElement('span'));
+        // this._unit = this._text.appendChild(document.createElement('span'));
+        //this._unit.contentEditable = 'false';
         this._iconRight = this._body.appendChild(material_content_add_rounded());
         this._iconRight.onpointerdown = this._stepperFunc(true);
 
 
-        this.onpointerdown = (e) => {
-            //this._text.focus();
+        this._text.onpointerdown = (e) => {
+            let scrolling = false;
+            this._text.setPointerCapture(e.pointerId);
+
+            this._text.onpointermove = (ev) => {
+                if (scrolling) {
+                    if (ev.movementX > 0) {
+                        this._stepValue(true);
+                    } else if (ev.movementX < 0) {
+                        this._stepValue(false);
+                    }
+                } else {
+                    if (Math.abs(e.clientX - ev.clientX) > 5) {
+                        this._text.contentEditable = 'false';
+                        scrolling = true;
+                    }
+                }
+            }
+            this._text.onpointerup = () => {
+                this._text.contentEditable = 'true';
+                this._text.releasePointerCapture(e.pointerId);
+                this._text.onpointermove = null
+                this._text.onpointerup = null
+            }
         }
 
         this._body.onkeydown = (e) => {
@@ -76,6 +98,11 @@ export class Stepper extends FormElement<number> {
                     e.preventDefault();
                     this._stepValue(false);
                     break;
+                default:
+                    if (/[\d,.-]/g.test(e.key)) {
+                        this._text.textContent = '';
+                        this._text.focus();
+                    }
             }
         };
         this._text.onkeydown = (e) => {
@@ -85,16 +112,35 @@ export class Stepper extends FormElement<number> {
                     e.preventDefault();
                     this._text.blur();
                     break;
-            }
-        };
-        this._text.oninput = (e) => {
-            if (e) {
 
             }
-            console.warn((<InputEvent>e).data);
+        };
+        this._text.onbeforeinput = (e) => {
+            console.warn(e);
+            console.warn(this._text.innerHTML);
+            switch (e.inputType) {
+                case 'deleteContentForward':
+                case 'deleteContentBackward':
+                case 'deleteByDrag':
+
+                    break;
+
+                default:
+                    break;
+            }
+
+
+            if (e.data) {
+                if (!/[\d,.-]/g.test(e.data)) {
+                    e.preventDefault()
+                } else if (/[,.]/g.test(e.data) && this._decimals === 0) {
+                    e.preventDefault()
+                }
+            }
+
         };
         this._text.onblur = (e) => {
-            this._valueSet(Number(this._valueNode.nodeValue));
+            this._valueSet(Number(this._text.textContent?.replace(',', '.')) || 0);
         };
     }
 
@@ -119,6 +165,7 @@ export class Stepper extends FormElement<number> {
 
     private _stepperFunc(dir: boolean): (e: PointerEvent) => void {
         return (e) => {
+            e.stopPropagation()
             this.setPointerCapture(e.pointerId);
             let interval = 0;
             let timeout = setTimeout(() => {
@@ -128,6 +175,7 @@ export class Stepper extends FormElement<number> {
                 }, 100)
             }, 500);
             this.onpointerup = (e) => {
+                e.stopPropagation()
                 if (interval === 0) {
                     this._stepValue(dir);
                 }
@@ -206,11 +254,11 @@ export class Stepper extends FormElement<number> {
 
     /**Called when value is changed */
     protected _valueUpdate(value: number) {
-        this._valueNode.nodeValue = value.toFixed(this._decimals);
+        this._text.textContent = value.toFixed(this._decimals);
     }
     /**Called when value cleared */
     protected _valueClear() {
-        this._valueNode.nodeValue = 'N/A';
+        this._text.textContent = 'N/A';
     }
 
     /**This steps the slider value in the given direction*/
@@ -244,15 +292,15 @@ export class Stepper extends FormElement<number> {
         if (typeof unit === 'object' && unit instanceof Value) {
             this._unitListener = this.attachValue(unit, (val) => {
                 if (val) {
-                    this._unit.innerHTML = val;
+                    this._text.setAttribute('unit', val);
                 } else {
-                    this._unit.innerHTML = '';
+                    this._text.removeAttribute('unit');
                 }
             });
         } else if (unit) {
-            this._unit.innerHTML = unit;
+            this._text.setAttribute('unit', unit);
         } else {
-            this._unit.innerHTML = '';
+            this._text.removeAttribute('unit');
         }
     }
 }

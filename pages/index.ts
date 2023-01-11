@@ -7,7 +7,7 @@ import { BasicColors, variables } from "../src/base"
 variables.makeVariable('testBackground', 'TEST', '', grey['100'], grey['800'], 'Color', undefined);
 
 
-let stepper1 = document.body.appendChild(new Stepper().options({ unit: 'testUnit' }));
+let stepper1 = document.body.appendChild(new Stepper().options({ unit: 'testUnitæø<br>asdf' }));
 let stepper2 = document.body.appendChild(new Stepper().options({ label: 'Accumsan sit amet nulla', }));
 let stepper3 = document.body.appendChild(new Stepper().options({ label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis', }));
 

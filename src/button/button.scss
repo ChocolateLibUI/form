@@ -74,6 +74,10 @@ chocolatelibui-form-button {
             }
         }
 
+        >svg+span {
+            padding-left: 0.4rem !important;
+        }
+
         >span {
             color: $textColor;
             justify-content: center;
@@ -81,13 +85,12 @@ chocolatelibui-form-button {
             padding-inline: 0.8rem;
             padding-block: 0.2rem;
 
-            &:empty {
-                display: none;
+            .touch & {
+                font-size: 1.4rem;
             }
 
-            .touch & {
-                width: $touchHeight;
-                height: $touchHeight;
+            &:empty {
+                display: none;
             }
 
             .anim & {
@@ -95,9 +98,6 @@ chocolatelibui-form-button {
             }
         }
 
-        >svg+span {
-            padding-left: 0.4rem !important;
-        }
 
         &[color="black"] {
             background-color: $blackColor;
