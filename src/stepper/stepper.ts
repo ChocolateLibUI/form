@@ -10,13 +10,13 @@ interface StepperOptions extends FormElementOptions<number> {
     /**Upper limit for slider value*/
     max?: number,
     /**Step size, use 0 for automatic step size*/
-    step?: number,
+    step?: number | ((value: number) => number),
     /**Amount of decimals to show*/
     decimals?: number,
-    /**Icon to use for left side*/
-    iconLeft?: SVGSVGElement,
-    /**Icon to use for right side*/
-    iconRight?: SVGSVGElement,
+    /**Icon to use for decreasing value*/
+    iconDec?: SVGSVGElement,
+    /**Icon to use for increasing value*/
+    iconInc?: SVGSVGElement,
     /**Unit to use for slider*/
     unit?: string | Value<string>
 }
@@ -34,6 +34,7 @@ export class Stepper extends FormElement<number> {
     private _min: number = -Infinity;
     private _max: number = Infinity;
     private _step: number = Infinity;
+    private _stepFunc: ((value: number) => number) | undefined;
     private _decimals: number = 0;
 
     /**Returns the name used to define the element*/
@@ -45,42 +46,73 @@ export class Stepper extends FormElement<number> {
         this._body = this.appendChild(document.createElement('div'));
         this._body.oncontextmenu = (e) => { e.preventDefault(); };
         this._body.setAttribute('tabindex', '0');
-        this._iconLeft = this._body.appendChild(material_content_remove_rounded());
-        this._iconLeft.onpointerdown = this._stepperFunc(false);
+        this._iconLeft = this._stepperFunc(this._body.appendChild(material_content_remove_rounded()), false);
         this._text = this._body.appendChild(document.createElement('span'));
         this._text.contentEditable = 'true';
         this._text.innerHTML = '0'
         this._text.setAttribute('tabindex', '-1');
-        // this._valueBox = this._text.appendChild(document.createElement('span'));
-        // this._unit = this._text.appendChild(document.createElement('span'));
-        //this._unit.contentEditable = 'false';
-        this._iconRight = this._body.appendChild(material_content_add_rounded());
-        this._iconRight.onpointerdown = this._stepperFunc(true);
+        this._iconRight = this._stepperFunc(this._body.appendChild(material_content_add_rounded()), true);
 
 
         this._text.onpointerdown = (e) => {
+            if (e.pointerType !== 'touch' && e.button === 0) {
+                e.stopPropagation();
+                let scrolling = false;
+                let x = e.screenX;
+                this._text.setPointerCapture(e.pointerId);
+                this._text.onpointermove = (ev) => {
+                    if (scrolling) {
+                        let diff = ev.screenX - x;
+                        if (Math.abs(diff) > 5) {
+                            if (diff > 0) {
+                                this._stepValue(true);
+                            } else {
+                                this._stepValue(false);
+                            }
+                            x = ev.screenX;
+                        }
+                    } else {
+                        if (Math.abs(e.clientX - ev.clientX) > 5) {
+                            this._text.contentEditable = 'false';
+                            scrolling = true;
+                        }
+                    }
+                }
+                this._text.onpointerup = () => {
+                    this._text.contentEditable = 'true';
+                    this._text.releasePointerCapture(e.pointerId);
+                    this._text.onpointermove = null
+                    this._text.onpointerup = null
+                }
+            }
+        }
+        this._text.ontouchstart = (e) => {
+            let id = e.changedTouches[0].identifier;
+            e.stopPropagation();
             let scrolling = false;
-            this._text.setPointerCapture(e.pointerId);
-
-            this._text.onpointermove = (ev) => {
+            let x = e.touches[id].clientX;
+            this._text.ontouchmove = (ev) => {
                 if (scrolling) {
-                    if (ev.movementX > 0) {
-                        this._stepValue(true);
-                    } else if (ev.movementX < 0) {
-                        this._stepValue(false);
+                    let diff = ev.touches[id].clientX - x;
+                    if (Math.abs(diff) > 5) {
+                        if (diff > 0) {
+                            this._stepValue(true);
+                        } else {
+                            this._stepValue(false);
+                        }
+                        x = ev.touches[id].clientX;
                     }
                 } else {
-                    if (Math.abs(e.clientX - ev.clientX) > 5) {
+                    if (Math.abs(e.touches[id].clientX - ev.touches[id].clientX) > 5) {
                         this._text.contentEditable = 'false';
                         scrolling = true;
                     }
                 }
             }
-            this._text.onpointerup = () => {
+            this._text.ontouchend = () => {
                 this._text.contentEditable = 'true';
-                this._text.releasePointerCapture(e.pointerId);
-                this._text.onpointermove = null
-                this._text.onpointerup = null
+                this._text.ontouchmove = null
+                this._text.ontouchend = null
             }
         }
 
@@ -151,11 +183,11 @@ export class Stepper extends FormElement<number> {
         this.step = options.step;
         this.decimals = options.decimals;
         super.options(options)
-        if (options.iconLeft) {
-            this.iconLeft = options.iconLeft;
+        if (options.iconDec) {
+            this.iconLeft = options.iconDec;
         }
-        if (options.iconRight) {
-            this.iconRight = options.iconRight;
+        if (options.iconInc) {
+            this.iconRight = options.iconInc;
         }
         if (options.unit) {
             this.unit = options.unit;
@@ -163,27 +195,48 @@ export class Stepper extends FormElement<number> {
         return this;
     }
 
-    private _stepperFunc(dir: boolean): (e: PointerEvent) => void {
-        return (e) => {
-            e.stopPropagation()
-            this.setPointerCapture(e.pointerId);
+    private _stepperFunc(icon: SVGSVGElement, dir: boolean) {
+        icon.onclick = (e) => {
+            e.stopPropagation();
+            this._stepValue(dir);
+        }
+        icon.onpointerdown = (e) => {
+            if (e.pointerType !== 'touch' && e.button === 0) {
+                e.stopPropagation();
+                this.setPointerCapture(e.pointerId);
+                let interval = 0;
+                let timeout = setTimeout(() => {
+                    this._stepValue(dir);
+                    interval = setInterval(() => {
+                        this._stepValue(dir);
+                    }, 200)
+                }, 500);
+                this.onpointerup = () => {
+                    if (interval === 0) {
+                        this._stepValue(dir);
+                    }
+                    clearInterval(interval);
+                    clearTimeout(timeout);
+                    this.onpointerup = null;
+                }
+            }
+        }
+        icon.ontouchstart = (e) => {
+            e.stopPropagation();
             let interval = 0;
             let timeout = setTimeout(() => {
                 this._stepValue(dir);
                 interval = setInterval(() => {
                     this._stepValue(dir);
-                }, 100)
+                }, 200)
             }, 500);
-            this.onpointerup = (e) => {
-                e.stopPropagation()
-                if (interval === 0) {
-                    this._stepValue(dir);
-                }
+            icon.ontouchend = () => {
                 clearInterval(interval);
                 clearTimeout(timeout);
-                this.onpointerup = null;
+                icon.ontouchend = null;
             }
         }
+        return icon
     }
 
     /**Returns the minimum value*/
@@ -217,8 +270,13 @@ export class Stepper extends FormElement<number> {
         return this._step
     }
     /**Sets the amount of steps on the slider*/
-    set step(step: number | undefined) {
-        this._step = Math.max(step ?? 0, Infinity);
+    set step(step: number | undefined | ((value: number) => number)) {
+        if (typeof step === 'function') {
+            this._stepFunc = step;
+        } else {
+            this._stepFunc = undefined;
+            this._step = Math.max(step ?? 0, Infinity);
+        }
     }
 
     /**Gets the amount of decimals the slider can have*/
@@ -232,24 +290,14 @@ export class Stepper extends FormElement<number> {
 
     /**Changes the icon on the left of the slider*/
     set iconLeft(icon: SVGSVGElement) {
-        if (this._iconLeft) {
-            this._iconLeft = this._body.replaceChild(icon, this._iconLeft);
-            this._iconLeft = icon;
-        } else {
-            this._iconLeft = this._body.appendChild(icon);
-        }
-        icon.onpointerdown = this._stepperFunc(false);
+        this._body.replaceChild(icon, this._iconLeft);
+        this._iconLeft = this._stepperFunc(icon, false);
     }
 
     /**Changes the icon on the right of the slider*/
     set iconRight(icon: SVGSVGElement) {
-        if (this._iconRight) {
-            this._iconRight = this._body.replaceChild(icon, this._iconRight);
-            this._iconRight = icon;
-        } else {
-            this._iconRight = this._body.appendChild(icon);
-        }
-        icon.onpointerdown = this._stepperFunc(true);
+        this._body.replaceChild(icon, this._iconRight);
+        this._iconRight = this._stepperFunc(icon, true);
     }
 
     /**Called when value is changed */
@@ -269,6 +317,8 @@ export class Stepper extends FormElement<number> {
             } else {
                 var step = Math.max(1 / this._decimals, Math.floor(Math.abs(this._value || 0) / 150));
             }
+        } else if (this._stepFunc) {
+            var step = this._stepFunc(this._value || 0);
         } else {
             var step = this._step;
         }

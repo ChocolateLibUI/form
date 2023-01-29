@@ -7,13 +7,130 @@ import { BasicColors, variables } from "../src/base"
 variables.makeVariable('testBackground', 'TEST', '', grey['100'], grey['800'], 'Color', undefined);
 
 
-let stepper1 = document.body.appendChild(new Stepper().options({ unit: 'testUnitæø<br>asdf' }));
+let stepper1 = document.body.appendChild(new Stepper());
 let stepper2 = document.body.appendChild(new Stepper().options({ label: 'Accumsan sit amet nulla', }));
 let stepper3 = document.body.appendChild(new Stepper().options({ label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis', }));
-
-
-let slider1 = document.body.appendChild(new Slider().options({
+let stepper4 = document.body.appendChild(new Stepper().options({ iconDec: material_action_account_balance_rounded(), }));
+let stepper5 = document.body.appendChild(new Stepper().options({ unit: 'Accumsan sit amet nulla', }));
+let stepper6 = document.body.appendChild(new Stepper().options({ unit: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis', }));
+let stepper7 = document.body.appendChild(new Stepper().options({
     label: 'Accumsan sit amet nulla',
+    iconDec: material_action_3d_rotation_rounded(),
+}));
+let stepper8 = document.body.appendChild(new Stepper().options({
+    label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
+    iconDec: material_action_3d_rotation_rounded(),
+}));
+let stepper9 = document.body.appendChild(new Stepper().options({
+    unit: 'Accumsan sit amet nulla',
+    iconDec: material_action_3d_rotation_rounded(),
+}));
+let stepper10 = document.body.appendChild(new Stepper().options({
+    unit: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
+    iconDec: material_action_3d_rotation_rounded(),
+}));
+let stepper11 = document.body.appendChild(new Stepper().options({
+    label: 'Accumsan sit amet nulla',
+    iconDec: material_action_3d_rotation_rounded(),
+    unit: 'Accumsan sit amet nulla',
+}));
+let stepper12 = document.body.appendChild(new Stepper().options({
+    label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
+    iconDec: material_action_3d_rotation_rounded(),
+    unit: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
+}));
+let stepper13 = document.body.appendChild(new Stepper().options({
+    label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
+    iconDec: material_action_3d_rotation_rounded(),
+    unit: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
+}));
+
+
+let button1 = document.body.appendChild(new Button());
+let button2 = document.body.appendChild(new Button().options({ label: 'Accumsan sit amet nulla', }));
+let button3 = document.body.appendChild(new Button().options({ label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis', }));
+let button4 = document.body.appendChild(new Button().options({ icon: material_action_3d_rotation_rounded(), }));
+let button5 = document.body.appendChild(new Button().options({ text: 'Accumsan sit amet nulla', }));
+let button6 = document.body.appendChild(new Button().options({ text: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis', }));
+let button7 = document.body.appendChild(new Button().options({
+    label: 'Accumsan sit amet nulla',
+    icon: material_action_3d_rotation_rounded(),
+}));
+let button8 = document.body.appendChild(new Button().options({
+    label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
+    icon: material_action_3d_rotation_rounded(),
+}));
+let button9 = document.body.appendChild(new Button().options({
+    label: 'Accumsan sit amet nulla',
+    text: 'Accumsan sit amet nulla',
+}));
+let button10 = document.body.appendChild(new Button().options({
+    label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
+    text: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
+}));
+let button11 = document.body.appendChild(new Button().options({
+    label: 'Accumsan sit amet nulla',
+    icon: material_action_3d_rotation_rounded(),
+    text: 'Accumsan sit amet nulla',
+}));
+let button12 = document.body.appendChild(new Button().options({
+    label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
+    icon: material_action_3d_rotation_rounded(),
+    text: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
+}));
+let button13 = document.body.appendChild(new Button().options({
+    label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
+    icon: material_action_3d_rotation_rounded(),
+    text: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
+}));
+let prog = 0;
+setInterval(() => {
+    button13.color = [BasicColors.Black, BasicColors.Blue, BasicColors.Green, BasicColors.Red, BasicColors.Yellow][prog];
+    prog++
+    if (prog === 4) { prog = 0; }
+}, 1000)
+
+
+let slider1 = document.body.appendChild(new Slider());
+let slider2 = document.body.appendChild(new Slider().options({ label: 'Accumsan sit amet nulla', value: 10, unit: 'm/s' }));
+let slider3 = document.body.appendChild(new Slider().options({ label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis', }));
+let slider4 = document.body.appendChild(new Slider().options({ iconDec: material_action_account_balance_rounded(), }));
+let slider5 = document.body.appendChild(new Slider().options({ unit: 'Accumsan sit amet nulla', }));
+let slider6 = document.body.appendChild(new Slider().options({ unit: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis', }));
+let slider7 = document.body.appendChild(new Slider().options({
+    label: 'Accumsan sit amet nulla',
+    iconDec: material_action_3d_rotation_rounded(),
+    value: 20
+}));
+let slider8 = document.body.appendChild(new Slider().options({
+    label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
+    iconDec: material_action_3d_rotation_rounded(),
+    min: -400,
+    max: 0,
+    value: 20
+}));
+let slider9 = document.body.appendChild(new Slider().options({
+    unit: 'Accumsan sit amet nulla',
+    iconDec: material_action_3d_rotation_rounded(),
+}));
+let slider10 = document.body.appendChild(new Slider().options({
+    unit: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
+    iconDec: material_action_3d_rotation_rounded(),
+}));
+let slider11 = document.body.appendChild(new Slider().options({
+    label: 'Accumsan sit amet nulla',
+    iconDec: material_action_3d_rotation_rounded(),
+    unit: 'Accumsan sit amet nulla',
+}));
+let slider12 = document.body.appendChild(new Slider().options({
+    label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
+    iconDec: material_action_3d_rotation_rounded(),
+    unit: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
+}));
+let slider13 = document.body.appendChild(new Slider().options({
+    label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
+    iconDec: material_action_3d_rotation_rounded(),
+    unit: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
 }));
 
 
@@ -63,50 +180,6 @@ let lamp13 = document.body.appendChild(new Lamp().options({
         if (prog === 4) { prog = 0; }
     }, 1000)
 }
-
-let button1 = document.body.appendChild(new Button());
-let button2 = document.body.appendChild(new Button().options({ label: 'Accumsan sit amet nulla', }));
-let button3 = document.body.appendChild(new Button().options({ label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis', }));
-let button4 = document.body.appendChild(new Button().options({ icon: material_action_3d_rotation_rounded(), }));
-let button5 = document.body.appendChild(new Button().options({ text: 'Accumsan sit amet nulla', }));
-let button6 = document.body.appendChild(new Button().options({ text: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis', }));
-let button7 = document.body.appendChild(new Button().options({
-    label: 'Accumsan sit amet nulla',
-    icon: material_action_3d_rotation_rounded(),
-}));
-let button8 = document.body.appendChild(new Button().options({
-    label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
-    icon: material_action_3d_rotation_rounded(),
-}));
-let button9 = document.body.appendChild(new Button().options({
-    label: 'Accumsan sit amet nulla',
-    text: 'Accumsan sit amet nulla',
-}));
-let button10 = document.body.appendChild(new Button().options({
-    label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
-    text: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
-}));
-let button11 = document.body.appendChild(new Button().options({
-    label: 'Accumsan sit amet nulla',
-    icon: material_action_3d_rotation_rounded(),
-    text: 'Accumsan sit amet nulla',
-}));
-let button12 = document.body.appendChild(new Button().options({
-    label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
-    icon: material_action_3d_rotation_rounded(),
-    text: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
-}));
-let button13 = document.body.appendChild(new Button().options({
-    label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
-    icon: material_action_3d_rotation_rounded(),
-    text: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',
-}));
-let prog = 0;
-setInterval(() => {
-    button13.color = [BasicColors.Black, BasicColors.Blue, BasicColors.Green, BasicColors.Red, BasicColors.Yellow][prog];
-    prog++
-    if (prog === 4) { prog = 0; }
-}, 1000)
 
 let switch1 = document.body.appendChild(new Switch());
 let switch2 = document.body.appendChild(new Switch().options({ label: 'Accumsan sit amet nulla' }));

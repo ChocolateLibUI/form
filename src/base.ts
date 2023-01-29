@@ -9,7 +9,7 @@ variables.makeVariable('color', 'Text Color', 'Standard text color', grey['800']
 variables.makeVariable('labelColor', 'Label Color', 'Color of form element text label', grey['700'], grey['300'], 'Color', undefined);
 variables.makeVariable('backColor', 'Body Color', 'Standard body color', grey['50'], grey['900'], 'Color', undefined);
 variables.makeVariable('hoverColor', 'Hover Color', 'Color of body at mouse hover', grey['400'], grey['700'], 'Color', undefined);
-variables.makeVariable('borderColor', 'Border Color', 'Standard border color', grey['700'], grey['300'], 'Color', undefined);
+variables.makeVariable('borderColor', 'Border Color', 'Standard border color', grey['700'], grey['500'], 'Color', undefined);
 variables.makeVariable('focusColor', 'Focus Color', 'Color added to selected element', orange['600'], orange['300'], 'Color', undefined);
 let colors = variables.makeSubGroup('colors', 'Colors', 'Base colors used by form elements')
 colors.makeVariable('blackColor', 'Black', 'Basic Black', grey['600'], grey['300'], 'Color', undefined);

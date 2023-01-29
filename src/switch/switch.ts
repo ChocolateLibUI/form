@@ -55,50 +55,48 @@ export class Switch extends FormElement<boolean> {
         };
 
         this._switch.onpointerdown = (e) => {
-            e.preventDefault();
             e.stopPropagation();
-            this._switch.focus();
-            this._switch.setPointerCapture(e.pointerId);
-            let hasMoved = false;
-            this._switch.onpointermove = (ev) => {
-                ev.preventDefault();
-                ev.stopPropagation();
-                if (hasMoved) {
-                    let box = this._switch.getBoundingClientRect();
-                    let midCord = box.x + box.width / 2;
-                    if (ev.clientX > midCord) {
-                        if (!this._value) {
-                            this._valueSet(true);
-                        }
-                    } else {
-                        if (this._value) {
-                            this._valueSet(false);
-                        }
-                    }
-                } else if (Math.abs(e.clientX - ev.clientX) > 10 || Math.abs(e.clientY - ev.clientY) > 10) {
-                    hasMoved = true;
-                }
-            };
+            if (e.button === 0) {
 
-            this._switch.onpointerup = (ev) => {
-                ev.preventDefault();
-                ev.stopPropagation();
-                if (!hasMoved) {
-                    this._valueSet(!this._value);
+                this._switch.focus();
+                this._switch.setPointerCapture(e.pointerId);
+                let hasMoved = false;
+                this._switch.onpointermove = (ev) => {
+                    ev.stopPropagation();
+                    if (hasMoved) {
+                        let box = this._switch.getBoundingClientRect();
+                        let midCord = box.x + box.width / 2;
+                        if (ev.clientX > midCord) {
+                            if (!this._value) {
+                                this._valueSet(true);
+                            }
+                        } else {
+                            if (this._value) {
+                                this._valueSet(false);
+                            }
+                        }
+                    } else if (Math.abs(e.clientX - ev.clientX) > 10 || Math.abs(e.clientY - ev.clientY) > 10) {
+                        hasMoved = true;
+                    }
+                };
+
+                this._switch.onpointerup = (ev) => {
+                    ev.stopPropagation();
+                    if (!hasMoved) {
+                        this._valueSet(!this._value);
+                    }
+                    this._switch.releasePointerCapture(ev.pointerId);
+                    this._switch.onpointerup = null;
+                    this._switch.onpointermove = null;
                 }
-                this._switch.releasePointerCapture(ev.pointerId);
-                this._switch.onpointerup = null;
-                this._switch.onpointermove = null;
             }
         }
 
         this._switch.onclick = (e) => {
-            e.preventDefault();
             e.stopPropagation();
         }
 
         this._body.onclick = (e) => {
-            e.preventDefault();
             e.stopPropagation();
             if (this._preventClick) {
                 this._preventClick = false;

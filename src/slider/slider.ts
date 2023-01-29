@@ -15,10 +15,10 @@ interface SliderOptions extends FormElementOptions<number> {
     decimals?: number,
     /**wether the events are live as the slider is moved or only when moving stops */
     live?: boolean,
-    /**Icon to use for left side*/
-    iconLeft?: SVGSVGElement,
+    /**Icon to use for */
+    iconDec?: SVGSVGElement,
     /**Icon to use for right side*/
-    iconRight?: SVGSVGElement,
+    iconInc?: SVGSVGElement,
     /**Unit to use for slider*/
     unit?: string | Value<string>
 }
@@ -30,6 +30,7 @@ export class Slider extends FormElement<number> {
     private _slide: HTMLDivElement;
     private _slider: HTMLDivElement;
     private _sliderVal: Text;
+    private _unitListener: ((value: string) => void) | undefined
     private _sliderUnit: HTMLDivElement;
     private _moving: boolean = false;
     private _iconLeft: SVGSVGElement;
@@ -49,40 +50,59 @@ export class Slider extends FormElement<number> {
         super();
         this.appendChild(this._label);
         this._body = this.appendChild(document.createElement('div'));
-        this._body.oncontextmenu = (e) => { e.preventDefault(); };
+        this._body.oncontextmenu = e => { e.preventDefault(); };
         this._slide = this._body.appendChild(document.createElement('div'));
         this._iconLeft = this._body.appendChild(material_navigation_chevron_left_rounded());
-        this._iconLeft.onpointerdown = this._stepperFunc(false);
+        this._stepperFunc(this._iconLeft, false);
         this._iconRight = this._body.appendChild(material_navigation_chevron_right_rounded());
-        this._iconRight.onpointerdown = this._stepperFunc(true);
+        this._stepperFunc(this._iconRight, true);
         this._slider = this._slide.appendChild(document.createElement('div'));
         this._slider.setAttribute('tabindex', '0');
-        this._sliderVal = this._slider.appendChild(document.createTextNode(''));
+        this._sliderVal = this._slider.appendChild(document.createTextNode('N/A'));
         this._sliderUnit = this._slider.appendChild(document.createElement('div'));
 
-        //Handlers for moving the slider
-        this._slide.onpointerdown = (e) => {
+        this._body.onpointerdown = (e) => {
             e.preventDefault();
+            if (e.pointerType !== 'touch' && e.button === 0) {
+                e.stopPropagation();
+                this._moving = true;
+                this._moveTo(e.clientX);
+                this._slider.setPointerCapture(e.pointerId);
+                this._slider.onpointermove = (ev) => {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    this._moveTo(ev.clientX);
+                };
+                this._slider.onpointerup = (ev) => {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    this._moving = false;
+                    this._slider.releasePointerCapture(e.pointerId);
+                    this._slider.onpointermove = null;
+                    this._slider.onpointerup = null;
+                    this._moveTo(ev.clientX);
+                };
+                this._slider.focus();
+            }
+        };
+        this._slider.ontouchstart = (e) => {
+            let id = e.changedTouches[0].identifier;
             e.stopPropagation();
             this._moving = true;
-            this._moveTo(e.clientX);
-            this._slider.setPointerCapture(e.pointerId);
-            this._slider.onpointermove = (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                this._moveTo(e.clientX);
+            this._slider.ontouchmove = (ev) => {
+                ev.stopPropagation();
+                ev.stopPropagation();
+                this._moveTo(ev.touches[id].clientX);
             };
-            this._slider.onpointerup = (e) => {
-                e.preventDefault();
-                e.stopPropagation();
+            this._slider.ontouchend = (ev) => {
+                ev.stopPropagation();
                 this._moving = false;
-                this._slider.releasePointerCapture(e.pointerId);
-                this._slider.onpointermove = null;
-                this._slider.onpointerup = null;
-                this._moveTo(e.clientX);
+                this._slider.ontouchmove = null;
+                this._slider.ontouchend = null;
+                this._moveTo(ev.changedTouches[0].clientX);
             };
-            this._slider.focus();
-        };
+        }
+
 
         this._slider.onkeydown = (e) => {
             switch (e.key) {
@@ -110,35 +130,58 @@ export class Slider extends FormElement<number> {
         this.decimals = options.decimals;
         super.options(options)
         this.live = options.live;
-        if (options.iconLeft) {
-            this.iconLeft = options.iconLeft;
+        if (options.iconDec) {
+            this.iconLeft = options.iconDec;
         }
-        if (options.iconRight) {
-            this.iconRight = options.iconRight;
+        if (options.iconInc) {
+            this.iconRight = options.iconInc;
         }
         this.unit = options.unit;
         return this;
     }
 
-    private _stepperFunc(dir: boolean): (e: PointerEvent) => void {
-        return (e) => {
-            this.setPointerCapture(e.pointerId);
+    private _stepperFunc(icon: SVGSVGElement, dir: boolean) {
+        icon.onclick = (e) => {
+            e.stopPropagation();
+            this._stepValue(dir);
+        }
+        icon.onpointerdown = (e) => {
+            if (e.pointerType !== 'touch' && e.button === 0) {
+                e.stopPropagation();
+                this.setPointerCapture(e.pointerId);
+                let interval = 0;
+                let timeout = setTimeout(() => {
+                    this._stepValue(dir);
+                    interval = setInterval(() => {
+                        this._stepValue(dir);
+                    }, 200)
+                }, 500);
+                this.onpointerup = () => {
+                    if (interval === 0) {
+                        this._stepValue(dir);
+                    }
+                    clearInterval(interval);
+                    clearTimeout(timeout);
+                    this.onpointerup = null;
+                }
+            }
+        }
+        icon.ontouchstart = (e) => {
+            e.stopPropagation();
             let interval = 0;
             let timeout = setTimeout(() => {
                 this._stepValue(dir);
                 interval = setInterval(() => {
                     this._stepValue(dir);
-                }, 100)
+                }, 200)
             }, 500);
-            this.onpointerup = (e) => {
-                if (interval === 0) {
-                    this._stepValue(dir);
-                }
+            icon.ontouchend = () => {
                 clearInterval(interval);
                 clearTimeout(timeout);
-                this.onpointerup = null;
+                icon.ontouchend = null;
             }
         }
+        return icon
     }
 
     /**Moves the value to a position by the mouse x coordinates*/
@@ -178,15 +221,31 @@ export class Slider extends FormElement<number> {
     private _stepValue(dir: boolean) {
         let step = this._step || this._span / 100;
         if (dir) {
-            this._valueSet((this._value || 0) + step);
+            this._valueSet(Math.min((this._value || 0) + step, this._max));
         } else {
-            this._valueSet((this._value || 0) - step);
+            this._valueSet(Math.max((this._value || 0) - step, this._min));
         }
     }
 
     /**Sets the unit of the inputbox*/
     set unit(unit: string | Value<string> | undefined) {
-        unit;
+        if (this._unitListener) {
+            this.dettachValue(this._unitListener);
+            delete this._unitListener;
+        }
+        if (typeof unit === 'object' && unit instanceof Value) {
+            this._unitListener = this.attachValue(unit, (val) => {
+                if (val) {
+                    this._sliderUnit.innerHTML = val;
+                } else {
+                    this._sliderUnit.innerHTML = '';
+                }
+            });
+        } else if (unit) {
+            this._sliderUnit.innerHTML = unit;
+        } else {
+            this._sliderUnit.innerHTML = '';
+        }
     }
 
     /**Returns the current unit*/
@@ -243,24 +302,14 @@ export class Slider extends FormElement<number> {
 
     /**Changes the icon on the left of the slider*/
     set iconLeft(icon: SVGSVGElement) {
-        if (this._iconLeft) {
-            this._iconLeft = this._slide.replaceChild(icon, this._iconLeft);
-            this._iconLeft = icon;
-        } else {
-            this._iconLeft = this._slide.appendChild(icon);
-        }
-        icon.onpointerdown = this._stepperFunc(false);
+        this._body.replaceChild(icon, this._iconLeft);
+        this._iconLeft = this._stepperFunc(icon, false);
     }
 
     /**Changes the icon on the right of the slider*/
     set iconRight(icon: SVGSVGElement) {
-        if (this._iconRight) {
-            this._iconRight = this._slide.replaceChild(icon, this._iconRight);
-            this._iconRight = icon;
-        } else {
-            this._iconRight = this._slide.appendChild(icon);
-        }
-        icon.onpointerdown = this._stepperFunc(true);
+        this._body.replaceChild(icon, this._iconRight);
+        this._iconRight = this._stepperFunc(icon, true);
     }
 
     /**Called when value is changed */

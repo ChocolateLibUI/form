@@ -2,9 +2,11 @@
     display: none;
 }
 
+//Sizes
 $height: 1.8rem;
 $touchHeight: 3rem;
-
+$unitWidth: 4.5rem;
+//Shadows
 $shadowOut: 0 0.125rem 0.1875rem 0 var(--\@chocolatelibui\/form\/borderColor);
 $shadowOutActive: 0 0 0.1875rem 0 var(--\@chocolatelibui\/form\/borderColor);
 $shadowIn: inset 0 0.125rem 0.1875rem 0 var(--\@chocolatelibui\/form\/borderColor);
@@ -16,15 +18,18 @@ $shadowInFocusOut: $focusOut, $shadowIn ;
 $shadowOutFocusIn: $focusIn, $shadowOut;
 $shadowInFocusIn: $focusIn, $shadowIn;
 
-
-$cornerRadius: 0.4rem;
+//Colors
 $backColor: var(--\@chocolatelibui\/form\/backColor);
-$borderColor: var(--\@chocolatelibui\/form\/borderColor);
 $hoverColor: var(--\@chocolatelibui\/form\/hoverColor);
 $textColor: var(--\@chocolatelibui\/form\/color);
 
-$border: 1px solid $borderColor;
+//Border
+$cornerRadius: 0.4rem;
+$borderColor: var(--\@chocolatelibui\/form\/borderColor);
+$borderThickness: 0.0625rem;
+$border: $borderThickness solid $borderColor;
 
+//Basic Colors
 $blackColor: var(--\@chocolatelibui\/form\/colors\/blackColor);
 $greenColor: var(--\@chocolatelibui\/form\/colors\/greenColor);
 $redColor: var(--\@chocolatelibui\/form\/colors\/redColor);

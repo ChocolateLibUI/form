@@ -36,27 +36,45 @@ export class Button extends FormElement<boolean> {
         this._body.oncontextmenu = (e) => { e.preventDefault(); };
         this._body.setAttribute('tabindex', '0');
         this._text = this._body.appendChild(document.createElement('span'));
-        this._body.onpointerdown = (e) => {
-            e.stopPropagation();
-            if (e.pointerType == 'touch') {
-                e.preventDefault();
+        this._body.onclick = () => {
+            if (this._click) {
+                this._click();
             }
-            this._body.setPointerCapture(e.pointerId);
+        }
+        this._body.onpointerdown = (e) => {
+            if (e.pointerType !== 'touch' && e.button === 0) {
+                e.stopPropagation();
+                this._body.setPointerCapture(e.pointerId);
+                if (!this._toggle) {
+                    this._valueSet(true);
+                }
+                this._body.onpointerup = (ev) => {
+                    ev.stopPropagation();
+                    this._body.releasePointerCapture(ev.pointerId);
+                    if (this._toggle) {
+                        this._valueSet(!this._value);
+                    } else {
+                        this._valueSet(false);
+                    }
+                    this._body.onpointerup = null;
+                }
+            }
+        }
+        this._body.ontouchstart = (e) => {
+            e.stopPropagation();
             if (!this._toggle) {
                 this._valueSet(true);
             }
-            this._body.onpointerup = (ev) => {
+            this._body.ontouchend = (ev) => {
                 ev.stopPropagation();
-                this._body.releasePointerCapture(ev.pointerId);
-                if (this._toggle) {
-                    this._valueSet(!this._value);
-                } else {
-                    this._valueSet(false);
+                if (ev.targetTouches.length === 0) {
+                    if (this._toggle) {
+                        this._valueSet(!this._value);
+                    } else {
+                        this._valueSet(false);
+                    }
+                    this._body.ontouchend = null;
                 }
-                if (this._click) {
-                    this._click();
-                }
-                this._body.onpointerup = null;
             }
         }
         this._body.onkeydown = (e) => {

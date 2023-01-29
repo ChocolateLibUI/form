@@ -1,7 +1,7 @@
 @import "../base.scss";
 
 chocolatelibui-form-slider {
-    $thumbWidth : 5rem;
+    $thumbWidth : $unitWidth + 0.4rem;
 
     display: flex;
     flex-direction: column;
@@ -16,6 +16,8 @@ chocolatelibui-form-slider {
     }
 
     >div {
+        -webkit-user-select: none;
+        user-select: none;
         box-sizing: border-box;
         height: $height;
         position: relative;
@@ -37,13 +39,13 @@ chocolatelibui-form-slider {
 
         >div {
             height: 100%;
-            left: ($thumbWidth / 2) + $height;
-            width: calc(100% - ($thumbWidth + $height * 2));
+            left: calc(($thumbWidth / 2) + $height - ($borderThickness * 2));
+            width: calc(100% - ($thumbWidth + ($height * 2) - ($borderThickness * 4)));
             position: absolute;
 
             .touch & {
-                left: ($thumbWidth / 2) + $touchHeight;
-                width: calc(100% - ($thumbWidth + $touchHeight * 2));
+                left: calc(($thumbWidth / 2) + $touchHeight - ($borderThickness * 2));
+                width: calc(100% - ($thumbWidth + ($touchHeight * 2) - ($borderThickness * 4)));
             }
 
             >div {
@@ -52,28 +54,38 @@ chocolatelibui-form-slider {
                 border-radius: $cornerRadius;
                 border: $border;
                 box-shadow: $shadowOut;
-                height: 100%;
-                width: 5rem;
+                height: $height;
+                width: $thumbWidth;
+                top: -$borderThickness;
+                left: 50%;
                 transform: translateX(-50%);
-                touch-action: none;
-                position: absolute;
+                position: relative;
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
+                align-items: center;
                 text-align: center;
-                -webkit-user-select: none;
-                user-select: none;
                 outline: none;
                 line-height: 0.8rem;
                 box-sizing: border-box;
+                touch-action: none;
 
-                >div {
-                    font-size: 0.8rem;
+                .touch & {
+                    height: $touchHeight;
                 }
 
                 .anim & {
                     transition: color var(--colorTransitionType) var(--colorTransitionTime), background-color var(--colorTransitionType) var(--colorTransitionTime), box-shadow var(--colorTransitionType) var(--colorTransitionTime);
                 }
+
+                >div {
+                    font-size: 0.8rem;
+                    max-width: $unitWidth;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
+
 
                 &:focus {
                     outline: none;
@@ -93,20 +105,30 @@ chocolatelibui-form-slider {
         }
 
         >svg {
+            position: relative;
+            top: -$borderThickness;
             background-color: $backColor;
             border-radius: $cornerRadius;
             border: $border;
             box-shadow: $shadowOut;
             box-sizing: border-box;
             fill: $textColor;
-            height: calc($height - 2px);
-            width: calc($height - 2px);
+            height: $height;
+            width: $height;
             padding: 0.14rem;
             flex-shrink: 0;
 
+            &:nth-child(2) {
+                left: -$borderThickness;
+            }
+
+            &:nth-child(3) {
+                right: -$borderThickness;
+            }
+
             .touch & {
-                height: calc($touchHeight - 2px);
-                width: calc($touchHeight - 2px);
+                height: $touchHeight;
+                width: $touchHeight;
                 padding: 0.2rem;
             }
 
