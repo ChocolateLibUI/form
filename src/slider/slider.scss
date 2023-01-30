@@ -1,7 +1,9 @@
 @import "../base.scss";
 
 chocolatelibui-form-slider {
-    $thumbWidth : $unitWidth + 0.4rem;
+    $textPadding : 0.2rem;
+    $thumbWidth : $unitWidth + 0.4rem + $textPadding;
+    $touchThumbWidth : $touchUnitWidth + 0.4rem + $textPadding;
 
     display: flex;
     flex-direction: column;
@@ -33,65 +35,68 @@ chocolatelibui-form-slider {
             height: $touchHeight;
         }
 
-        .anim & {
-            transition: height var(--sizeTransitionType) var(--sizeTransitionTime), background-color var(--colorTransitionType) var(--colorTransitionTime);
-        }
-
         >div {
             height: 100%;
-            left: calc(($thumbWidth / 2) + $height - ($borderThickness * 2));
-            width: calc(100% - ($thumbWidth + ($height * 2) - ($borderThickness * 4)));
+            left: calc($height - ($borderThickness * 2));
+            width: calc(100% - (($thumbWidth + ($height * 2)) - ($borderThickness * 4)));
             position: absolute;
 
             .touch & {
-                left: calc(($thumbWidth / 2) + $touchHeight - ($borderThickness * 2));
-                width: calc(100% - ($thumbWidth + ($touchHeight * 2) - ($borderThickness * 4)));
+                left: calc($touchHeight - ($borderThickness * 2));
+                width: calc(100% - (($touchThumbWidth + ($touchHeight * 2)) - ($borderThickness * 4)));
             }
 
             >div {
-                color: $textColor;
+                @include valueFont;
+                box-sizing: border-box;
                 background-color: $backColor;
                 border-radius: $cornerRadius;
                 border: $border;
                 box-shadow: $shadowOut;
                 height: $height;
                 width: $thumbWidth;
-                top: -$borderThickness;
+                top: - $borderThickness;
                 left: 50%;
-                transform: translateX(-50%);
-                position: relative;
+                position: absolute;
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                text-align: center;
-                outline: none;
-                line-height: 0.8rem;
-                box-sizing: border-box;
                 touch-action: none;
+                padding-inline: 0.2rem;
 
                 .touch & {
                     height: $touchHeight;
+                    width: $touchThumbWidth;
                 }
 
-                .anim & {
-                    transition: color var(--colorTransitionType) var(--colorTransitionTime), background-color var(--colorTransitionType) var(--colorTransitionTime), box-shadow var(--colorTransitionType) var(--colorTransitionTime);
+                >span {
+                    @include valueFont;
+                    box-sizing: border-box;
+                    line-height: $valueFontSize;
+                    text-align: center;
+                    max-width: $thumbWidth - $textPadding * 2;
+                    overflow: hidden;
+
+                    .touch & {
+                        line-height: $touchValueFontSize;
+                        max-width: $touchThumbWidth;
+                    }
                 }
 
                 >div {
-                    font-size: 0.8rem;
-                    max-width: $unitWidth;
-                    overflow: hidden;
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
-                }
+                    @include unitContainer;
+                    line-height: $unitFontSize;
+                    text-align: center;
 
-
-                &:focus {
-                    outline: none;
+                    .touch & {
+                        line-height: $touchUnitFontSize;
+                    }
                 }
 
                 @media(pointer: fine) {
+                    outline: none;
+
                     &:hover {
                         background-color: $hoverColor;
                     }
@@ -105,6 +110,8 @@ chocolatelibui-form-slider {
         }
 
         >svg {
+            -webkit-user-select: none;
+            user-select: none;
             position: relative;
             top: -$borderThickness;
             background-color: $backColor;
@@ -116,7 +123,7 @@ chocolatelibui-form-slider {
             height: $height;
             width: $height;
             padding: 0.14rem;
-            flex-shrink: 0;
+            touch-action: none;
 
             &:nth-child(2) {
                 left: -$borderThickness;
@@ -131,11 +138,6 @@ chocolatelibui-form-slider {
                 width: $touchHeight;
                 padding: 0.2rem;
             }
-
-            .anim & {
-                transition: height var(--sizeTransitionType) var(--sizeTransitionTime), max-width var(--sizeTransitionType) var(--sizeTransitionTime), padding var(--sizeTransitionType) var(--sizeTransitionTime), fill var(--colorTransitionType) var(--colorTransitionTime);
-            }
-
 
             @media(pointer: fine) {
                 &:hover {

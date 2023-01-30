@@ -101,6 +101,14 @@ chocolatelibui-form-button {
 
         &[color="black"] {
             background-color: $blackColor;
+
+            >span {
+                color: $blackColorText;
+            }
+
+            >svg {
+                fill: $blackColorText;
+            }
         }
 
         &[color="green"] {

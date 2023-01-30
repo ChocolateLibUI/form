@@ -1,7 +1,7 @@
 import "./slider.scss"
 import { defineElement } from "@chocolatelibui/core";
 import { material_navigation_chevron_left_rounded, material_navigation_chevron_right_rounded } from "@chocolatelibui/icons";
-import { FormElementOptions, FormElement } from "../base";
+import { FormElementOptions, FormElement, NoValueText } from "../base";
 import { Value } from "@chocolatelib/value";
 
 interface SliderOptions extends FormElementOptions<number> {
@@ -29,9 +29,9 @@ export class Slider extends FormElement<number> {
     private _body: HTMLDivElement;
     private _slide: HTMLDivElement;
     private _slider: HTMLDivElement;
-    private _sliderVal: Text;
+    private _valueBox: HTMLSpanElement;
     private _unitListener: ((value: string) => void) | undefined
-    private _sliderUnit: HTMLDivElement;
+    private _unit: HTMLDivElement;
     private _moving: boolean = false;
     private _iconLeft: SVGSVGElement;
     private _iconRight: SVGSVGElement;
@@ -52,56 +52,44 @@ export class Slider extends FormElement<number> {
         this._body = this.appendChild(document.createElement('div'));
         this._body.oncontextmenu = e => { e.preventDefault(); };
         this._slide = this._body.appendChild(document.createElement('div'));
-        this._iconLeft = this._body.appendChild(material_navigation_chevron_left_rounded());
-        this._stepperFunc(this._iconLeft, false);
-        this._iconRight = this._body.appendChild(material_navigation_chevron_right_rounded());
-        this._stepperFunc(this._iconRight, true);
+        this._iconLeft = this._stepperFunc(this._body.appendChild(material_navigation_chevron_left_rounded()), false);
+        this._iconRight = this._stepperFunc(this._body.appendChild(material_navigation_chevron_right_rounded()), true);
         this._slider = this._slide.appendChild(document.createElement('div'));
         this._slider.setAttribute('tabindex', '0');
-        this._sliderVal = this._slider.appendChild(document.createTextNode('N/A'));
-        this._sliderUnit = this._slider.appendChild(document.createElement('div'));
+        this._valueBox = this._slider.appendChild(document.createElement('span'));
+        this._valueBox.textContent = NoValueText;
+        this._unit = this._slider.appendChild(document.createElement('div'));
 
         this._body.onpointerdown = (e) => {
-            e.preventDefault();
-            if (e.pointerType !== 'touch' && e.button === 0) {
+            if (e.button === 0) {
                 e.stopPropagation();
                 this._moving = true;
-                this._moveTo(e.clientX);
+                let offset = 0;
+                let box = this._slider.getBoundingClientRect();
+                if (e.clientX >= box.x) {
+                    if (e.clientX <= box.x + box.width) {
+                        offset = box.x - e.clientX;
+                    } else {
+                        offset = -box.width;
+                    }
+                }
+                this._moveTo(e.clientX + offset);
                 this._slider.setPointerCapture(e.pointerId);
                 this._slider.onpointermove = (ev) => {
-                    ev.preventDefault();
                     ev.stopPropagation();
-                    this._moveTo(ev.clientX);
+                    this._moveTo(ev.clientX + offset);
                 };
                 this._slider.onpointerup = (ev) => {
-                    ev.preventDefault();
                     ev.stopPropagation();
                     this._moving = false;
                     this._slider.releasePointerCapture(e.pointerId);
                     this._slider.onpointermove = null;
                     this._slider.onpointerup = null;
-                    this._moveTo(ev.clientX);
+                    this._moveTo(ev.clientX + offset);
                 };
                 this._slider.focus();
             }
         };
-        this._slider.ontouchstart = (e) => {
-            let id = e.changedTouches[0].identifier;
-            e.stopPropagation();
-            this._moving = true;
-            this._slider.ontouchmove = (ev) => {
-                ev.stopPropagation();
-                ev.stopPropagation();
-                this._moveTo(ev.touches[id].clientX);
-            };
-            this._slider.ontouchend = (ev) => {
-                ev.stopPropagation();
-                this._moving = false;
-                this._slider.ontouchmove = null;
-                this._slider.ontouchend = null;
-                this._moveTo(ev.changedTouches[0].clientX);
-            };
-        }
 
 
         this._slider.onkeydown = (e) => {
@@ -141,12 +129,8 @@ export class Slider extends FormElement<number> {
     }
 
     private _stepperFunc(icon: SVGSVGElement, dir: boolean) {
-        icon.onclick = (e) => {
-            e.stopPropagation();
-            this._stepValue(dir);
-        }
         icon.onpointerdown = (e) => {
-            if (e.pointerType !== 'touch' && e.button === 0) {
+            if (e.button === 0) {
                 e.stopPropagation();
                 this.setPointerCapture(e.pointerId);
                 let interval = 0;
@@ -154,7 +138,7 @@ export class Slider extends FormElement<number> {
                     this._stepValue(dir);
                     interval = setInterval(() => {
                         this._stepValue(dir);
-                    }, 200)
+                    }, 100)
                 }, 500);
                 this.onpointerup = () => {
                     if (interval === 0) {
@@ -164,21 +148,6 @@ export class Slider extends FormElement<number> {
                     clearTimeout(timeout);
                     this.onpointerup = null;
                 }
-            }
-        }
-        icon.ontouchstart = (e) => {
-            e.stopPropagation();
-            let interval = 0;
-            let timeout = setTimeout(() => {
-                this._stepValue(dir);
-                interval = setInterval(() => {
-                    this._stepValue(dir);
-                }, 200)
-            }, 500);
-            icon.ontouchend = () => {
-                clearInterval(interval);
-                clearTimeout(timeout);
-                icon.ontouchend = null;
             }
         }
         return icon
@@ -208,7 +177,7 @@ export class Slider extends FormElement<number> {
         }
 
         this._movePerc((-this._min + value) / this._span * 100);
-        this._sliderVal.nodeValue = (value.toFixed(this._decimals));
+        this._valueBox.textContent = (value.toFixed(this._decimals));
     }
 
     /**Moves the slider to the given percent position*/
@@ -219,7 +188,7 @@ export class Slider extends FormElement<number> {
 
     /**This steps the slider value in the given direction*/
     private _stepValue(dir: boolean) {
-        let step = this._step || this._span / 100;
+        let step = this._step || Number((this._span / 333).toFixed(this._decimals)) || 1;
         if (dir) {
             this._valueSet(Math.min((this._value || 0) + step, this._max));
         } else {
@@ -236,15 +205,15 @@ export class Slider extends FormElement<number> {
         if (typeof unit === 'object' && unit instanceof Value) {
             this._unitListener = this.attachValue(unit, (val) => {
                 if (val) {
-                    this._sliderUnit.innerHTML = val;
+                    this._unit.innerHTML = val;
                 } else {
-                    this._sliderUnit.innerHTML = '';
+                    this._unit.innerHTML = '';
                 }
             });
         } else if (unit) {
-            this._sliderUnit.innerHTML = unit;
+            this._unit.innerHTML = unit;
         } else {
-            this._sliderUnit.innerHTML = '';
+            this._unit.innerHTML = '';
         }
     }
 
@@ -316,13 +285,13 @@ export class Slider extends FormElement<number> {
     protected _valueUpdate(value: number) {
         if (!this._moving) {
             this._movePerc((-this._min + value) / this._span * 100);
-            this._sliderVal.nodeValue = (value.toFixed(this._decimals));
+            this._valueBox.textContent = (value.toFixed(this._decimals));
         }
     }
     /**Called when value cleared */
     protected _valueClear() {
         this._movePerc(50);
-        this._sliderVal.nodeValue = 'N/A';
+        this._valueBox.textContent = NoValueText;
     }
 }
 defineElement(Slider);

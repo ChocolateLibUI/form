@@ -3,7 +3,12 @@
 chocolatelibui-form-stepper {
     display: flex;
     flex-direction: column;
-    //min-width: 10rem;
+
+    min-width: 10rem;
+
+    .touch & {
+        min-width: 14rem;
+    }
 
     >span {
         @include label;
@@ -24,51 +29,61 @@ chocolatelibui-form-stepper {
         user-select: none;
         cursor: ew-resize;
         outline: none;
+        touch-action: none;
 
         .touch & {
             min-width: 14rem;
             height: $touchHeight;
         }
 
-        @media(pointer: fine) {
-            &:hover {
-                background-color: $hoverColor;
-            }
-
-            &:focus-visible {
-                box-shadow: $shadowInFocusOut;
-            }
-        }
-
         >span {
-            color: $textColor;
-            outline: none;
-            flex-grow: 1;
             display: flex;
-            justify-content: center;
+            position: relative;
             align-items: center;
-            padding-inline: 0.4rem;
-            min-width: 0;
+            width: 100%;
+            outline: none;
 
-            .touch & {
-                font-size: 1.4rem;
+            >span:nth-child(1) {
+                @include valueFont;
+                padding-left: 0.5rem;
+                min-width: 4rem;
+                text-align: end;
+                outline: none;
+
+                .touch & {
+                    min-width: 5rem;
+                }
             }
 
-            &.scrolling {
+            >div {
+                @include unitContainer;
+                padding-left: 0.3rem;
                 -webkit-user-select: none;
                 user-select: none;
             }
 
-            &[unit] {
-                &::after {
-                    content: attr(unit);
-                    width: $unitWidth;
-                    color: $textColor;
-                    padding-left: 0.4rem;
-                    overflow: hidden;
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
+            >span:nth-child(3) {
+                color: $textColor;
+                display: flex;
+                flex-direction: column;
+                text-align: end;
+                flex-grow: 1;
+                padding-inline: 0.4rem;
+
+
+                >span {
+                    font-size: 0.7rem;
+
+                    .touch & {
+                        font-size: 0.9rem;
+                    }
                 }
+            }
+
+            >button {
+                position: absolute;
+                inset: 0;
+                visibility: hidden;
             }
         }
 
@@ -89,13 +104,9 @@ chocolatelibui-form-stepper {
             cursor: auto;
 
             .touch & {
-                height: calc($touchHeight - 2px);
-                width: calc($touchHeight - 2px);
+                height: $touchHeight;
+                width: $touchHeight;
                 padding: 0.2rem;
-            }
-
-            .anim & {
-                transition: height var(--sizeTransitionType) var(--sizeTransitionTime), max-width var(--sizeTransitionType) var(--sizeTransitionTime), padding var(--sizeTransitionType) var(--sizeTransitionTime), fill var(--colorTransitionType) var(--colorTransitionTime);
             }
 
             &:first-child {
@@ -115,6 +126,16 @@ chocolatelibui-form-stepper {
                     box-shadow: $shadowOutActive;
                     background-color: $hoverColor;
                 }
+            }
+        }
+
+        @media(pointer: fine) {
+            &:hover {
+                background-color: $hoverColor;
+            }
+
+            &:focus-visible {
+                box-shadow: $shadowInFocusOut;
             }
         }
     }

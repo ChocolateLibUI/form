@@ -12,16 +12,14 @@ variables.makeVariable('hoverColor', 'Hover Color', 'Color of body at mouse hove
 variables.makeVariable('borderColor', 'Border Color', 'Standard border color', grey['700'], grey['500'], 'Color', undefined);
 variables.makeVariable('focusColor', 'Focus Color', 'Color added to selected element', orange['600'], orange['300'], 'Color', undefined);
 let colors = variables.makeSubGroup('colors', 'Colors', 'Base colors used by form elements')
-colors.makeVariable('blackColor', 'Black', 'Basic Black', grey['600'], grey['300'], 'Color', undefined);
+colors.makeVariable('blackColor', 'Black', 'Basic Black', grey['800'], grey['900'], 'Color', undefined);
+colors.makeVariable('blackColorText', 'Basic Black Text Color', 'Text color for basic black background', grey['200'], grey['200'], 'Color', undefined);
 colors.makeVariable('greenColor', 'Green', 'Basic Green', green['300'], green['900'], 'Color', undefined);
 colors.makeVariable('redColor', 'Red', 'Basic Red', red['300'], red['900'], 'Color', undefined);
 colors.makeVariable('blueColor', 'Blue', 'Basic Blue', blue['300'], blue['900'], 'Color', undefined);
 colors.makeVariable('yellowColor', 'Yellow', 'Basic Yellow', yellow['300'], yellow['900'], 'Color', undefined);
 
-// registerVariable('componentUnselectedBorderColor', grey['700'], grey['300']);
-// registerVariable('componentUnselectedTextColor', grey['600'], grey['400']);
-// registerVariable('componentUnselectedSymbolColor', grey['600'], grey['400']);
-// registerVariable('componentUnselectedBackGroundColor', grey['300'], grey['800']);
+export const NoValueText = '-';
 
 /**Defines all possible background colors for the button*/
 export const enum BasicColors {
@@ -59,7 +57,7 @@ export abstract class FormElement<ValueType> extends Base {
     /**Sets options for the element*/
     options(options: FormElementOptions<ValueType>) {
         super.options(options);
-        if (options.value) {
+        if (typeof options.value !== 'undefined') {
             this.value = options.value;
         }
         if (options.label) {
@@ -90,7 +88,7 @@ export abstract class FormElement<ValueType> extends Base {
                     delete this._value;
                 }
             });
-        } else if (value) {
+        } else if (typeof value !== 'undefined') {
             this._valueUpdate(value);
             this._value = value;
         } else {
