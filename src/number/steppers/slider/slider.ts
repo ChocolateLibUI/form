@@ -1,46 +1,21 @@
 import "./slider.scss"
 import { defineElement } from "@chocolatelibui/core";
 import { material_navigation_chevron_left_rounded, material_navigation_chevron_right_rounded } from "@chocolatelibui/icons";
-import { FormElementOptions, FormElement, NoValueText } from "../base";
-import { Value } from "@chocolatelib/value";
+import { StepperBase, StepperBaseOptions } from "../stepperBase";
+import { NoValueText } from "../../../base";
 
-interface SliderOptions extends FormElementOptions<number> {
-    /**Lower limit for slider value*/
-    min?: number,
-    /**Upper limit for slider value*/
-    max?: number,
-    /**Amount of steps on the slider 0 is infinite*/
-    step?: number,
-    /**Amount of decimals to show*/
-    decimals?: number,
+interface SliderOptions extends StepperBaseOptions {
     /**wether the events are live as the slider is moved or only when moving stops */
     live?: boolean,
-    /**Icon to use for */
-    iconDec?: SVGSVGElement,
-    /**Icon to use for right side*/
-    iconInc?: SVGSVGElement,
-    /**Unit to use for slider*/
-    unit?: string | Value<string>
 }
 
-
 /**Slide Selector, displays all options in a slider*/
-export class Slider extends FormElement<number> {
+export class Slider extends StepperBase {
     private _body: HTMLDivElement;
     private _slide: HTMLDivElement;
     private _slider: HTMLDivElement;
     private _valueBox: HTMLSpanElement;
-    private _unitListener: ((value: string) => void) | undefined
-    private _unit: HTMLDivElement;
     private _moving: boolean = false;
-    private _iconLeft: SVGSVGElement;
-    private _iconRight: SVGSVGElement;
-
-    private _min: number = 0;
-    private _max: number = 100;
-    private _span: number = 100;
-    private _step: number = 0;
-    private _decimals: number = 0;
     private _live: boolean = false;
 
     /**Returns the name used to define the element*/
@@ -52,8 +27,8 @@ export class Slider extends FormElement<number> {
         this._body = this.appendChild(document.createElement('div'));
         this._body.oncontextmenu = e => { e.preventDefault(); };
         this._slide = this._body.appendChild(document.createElement('div'));
-        this._iconLeft = this._stepperFunc(this._body.appendChild(material_navigation_chevron_left_rounded()), false);
-        this._iconRight = this._stepperFunc(this._body.appendChild(material_navigation_chevron_right_rounded()), true);
+        this._iconDec = this._stepperFunc(this._body.appendChild(material_navigation_chevron_left_rounded()), false);
+        this._iconInc = this._stepperFunc(this._body.appendChild(material_navigation_chevron_right_rounded()), true);
         this._slider = this._slide.appendChild(document.createElement('div'));
         this._slider.setAttribute('tabindex', '0');
         this._valueBox = this._slider.appendChild(document.createElement('span'));
@@ -112,10 +87,6 @@ export class Slider extends FormElement<number> {
 
     /**Sets options for the slider*/
     options(options: SliderOptions) {
-        this.min = options.min;
-        this.max = options.max;
-        this.step = options.step;
-        this.decimals = options.decimals;
         super.options(options)
         this.live = options.live;
         if (options.iconDec) {
@@ -124,33 +95,7 @@ export class Slider extends FormElement<number> {
         if (options.iconInc) {
             this.iconRight = options.iconInc;
         }
-        this.unit = options.unit;
         return this;
-    }
-
-    private _stepperFunc(icon: SVGSVGElement, dir: boolean) {
-        icon.onpointerdown = (e) => {
-            if (e.button === 0) {
-                e.stopPropagation();
-                this.setPointerCapture(e.pointerId);
-                let interval = 0;
-                let timeout = setTimeout(() => {
-                    this._stepValue(dir);
-                    interval = setInterval(() => {
-                        this._stepValue(dir);
-                    }, 100)
-                }, 500);
-                this.onpointerup = () => {
-                    if (interval === 0) {
-                        this._stepValue(dir);
-                    }
-                    clearInterval(interval);
-                    clearTimeout(timeout);
-                    this.onpointerup = null;
-                }
-            }
-        }
-        return icon
     }
 
     /**Moves the value to a position by the mouse x coordinates*/
@@ -186,80 +131,6 @@ export class Slider extends FormElement<number> {
         this._slider.style.left = perc + '%';
     }
 
-    /**This steps the slider value in the given direction*/
-    private _stepValue(dir: boolean) {
-        let step = this._step || Number((this._span / 333).toFixed(this._decimals)) || 1;
-        if (dir) {
-            this._valueSet(Math.min((this._value || 0) + step, this._max));
-        } else {
-            this._valueSet(Math.max((this._value || 0) - step, this._min));
-        }
-    }
-
-    /**Sets the unit of the inputbox*/
-    set unit(unit: string | Value<string> | undefined) {
-        if (this._unitListener) {
-            this.dettachValue(this._unitListener);
-            delete this._unitListener;
-        }
-        if (typeof unit === 'object' && unit instanceof Value) {
-            this._unitListener = this.attachValue(unit, (val) => {
-                if (val) {
-                    this._unit.innerHTML = val;
-                } else {
-                    this._unit.innerHTML = '';
-                }
-            });
-        } else if (unit) {
-            this._unit.innerHTML = unit;
-        } else {
-            this._unit.innerHTML = '';
-        }
-    }
-
-    /**Returns the current unit*/
-    get unit() {
-        return ''
-    }
-
-    /**Gets the minimum value on the slider*/
-    get min() {
-        return this._min;
-    }
-    /**Set the minimum value on the slider*/
-    set min(min: number | undefined) {
-        this._min = min ?? 0;
-        this._span = this._max - this._min;
-    }
-
-    /**Gets the maximum value on the slider*/
-    get max() {
-        return this._max;
-    }
-    /**Set the maximum value on the slider*/
-    set max(max: number | undefined) {
-        this._max = max ?? 100;
-        this._span = this._max - this._min;
-    }
-
-    /**Gets the amount of steps on the slider*/
-    get step() {
-        return this._step
-    }
-    /**Sets the amount of steps on the slider*/
-    set step(step: number | undefined) {
-        this._step = Math.max(step ?? 0, 0);
-    }
-
-    /**Gets the amount of decimals the slider can have*/
-    get decimals() {
-        return this._decimals
-    }
-    /**Sets the amount of decimals the slider can have*/
-    set decimals(dec: number | undefined) {
-        this._decimals = Math.max(dec ?? 0, 0);
-    }
-
     /**Gets wether the slider is in live mode*/
     get live() {
         return this._live;
@@ -267,18 +138,6 @@ export class Slider extends FormElement<number> {
     /**Set wether the slider is in live mode*/
     set live(live: boolean | undefined) {
         this._live = live || false;
-    }
-
-    /**Changes the icon on the left of the slider*/
-    set iconLeft(icon: SVGSVGElement) {
-        this._body.replaceChild(icon, this._iconLeft);
-        this._iconLeft = this._stepperFunc(icon, false);
-    }
-
-    /**Changes the icon on the right of the slider*/
-    set iconRight(icon: SVGSVGElement) {
-        this._body.replaceChild(icon, this._iconRight);
-        this._iconRight = this._stepperFunc(icon, true);
     }
 
     /**Called when value is changed */

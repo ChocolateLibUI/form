@@ -1,7 +1,6 @@
 import "./dropDown.scss"
 import { defineElement } from "@chocolatelibui/core";
-import { FormElementOptions, FormSelector } from "../base";
-import { Value } from "@chocolatelib/value";
+import { SelectorBase } from "../selectorBase";
 
 
 // import { componentNameStart, SelectorComponent, SelectorComponentOptions } from "./common";
@@ -18,7 +17,7 @@ import { Value } from "@chocolatelib/value";
 //  * @typedef {SelectorComponentOptions & DropDownInternalOptions} DropDownOptions*/
 
 /**Dropdown box for selecting between multiple choices in a small space*/
-export class DropDown extends FormSelector {
+export class DropDown extends SelectorBase {
     /**Returns the name used to define the element*/
     static elementName() { return 'dropdown' }
 

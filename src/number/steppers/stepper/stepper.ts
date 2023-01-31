@@ -1,35 +1,14 @@
 import "./stepper.scss"
 import { defineElement } from "@chocolatelibui/core";
 import { material_content_remove_rounded, material_content_add_rounded } from "@chocolatelibui/icons";
-import { FormElementOptions, FormElement, NoValueText } from "../base";
-import { Listener, Value } from "@chocolatelib/value";
-
-interface StepperOptions extends FormElementOptions<number> {
-    /**Lower limit for slider value*/
-    min?: number,
-    /**Upper limit for slider value*/
-    max?: number,
-    /**Step size, use 0 for automatic step size*/
-    step?: number | ((value: number) => number),
-    /**Amount of decimals to show*/
-    decimals?: number,
-    /**Icon to use for decreasing value*/
-    iconDec?: SVGSVGElement,
-    /**Icon to use for increasing value*/
-    iconInc?: SVGSVGElement,
-    /**Unit to use for slider*/
-    unit?: string | Value<string>
-}
+import { StepperBase, StepperBaseOptions } from "../stepperBase";
+import { NoValueText } from "../../../base";
 
 /**Slide Selector, displays all options in a slider*/
-export class Stepper extends FormElement<number> {
+export class Stepper extends StepperBase {
     private _body: HTMLDivElement;
-    private _iconLeft: SVGSVGElement;
-    private _iconRight: SVGSVGElement;
     private _text: HTMLSpanElement;
     private _valueBox: HTMLSpanElement;
-    private _unit: HTMLDivElement;
-    private _unitListener: Listener<string> | undefined
     private _warning: HTMLButtonElement;
 
     private _legend: HTMLSpanElement;
@@ -40,12 +19,6 @@ export class Stepper extends FormElement<number> {
     private _maxValue: Text | undefined;
     private _maxUnit: Text | undefined;
 
-    private _min: number = -Infinity;
-    private _max: number = Infinity;
-    private _step: number = Infinity;
-    private _stepFunc: ((value: number) => number) | undefined;
-    private _decimals: number = 0;
-
     /**Returns the name used to define the element*/
     static elementName() { return 'stepper' }
 
@@ -55,14 +28,14 @@ export class Stepper extends FormElement<number> {
         this._body = this.appendChild(document.createElement('div'));
         this._body.oncontextmenu = (e) => { e.preventDefault(); };
         this._body.setAttribute('tabindex', '0');
-        this._iconLeft = this._stepperFunc(this._body.appendChild(material_content_remove_rounded()), false);
+        this._iconDec = this._stepperFunc(this._body.appendChild(material_content_remove_rounded()), false);
         this._text = this._body.appendChild(document.createElement('span'));
         this._valueBox = this._text.appendChild(document.createElement('span'));
         this._valueBox.setAttribute('tabindex', '-1');
         this._valueBox.contentEditable = 'true';
         this._valueBox.textContent = NoValueText;
         this._unit = this._text.appendChild(document.createElement('div'));
-        this._iconRight = this._stepperFunc(this._body.appendChild(material_content_add_rounded()), true);
+        this._iconInc = this._stepperFunc(this._body.appendChild(material_content_add_rounded()), true);
         this._legend = this._text.appendChild(document.createElement('span'));
         this._warning = this._text.appendChild(document.createElement('button'));
 
@@ -178,58 +151,8 @@ export class Stepper extends FormElement<number> {
             }
 
         };
-
-
     }
 
-    /**Sets options for the slider*/
-    options(options: StepperOptions) {
-        this.min = options.min;
-        this.max = options.max;
-        this.step = options.step;
-        this.decimals = options.decimals;
-        super.options(options)
-        if (options.iconDec) {
-            this.iconLeft = options.iconDec;
-        }
-        if (options.iconInc) {
-            this.iconRight = options.iconInc;
-        }
-        if (options.unit) {
-            this.unit = options.unit;
-        }
-        return this;
-    }
-
-    private _stepperFunc(icon: SVGSVGElement, dir: boolean) {
-        icon.onpointerdown = (e) => {
-            if (e.button === 0) {
-                e.stopPropagation();
-                this.setPointerCapture(e.pointerId);
-                let interval = 0;
-                let timeout = setTimeout(() => {
-                    this._stepValue(dir);
-                    interval = setInterval(() => {
-                        this._stepValue(dir);
-                    }, 100)
-                }, 500);
-                this.onpointerup = () => {
-                    if (interval === 0) {
-                        this._stepValue(dir);
-                    }
-                    clearInterval(interval);
-                    clearTimeout(timeout);
-                    this.onpointerup = null;
-                }
-            }
-        }
-        return icon
-    }
-
-    /**Returns the minimum value*/
-    get min() {
-        return this._min;
-    }
     /**Set the minimum value*/
     set min(min: number | undefined) {
         if (typeof min === 'number') {
@@ -254,10 +177,6 @@ export class Stepper extends FormElement<number> {
         }
     }
 
-    /**Returns the minimum value*/
-    get max() {
-        return this._max;
-    }
     /**Set the minimum value*/
     set max(max: number | undefined) {
         if (typeof max === 'number') {
@@ -281,41 +200,6 @@ export class Stepper extends FormElement<number> {
         }
     }
 
-    /**Gets the amount of steps on the slider*/
-    get step() {
-        return this._step
-    }
-    /**Sets the amount of steps on the slider*/
-    set step(step: number | undefined | ((value: number) => number)) {
-        if (typeof step === 'function') {
-            this._stepFunc = step;
-        } else {
-            this._stepFunc = undefined;
-            this._step = Math.max(step ?? 0, Infinity);
-        }
-    }
-
-    /**Gets the amount of decimals the slider can have*/
-    get decimals() {
-        return this._decimals
-    }
-    /**Sets the amount of decimals the slider can have*/
-    set decimals(dec: number | undefined) {
-        this._decimals = Math.max(dec ?? 0, 0);
-    }
-
-    /**Changes the icon on the left of the slider*/
-    set iconLeft(icon: SVGSVGElement) {
-        this._body.replaceChild(icon, this._iconLeft);
-        this._iconLeft = this._stepperFunc(icon, false);
-    }
-
-    /**Changes the icon on the right of the slider*/
-    set iconRight(icon: SVGSVGElement) {
-        this._body.replaceChild(icon, this._iconRight);
-        this._iconRight = this._stepperFunc(icon, true);
-    }
-
     /**Called when value is changed */
     protected _valueUpdate(value: number) {
         this._valueBox.textContent = value.toFixed(this._decimals);
@@ -326,7 +210,7 @@ export class Stepper extends FormElement<number> {
     }
 
     /**This steps the slider value in the given direction*/
-    private _stepValue(dir: boolean) {
+    protected _stepValue(dir: boolean): boolean | void {
         if (this._step === Infinity) {
             if (this._decimals === 0) {
                 var step = Math.max(1, Math.floor(Math.abs(this._value || 0) / 150));
@@ -339,22 +223,24 @@ export class Stepper extends FormElement<number> {
             var step = this._step;
         }
         if (dir) {
-            this._setValueValidate((this._value || 0) + step);
+            return this._setValueValidate((this._value || 0) + step);
         } else {
-            this._setValueValidate((this._value || 0) - step);
+            return this._setValueValidate((this._value || 0) - step);
         }
     }
 
     /**Validates given value then sets it*/
-    private _setValueValidate(val: number) {
+    private _setValueValidate(val: number): boolean | void {
         if (val > this._max) {
             this._warning.setCustomValidity('Maximum value is ' + this._max)
             this._warning.reportValidity();
             this._valueSet(this._max);
+            return true;
         } else if (val < this._min) {
             this._warning.setCustomValidity('Minimum value is ' + this._min)
             this._warning.reportValidity();
             this._valueSet(this._min);
+            return true;
         } else {
             this._warning.setCustomValidity('');
             this._warning.reportValidity();
@@ -362,34 +248,13 @@ export class Stepper extends FormElement<number> {
         }
     }
 
-    /**Gets the current unit of the element*/
-    get unit() {
-        return this._label.innerHTML;
-    }
-    /**Sets the current unit of the element*/
-    set unit(unit: Value<string> | string | undefined) {
-        if (this._unitListener) {
-            this.dettachValue(this._unitListener);
-            delete this._unitListener;
+    protected _setUnit(unit: string | undefined) {
+        super._setUnit(unit);
+        if (this._minUnit) {
+            this._minUnit.nodeValue = unit || '';
         }
-        if (typeof unit === 'object' && unit instanceof Value) {
-            this._unitListener = this.attachValue(unit, (val) => { this._setUnit(val) });
-        } else {
-            this._setUnit(unit)
-        }
-    }
-
-    private _setUnit(unit: string | undefined) {
-        if (unit) {
-            this._unit.textContent = unit;
-            if (this._minUnit) {
-                this._minUnit.nodeValue = unit;
-            }
-            if (this._maxUnit) {
-                this._maxUnit.nodeValue = unit;
-            }
-        } else {
-            this._unit.textContent = '';
+        if (this._maxUnit) {
+            this._maxUnit.nodeValue = unit || '';
         }
     }
 }
