@@ -1,12 +1,7 @@
 @import "../base.scss";
 
 chocolatelibui-form-switch {
-    display: flex;
-    flex-direction: column;
-
-    >span {
-        @include label;
-    }
+    @include base;
 
     >div {
         display: flex;

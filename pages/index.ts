@@ -1,7 +1,7 @@
 import "./index.scss"
 import { grey } from "@chocolatelib/colors";
 import { material_action_3d_rotation_rounded, material_action_account_balance_rounded } from "@chocolatelibui/icons";
-import { Button, Lamp, Slider, DropDown, Switch, TextField, TitleField, Stepper, Progress, NumberInput } from "../src"
+import { Button, Lamp, Slider, DropDown, Switch, TextField, TitleField, Stepper, Progress, NumberInput, ToggleButton } from "../src"
 import { BasicColors, variables } from "../src/base"
 import { Value, ValueLimitedNumber } from "@chocolatelib/value";
 
@@ -26,6 +26,22 @@ setInterval(() => {
     unitValue.set = 'unit' + unitCount;
     unitCount++;
 }, 100);
+
+
+let dropdown1 = document.body.appendChild(new DropDown().options({ label: 'Accumsan sit amet nulla' }));
+let toggleButton1 = document.body.appendChild(new ToggleButton().options({
+    label: 'Accumsan sit amet nulla',
+    selection: [{
+        icon: material_action_account_balance_rounded(),
+        name: 'Test1',
+        value: 1
+    }, {
+        icon: material_action_account_balance_rounded(),
+        name: 'Test2',
+        value: 2
+    }]
+}));
+
 
 let numberinput1 = document.body.appendChild(new NumberInput());
 let numberinput2 = document.body.appendChild(new NumberInput().options({ label: 'Accumsan sit amet nulla', value: 44 }));

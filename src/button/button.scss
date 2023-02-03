@@ -1,13 +1,7 @@
 @import "../base.scss";
 
 chocolatelibui-form-button {
-    display: flex;
-    flex-direction: column;
-
-
-    >span {
-        @include label;
-    }
+    @include base;
 
     >div {
         display: flex;
@@ -48,11 +42,6 @@ chocolatelibui-form-button {
             }
         }
 
-
-        .anim & {
-            transition: min-height var(--sizeTransitionType) var(--sizeTransitionTime), box-shadow ease 200ms, border-color var(--colorTransitionType) var(--colorTransitionTime), background-color var(--colorTransitionType) var(--colorTransitionTime);
-        }
-
         >svg {
             box-sizing: border-box;
             fill: $textColor;
@@ -67,10 +56,6 @@ chocolatelibui-form-button {
                 height: $touchHeight;
                 max-width: $touchHeight + 1rem;
                 padding: 0.5rem;
-            }
-
-            .anim & {
-                transition: fill var(--colorTransitionType) var(--colorTransitionTime), height var(--sizeTransitionType) var(--sizeTransitionTime), max-width var(--sizeTransitionType) var(--sizeTransitionTime);
             }
         }
 
@@ -91,10 +76,6 @@ chocolatelibui-form-button {
 
             &:empty {
                 display: none;
-            }
-
-            .anim & {
-                transition: color var(--colorTransitionType) var(--colorTransitionTime);
             }
         }
 

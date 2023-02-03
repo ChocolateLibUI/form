@@ -6,5 +6,6 @@ export * from "./number/progress/progress";
 export * from "./number/steppers/slider/slider";
 export * from "./number/steppers/stepper/stepper";
 export * from "./selectors/dropDown/dropDown";
+export * from "./selectors/toggleButton/toggleButton";
 export * from "./switch/switch";
 export * from "./text/text";

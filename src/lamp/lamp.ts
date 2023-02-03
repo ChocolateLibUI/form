@@ -14,18 +14,13 @@ interface LampOptions extends FormElementOptions<number | boolean> {
 
 /**Lamp for clicking*/
 export class Lamp extends FormElement<number | boolean> {
-    private _text: HTMLSpanElement;
+    private _text: HTMLSpanElement = this._body.appendChild(document.createElement('span'));
     private _textListener: Listener<string> | undefined
     private _icon: SVGSVGElement | undefined;
     private _colors: BasicColors[] = [];
 
     /**Returns the name used to define the element*/
     static elementName() { return 'lamp' }
-
-    constructor() {
-        super();
-        this._text = this._body.appendChild(document.createElement('span'));
-    }
 
     /**Sets options for the lamp*/
     options(options: LampOptions) {

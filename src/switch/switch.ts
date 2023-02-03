@@ -12,10 +12,10 @@ interface ToggleSwitchOptions extends FormElementOptions<boolean> {
 
 /**Toggle Switch, switches between on and off*/
 export class Switch extends FormElement<boolean> {
-    private _switch: HTMLDivElement;
+    private _switch: HTMLDivElement = this._body.appendChild(document.createElement('div'));
+    private _text: HTMLSpanElement = this._body.appendChild(document.createElement('span'));
     private _icon: SVGSVGElement | undefined;
     private _preventClick: boolean = false;
-    private _text: HTMLSpanElement;
     private _textListener: Listener<string> | undefined
 
     /**Returns the name used to define the element*/
@@ -23,10 +23,7 @@ export class Switch extends FormElement<boolean> {
 
     constructor() {
         super();
-        this._switch = this._body.appendChild(document.createElement('div'));
         this._switch.setAttribute('tabindex', '0');
-        this._text = this._body.appendChild(document.createElement('span'));
-
         this._switch.onkeydown = (e) => {
             switch (e.key) {
                 case 'Enter':

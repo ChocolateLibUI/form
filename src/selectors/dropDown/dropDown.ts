@@ -3,23 +3,14 @@ import { defineElement } from "@chocolatelibui/core";
 import { SelectorBase } from "../selectorBase";
 
 
-// import { componentNameStart, SelectorComponent, SelectorComponentOptions } from "./common";
-// import { unfold_more } from "../icons/icons";
-// import { AccessTypes } from "../values/access";
-// import { initWebComponentWithOptions } from "../common/webComponent";
-// import { nameSpace } from "../common/svg";
-
-// /**Defines options for dropdown component 
-//  * @typedef {Object} DropDownInternalOptions
-//  * @property {string} default the text displaied when nothing is selected
-//  * 
-//  * Defines options for dropdown component 
-//  * @typedef {SelectorComponentOptions & DropDownInternalOptions} DropDownOptions*/
-
 /**Dropdown box for selecting between multiple choices in a small space*/
-export class DropDown extends SelectorBase {
+export class DropDown<T> extends SelectorBase<T> {
     /**Returns the name used to define the element*/
     static elementName() { return 'dropdown' }
+
+    constructor() {
+        super();
+    }
 
 
     // constructor() {
