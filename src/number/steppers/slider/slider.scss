@@ -1,21 +1,11 @@
 @import "../stepperBase.scss";
 
 chocolatelibui-form-slider {
+    @include base;
+    @include number-base;
     $textPadding : 0.2rem;
     $thumbWidth : $unitWidth + 0.4rem + $textPadding;
     $touchThumbWidth : $touchUnitWidth + 0.4rem + $textPadding;
-
-    display: flex;
-    flex-direction: column;
-    min-width: 14rem;
-
-    .touch & {
-        min-width: 18rem;
-    }
-
-    >span {
-        @include label;
-    }
 
     >div {
         -webkit-user-select: none;
@@ -25,29 +15,35 @@ chocolatelibui-form-slider {
         position: relative;
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
+        justify-content: flex-start;
         background-color: $backColor;
         border-radius: $cornerRadius;
         border: $border;
         box-shadow: $shadowIn;
+
+
 
         .touch & {
             height: $touchHeight;
         }
 
         >div {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             height: 100%;
-            left: calc($height - ($borderThickness * 2));
             width: calc(100% - (($thumbWidth + ($height * 2)) - ($borderThickness * 4)));
-            position: absolute;
+            position: relative;
+            left: -$borderThickness * 2;
+            z-index: 1;
 
             .touch & {
-                left: calc($touchHeight - ($borderThickness * 2));
                 width: calc(100% - (($touchThumbWidth + ($touchHeight * 2)) - ($borderThickness * 4)));
             }
 
+
+
             >div {
-                @include valueFont;
                 box-sizing: border-box;
                 background-color: $backColor;
                 border-radius: $cornerRadius;
@@ -64,13 +60,30 @@ chocolatelibui-form-slider {
                 align-items: center;
                 touch-action: none;
                 padding-inline: 0.2rem;
+                outline: none;
+                cursor: grab;
+
+                &.active {
+                    cursor: grabbing;
+                }
+
+                &:focus-visible {
+                    box-shadow: $shadowOutFocusOut;
+                    z-index: 2;
+                }
+
+                @media(pointer: fine) {
+                    &:hover {
+                        background-color: $hoverColor;
+                    }
+                }
 
                 .touch & {
                     height: $touchHeight;
                     width: $touchThumbWidth;
                 }
 
-                >span {
+                >span:first-child {
                     @include valueFont;
                     box-sizing: border-box;
                     line-height: $valueFontSize;
@@ -84,7 +97,7 @@ chocolatelibui-form-slider {
                     }
                 }
 
-                >div {
+                >span:last-child {
                     @include unitContainer;
                     line-height: $unitFontSize;
                     text-align: center;
@@ -93,60 +106,37 @@ chocolatelibui-form-slider {
                         line-height: $touchUnitFontSize;
                     }
                 }
-
-                @media(pointer: fine) {
-                    outline: none;
-
-                    &:hover {
-                        background-color: $hoverColor;
-                    }
-
-                    &:focus-visible {
-                        box-shadow: $shadowOutFocusOut;
-                        z-index: 2;
-                    }
-                }
             }
         }
 
         >svg {
-            -webkit-user-select: none;
-            user-select: none;
-            position: relative;
-            top: -$borderThickness;
-            background-color: $backColor;
-            border-radius: $cornerRadius;
-            border: $border;
-            box-shadow: $shadowOut;
-            box-sizing: border-box;
-            fill: $textColor;
-            height: $height;
-            width: $height;
-            padding: 0.14rem;
-            touch-action: none;
+            @include svgStepperButton;
+            z-index: 1;
 
             &:nth-child(2) {
                 left: -$borderThickness;
             }
 
-            &:nth-child(3) {
+            &:nth-child(4) {
+                position: absolute;
                 right: -$borderThickness;
             }
+        }
 
-            .touch & {
-                height: $touchHeight;
-                width: $touchHeight;
-                padding: 0.2rem;
-            }
+        >span {
+            position: absolute;
+            inset: 0;
+            padding-left: $height + 0.4rem;
+            padding-right: $height + 0.4rem;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.4rem;
+            display: flex;
 
-            @media(pointer: fine) {
-                &:hover {
-                    background-color: $hoverColor;
-                }
+            >* {
+                @include limit-legend;
+                overflow: hidden;
 
-                &:active {
-                    box-shadow: $shadowOutActive;
-                }
             }
         }
     }

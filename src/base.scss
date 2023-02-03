@@ -3,11 +3,29 @@
 }
 
 //Sizes
+$minWidth: 14rem;
+$minWidthTouch: $minWidth * 1.6;
 $height: 1.8rem;
 $touchHeight: 3rem;
 //Font
 $fontSize: 1rem;
 $touchFontSize: 1.6rem;
+
+//Mixins
+@mixin base {
+    display: flex;
+    flex-direction: column;
+    min-width: $minWidth;
+    position: relative;
+
+    .touch & {
+        min-width: $minWidthTouch;
+    }
+
+    >span {
+        @include label;
+    }
+}
 
 //Shadows
 $shadowOut: 0 0.125rem 0.1875rem 0 var(--\@chocolatelibui\/form\/borderColor);
@@ -93,7 +111,8 @@ $touchUnitWidth: $touchUnitFontSize * 5.6;
 
 @mixin unitContainer {
     @include unitFont;
-    width: $unitWidth;
+    display: block;
+    max-width: $unitWidth;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -103,6 +122,6 @@ $touchUnitWidth: $touchUnitFontSize * 5.6;
     }
 
     .touch & {
-        width: $touchUnitWidth;
+        max-width: $touchUnitWidth;
     }
 }

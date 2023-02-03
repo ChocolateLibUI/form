@@ -18,7 +18,6 @@ interface ButtonOptions extends FormElementOptions<boolean> {
 
 /**Button for clicking*/
 export class Button extends FormElement<boolean> {
-    private _body: HTMLDivElement;
     private _text: HTMLSpanElement;
     private _textListener: Listener<string> | undefined
     private _icon: SVGSVGElement | undefined;
@@ -31,8 +30,6 @@ export class Button extends FormElement<boolean> {
 
     constructor() {
         super();
-        this.appendChild(this._label);
-        this._body = this.appendChild(document.createElement('div'));
         this._body.oncontextmenu = (e) => { e.preventDefault(); };
         this._body.setAttribute('tabindex', '0');
         this._text = this._body.appendChild(document.createElement('span'));

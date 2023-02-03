@@ -14,7 +14,6 @@ interface LampOptions extends FormElementOptions<number | boolean> {
 
 /**Lamp for clicking*/
 export class Lamp extends FormElement<number | boolean> {
-    private _body: HTMLDivElement;
     private _text: HTMLSpanElement;
     private _textListener: Listener<string> | undefined
     private _icon: SVGSVGElement | undefined;
@@ -25,9 +24,6 @@ export class Lamp extends FormElement<number | boolean> {
 
     constructor() {
         super();
-        this.appendChild(this._label);
-        this._body = this.appendChild(document.createElement('div'));
-        this._body.oncontextmenu = (e) => { e.preventDefault(); };
         this._text = this._body.appendChild(document.createElement('span'));
     }
 

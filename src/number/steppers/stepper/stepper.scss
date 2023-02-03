@@ -1,18 +1,8 @@
 @import "../stepperBase.scss";
 
 chocolatelibui-form-stepper {
-    display: flex;
-    flex-direction: column;
-
-    min-width: 10rem;
-
-    .touch & {
-        min-width: 14rem;
-    }
-
-    >span {
-        @include label;
-    }
+    @include base;
+    @include number-base;
 
     >div {
         box-sizing: border-box;
@@ -36,6 +26,20 @@ chocolatelibui-form-stepper {
             height: $touchHeight;
         }
 
+        &:has(:focus) {
+            box-shadow: $shadowInFocusOut;
+        }
+
+        &:focus-visible {
+            box-shadow: $shadowInFocusOut;
+        }
+
+        @media(pointer: fine) {
+            &:hover {
+                background-color: $hoverColor;
+            }
+        }
+
         >span {
             display: flex;
             position: relative;
@@ -55,7 +59,7 @@ chocolatelibui-form-stepper {
                 }
             }
 
-            >div {
+            >span:nth-child(2) {
                 @include unitContainer;
                 padding-left: 0.3rem;
                 -webkit-user-select: none;
@@ -69,14 +73,10 @@ chocolatelibui-form-stepper {
                 text-align: end;
                 flex-grow: 1;
                 padding-inline: 0.4rem;
-
+                align-items: flex-end;
 
                 >span {
-                    font-size: 0.7rem;
-
-                    .touch & {
-                        font-size: 0.9rem;
-                    }
+                    @include limit-legend;
                 }
             }
 
@@ -88,26 +88,7 @@ chocolatelibui-form-stepper {
         }
 
         >svg {
-            background-color: $backColor;
-            border-radius: $cornerRadius;
-            border: $border;
-            box-shadow: $shadowOut;
-            box-sizing: border-box;
-            fill: $textColor;
-            position: relative;
-            height: $height;
-            width: $height ;
-            top: -$borderThickness;
-            padding: 0.14rem;
-            flex-shrink: 0;
-            pointer-events: all;
-            cursor: auto;
-
-            .touch & {
-                height: $touchHeight;
-                width: $touchHeight;
-                padding: 0.2rem;
-            }
+            @include svgStepperButton;
 
             &:first-child {
                 left: -$borderThickness;
@@ -115,27 +96,6 @@ chocolatelibui-form-stepper {
 
             &:last-child {
                 right: -$borderThickness;
-            }
-
-            @media(pointer: fine) {
-                &:hover {
-                    background-color: $hoverColor;
-                }
-
-                &:active {
-                    box-shadow: $shadowOutActive;
-                    background-color: $hoverColor;
-                }
-            }
-        }
-
-        @media(pointer: fine) {
-            &:hover {
-                background-color: $hoverColor;
-            }
-
-            &:focus-visible {
-                box-shadow: $shadowInFocusOut;
             }
         }
     }

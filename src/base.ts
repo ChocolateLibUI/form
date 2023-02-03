@@ -46,13 +46,23 @@ export abstract class FormElement<ValueType> extends Base {
     /**Stores local copy of form element value*/
     protected _value: ValueType | undefined
     /**Stores reference to Value when used*/
-    private _Value: Value<ValueType> | undefined
+    protected _Value: Value<ValueType> | undefined
     /**Listener for Value*/
     private _valueListener: Listener<ValueType> | undefined
     /**Label container*/
     protected _label: HTMLSpanElement = document.createElement('span');
     /**Listener for label change*/
     private _labelListener: Listener<string> | undefined
+    /**Body of form element*/
+    protected _body: HTMLDivElement = document.createElement('div');
+
+    constructor() {
+        super();
+        this.appendChild(this._label);
+        this.appendChild(this._body);
+        this._body.oncontextmenu = (e) => { e.preventDefault(); }
+        this._body.ondragstart = (e) => { e.preventDefault(); }
+    }
 
     /**Sets options for the element*/
     options(options: FormElementOptions<ValueType>) {
@@ -79,6 +89,7 @@ export abstract class FormElement<ValueType> extends Base {
         }
         if (typeof value === 'object' && value instanceof Value) {
             this._Value = value;
+            this._ValueUpdate(value);
             this._valueListener = this.attachValue(value, (val) => {
                 if (value) {
                     this._valueUpdate(val);
@@ -96,13 +107,18 @@ export abstract class FormElement<ValueType> extends Base {
             delete this._value;
         }
     }
+    /**Called when Value is changed */
+    protected _ValueUpdate(value: Value<ValueType>) {
+        value;
+    }
+    /**Called when the form element is set to not use a Value anymore*/
+    protected _ValueClear() { }
     /**Called when value is changed */
     protected _valueUpdate(value: ValueType) {
         value;
     }
     /**Called when value cleared */
     protected _valueClear() { }
-
     /**Called to change value*/
     protected _valueSet(value: ValueType) {
         if (this._Value) {

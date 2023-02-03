@@ -1,17 +1,8 @@
 @import "../numberBase.scss";
 
 chocolatelibui-form-progress {
-    display: flex;
-    flex-direction: column;
-    min-width: 10rem;
-
-    .touch & {
-        min-width: 14rem;
-    }
-
-    >span {
-        @include label;
-    }
+    @include base;
+    @include number-base;
 
     >div {
         border-radius: $cornerRadius;

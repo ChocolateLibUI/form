@@ -2,8 +2,8 @@ import "./stepperBase.scss"
 import { NumberBase, NumberBaseOptions } from "../numberBase";
 
 export interface StepperBaseOptions extends NumberBaseOptions {
-    /**Step size, use 0 for automatic step size*/
-    step?: number | ((value: number) => number),
+    /**wether the events are live as the slider is moved or only when moving stops */
+    live?: boolean,
     /**Icon to use for decreasing value*/
     iconDec?: SVGSVGElement,
     /**Icon to use for increasing value*/
@@ -12,18 +12,14 @@ export interface StepperBaseOptions extends NumberBaseOptions {
 
 /**Base for stepper elements*/
 export class StepperBase extends NumberBase {
-    protected _step: number = Infinity;
-    protected _stepFunc: ((value: number) => number) | undefined;
+    protected _live: boolean = false;
     protected _iconDec: SVGSVGElement | undefined;
     protected _iconInc: SVGSVGElement | undefined;
 
-    /**Returns the name used to define the element*/
-    static elementName() { return '@abstract@' }
-
     /**Sets options for the slider*/
     options(options: StepperBaseOptions) {
-        this.step = options.step;
         super.options(options)
+        this.live = options.live;
         if (options.iconDec) {
             this.iconLeft = options.iconDec;
         }
@@ -33,18 +29,14 @@ export class StepperBase extends NumberBase {
         return this;
     }
 
-    /**Gets the amount of steps on the slider*/
-    get step() {
-        return this._step
+
+    /**Gets wether the slider is in live mode*/
+    get live() {
+        return this._live;
     }
-    /**Sets the amount of steps on the slider*/
-    set step(step: number | undefined | ((value: number) => number)) {
-        if (typeof step === 'function') {
-            this._stepFunc = step;
-        } else {
-            this._stepFunc = undefined;
-            this._step = Math.max(step ?? 0, Infinity);
-        }
+    /**Set wether the slider is in live mode*/
+    set live(live: boolean | undefined) {
+        this._live = live || false;
     }
 
     /**Changes the icon on the left of the slider*/
@@ -63,27 +55,46 @@ export class StepperBase extends NumberBase {
         icon.onpointerdown = (e) => {
             if (e.button === 0) {
                 e.stopPropagation();
-                this.setPointerCapture(e.pointerId);
                 let interval = 0;
+                let scalerInterval = 0;
+                let scaler = 200;
+                let release = () => {
+                    clearInterval(interval);
+                    clearInterval(scalerInterval);
+                    clearTimeout(timeout);
+                    icon.onpointerup = null;
+                    icon.releasePointerCapture(e.pointerId)
+                    icon.classList.remove('active');
+                }
+                icon.setPointerCapture(e.pointerId);
+                icon.classList.add('active');
                 let timeout = setTimeout(() => {
                     if (this._stepValue(dir)) {
-                        this.onpointerup = null;
+                        icon.onpointerup = null;
                     } else {
                         interval = setInterval(() => {
                             if (this._stepValue(dir)) {
-                                clearInterval(interval);
-                                this.onpointerup = null;
+                                release();
                             }
-                        }, 100);
+                        }, scaler);
+                        scalerInterval = setInterval(() => {
+                            if (scaler > 20) {
+                                scaler /= 1.1;
+                            }
+                            clearInterval(interval);
+                            interval = setInterval(() => {
+                                if (this._stepValue(dir)) {
+                                    release();
+                                }
+                            }, scaler);
+                        }, 200)
                     }
                 }, 500);
-                this.onpointerup = () => {
+                icon.onpointerup = () => {
                     if (interval === 0) {
                         this._stepValue(dir);
                     }
-                    clearInterval(interval);
-                    clearTimeout(timeout);
-                    this.onpointerup = null;
+                    release();
                 }
             }
         }
@@ -92,11 +103,21 @@ export class StepperBase extends NumberBase {
 
     /**This steps the slider value in the given direction*/
     protected _stepValue(dir: boolean): boolean | void {
-        let step = this._step || Number((this._span / 333).toFixed(this._decimals)) || 1;
-        if (dir) {
-            this._valueSet(Math.min((this._value || 0) + step, this._max));
+        if (this._step === 0) {
+            if (this._decimals === 0) {
+                var step = Math.max(1, Math.floor(Math.abs(this._value || 0) / 150));
+            } else {
+                var step = Math.max(1 / this._decimals, Math.floor(Math.abs(this._value || 0) / 150));
+            }
+        } else if (this._stepFunc) {
+            var step = this._stepFunc(this._value || 0);
         } else {
-            this._valueSet(Math.max((this._value || 0) - step, this._min));
+            var step = this._step;
+        }
+        if (dir) {
+            return this._setValueValidate((this._value || 0) + step, true);
+        } else {
+            return this._setValueValidate((this._value || 0) - step, true);
         }
     }
 }

@@ -12,7 +12,6 @@ interface ToggleSwitchOptions extends FormElementOptions<boolean> {
 
 /**Toggle Switch, switches between on and off*/
 export class Switch extends FormElement<boolean> {
-    private _body: HTMLDivElement;
     private _switch: HTMLDivElement;
     private _icon: SVGSVGElement | undefined;
     private _preventClick: boolean = false;
@@ -24,9 +23,6 @@ export class Switch extends FormElement<boolean> {
 
     constructor() {
         super();
-        this.appendChild(this._label);
-        this._body = this.appendChild(document.createElement('div'));
-        this._body.oncontextmenu = (e) => { e.preventDefault(); };
         this._switch = this._body.appendChild(document.createElement('div'));
         this._switch.setAttribute('tabindex', '0');
         this._text = this._body.appendChild(document.createElement('span'));
@@ -55,10 +51,9 @@ export class Switch extends FormElement<boolean> {
         };
 
         this._switch.onpointerdown = (e) => {
-            e.stopPropagation();
             if (e.button === 0) {
-
-                this._switch.focus();
+                e.stopPropagation();
+                this._switch.classList.add('active');
                 this._switch.setPointerCapture(e.pointerId);
                 let hasMoved = false;
                 this._switch.onpointermove = (ev) => {
@@ -82,6 +77,7 @@ export class Switch extends FormElement<boolean> {
 
                 this._switch.onpointerup = (ev) => {
                     ev.stopPropagation();
+                    this._switch.classList.remove('active');
                     if (!hasMoved) {
                         this._valueSet(!this._value);
                     }
