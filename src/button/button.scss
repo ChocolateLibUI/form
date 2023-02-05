@@ -15,31 +15,28 @@ chocolatelibui-form-button {
         user-select: none;
         min-height: $height;
         min-width: min-content;
-
-        .touch & {
-            min-height: $touchHeight;
-        }
-
-        &:focus {
-            outline: none;
-        }
+        outline: none;
 
         &.active {
             box-shadow: $shadowOutActive;
+        }
+
+        &:focus-visible {
+            box-shadow: $shadowOutFocusOut;
+
+            &.active {
+                box-shadow: $shadowOutActiveFocusOut;
+            }
         }
 
         @media(pointer: fine) {
             &:hover {
                 background-color: $hoverColor;
             }
+        }
 
-            &:focus-visible {
-                box-shadow: $shadowOutFocusOut;
-
-                &.active {
-                    box-shadow: $shadowOutActiveFocusOut;
-                }
-            }
+        .touch & {
+            min-height: $touchHeight;
         }
 
         >svg {

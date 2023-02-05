@@ -6,6 +6,72 @@ chocolatelibui-form-togglebutton {
     >div {
         -webkit-user-select: none;
         user-select: none;
-        display: table;
+        display: grid;
+        grid-template-rows: auto auto;
+        grid-auto-columns: 1fr;
+
+
+        >div {
+            color: $textColor;
+            fill: $textColor;
+            display: flex;
+            justify-content: center;
+            text-align: center;
+
+            &:nth-child(odd) {
+                position: relative;
+                grid-row: 1;
+                align-items: center;
+                background-color: $backColor;
+                padding: 0.1rem;
+                border-block: $borderThickness solid $borderColor;
+
+                &::after {
+                    content: '';
+                    position: absolute;
+                    box-shadow: $shadowOut;
+                    inset: 0;
+                    z-index: -1;
+                }
+
+                @media(pointer: fine) {
+                    &:hover {
+                        background-color: $hoverColor;
+                    }
+                }
+
+                >svg {
+                    height: $height - 0.2rem;
+                }
+            }
+
+            &:nth-child(even) {
+                grid-row: 2;
+                padding: 0.4rem;
+                padding-bottom: 0;
+            }
+
+            &:first-child {
+                border-radius: $cornerRadius 0 0 $cornerRadius;
+                border-left: $borderThickness solid $borderColor;
+
+                &::after {
+                    border-radius: $cornerRadius 0 0 $cornerRadius;
+                }
+            }
+
+            &:nth-last-child(2) {
+                border-radius: 0 $cornerRadius $cornerRadius 0;
+                border-right: $borderThickness solid $borderColor;
+
+                &::after {
+                    border-radius: 0 $cornerRadius $cornerRadius 0;
+                }
+            }
+
+            &.active {
+                color: pink;
+            }
+        }
     }
 }

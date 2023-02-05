@@ -4,10 +4,10 @@ import { FormElementOptions, FormElement } from "../base";
 export interface SelectorOption<T> {
     /**Value to set when option is selected */
     value: T,
-    /**Icon to display for option*/
-    icon: SVGSVGElement,
     /** */
     name: string,
+    /**Icon to display for option*/
+    icon?: SVGSVGElement,
 }
 
 export interface SelectorBaseOptions<T> extends FormElementOptions<T> {
@@ -20,9 +20,12 @@ export interface SelectorBaseOptions<T> extends FormElementOptions<T> {
 /**Base for number elements elements*/
 export class SelectorBase<T> extends FormElement<T> {
     protected _default: string = '';
+    protected _selectionValues: T[] = [];
+    protected _selections: HTMLElement[] = [];
 
     /**Sets options for the element*/
     options(options: SelectorBaseOptions<T>) {
+        super.options(options);
         this.selections = options.selection;
         this.default = options.default;
         return this;
@@ -33,9 +36,12 @@ export class SelectorBase<T> extends FormElement<T> {
     }
 
     set selections(sel: SelectorOption<T>[] | undefined) {
+        this._selectionValues = [];
+        this._selections = [];
         this._clearSelections();
         if (sel) {
             for (let i = 0; i < sel.length; i++) {
+
                 this._addSelection(sel[i]);
             }
         }

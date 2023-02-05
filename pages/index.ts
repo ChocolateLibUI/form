@@ -35,11 +35,47 @@ let toggleButton1 = document.body.appendChild(new ToggleButton().options({
         icon: material_action_account_balance_rounded(),
         name: 'Test1',
         value: 1
-    }, {
+    }
+        , {
+        name: 'Accumsan sit amet nulla',
+        value: 2
+    }
+        , {
+        icon: material_action_account_balance_rounded(),
+        name: 'Accumsan sit amet nulla',
+        value: 3
+    }
+        , {
         icon: material_action_account_balance_rounded(),
         name: 'Test2',
+        value: 4
+    }
+    ]
+
+}));
+let toggleButton2 = document.body.appendChild(new ToggleButton().options({
+    label: 'Accumsan sit amet nulla',
+    selection: [{
+        icon: material_action_account_balance_rounded(),
+        name: 'Test1',
+        value: 1
+    }
+        , {
+        name: 'Accumsan sit amet nulla',
         value: 2
-    }]
+    }
+        , {
+        icon: material_action_account_balance_rounded(),
+        name: 'Accumsan sit amet nulla',
+        value: 3
+    }
+        , {
+        icon: material_action_account_balance_rounded(),
+        name: 'Test2',
+        value: 4
+    }
+    ]
+
 }));
 
 
