@@ -10,7 +10,6 @@ chocolatelibui-form-togglebutton {
         grid-template-rows: auto auto;
         grid-auto-columns: 1fr;
 
-
         >div {
             color: $unselectedTextColor;
             fill: $unselectedTextColor;
@@ -28,9 +27,10 @@ chocolatelibui-form-togglebutton {
                 grid-row: 1;
                 align-items: center;
                 background-color: $backColor;
-                padding: 0.1rem;
+                padding: $padding;
                 border-block: $borderThickness solid $borderColor;
                 outline: none;
+                min-height: $height - $padding * 2 - $borderThickness * 2;
 
                 &.selected {
                     background-color: $hoverColor;
@@ -59,14 +59,18 @@ chocolatelibui-form-togglebutton {
                 }
 
                 >svg {
-                    height: $height - 0.2rem;
+                    height: $height - $padding * 2 - $borderThickness * 2;
                 }
             }
 
             &:nth-child(even) {
                 grid-row: 2;
-                padding: 0.4rem;
+                padding: $padding;
                 padding-bottom: 0;
+
+                &:empty {
+                    padding: 0rem;
+                }
             }
 
             &:first-child {
@@ -85,10 +89,6 @@ chocolatelibui-form-togglebutton {
                 &::after {
                     border-radius: 0 $cornerRadius $cornerRadius 0;
                 }
-            }
-
-            &.active {
-                color: pink;
             }
         }
     }

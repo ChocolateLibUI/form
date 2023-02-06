@@ -18,8 +18,6 @@ chocolatelibui-form-numberinput {
         user-select: none;
         cursor: text;
         outline: none;
-        touch-action: none;
-
 
         &:focus-within {
             box-shadow: $shadowInFocusOut;

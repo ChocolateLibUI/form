@@ -133,10 +133,14 @@ chocolatelibui-form-slider {
             gap: 0.4rem;
             display: flex;
 
+            .touch & {
+                padding-left: $touchHeight + 0.4rem;
+                padding-right: $touchHeight + 0.4rem;
+            }
+
             >* {
                 @include limit-legend;
                 overflow: hidden;
-
             }
         }
     }

@@ -41,6 +41,16 @@ chocolatelibui-form-dropdownbox {
                 &.selected {
                     color: $selectedTextColor;
                     fill: $selectedTextColor;
+
+                    &::after {
+                        content: '';
+                        position: absolute;
+                        inset: 0;
+                        left: -$padding;
+                        right: -($padding + $scrollBarWidth);
+                        background-color: $hoverColor;
+                        z-index: -1;
+                    }
                 }
 
                 >div {
