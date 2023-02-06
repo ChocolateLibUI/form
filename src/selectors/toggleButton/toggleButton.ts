@@ -1,53 +1,68 @@
 import "./toggleButton.scss"
-import { SelectorBase, SelectorOption } from "../selectorBase";
+import { SelectionBase, SelectorBase, SelectorOption } from "../selectorBase";
 import { defineElement } from "@chocolatelibui/core";
-import { Value } from "@chocolatelib/value";
+
+interface Selection<T> extends SelectionBase<T> {
+    top: HTMLDivElement,
+    bot: HTMLDivElement
+}
 
 /**Toggle buttons, displays all options in a multi toggler*/
-export class ToggleButton<T> extends SelectorBase<T> {
+export class ToggleButton<T> extends SelectorBase<T, Selection<T>> {
 
     /**Returns the name used to define the element*/
     static elementName() { return 'togglebutton' }
 
-    protected _addSelection(sel: SelectorOption<T>) {
+    protected _addSelection(selection: SelectorOption<T>, index: number) {
         let top = this._body.appendChild(document.createElement('div'));
         top.tabIndex = 0;
         let bot = this._body.appendChild(document.createElement('div'));
-        if (sel.icon) {
-            top.appendChild(sel.icon);
-            bot.textContent = sel.name;
+        if (selection.icon) {
+            top.appendChild(selection.icon);
+            bot.textContent = selection.text;
         } else {
-            top.textContent = sel.name;
+            top.textContent = selection.text;
         }
-        let click = () => {
-            console.warn('yo');
-            this._valueSet(sel.value);
-        }
+        let click = () => { this._valueSet(selection.value); }
         top.onclick = click;
         bot.onclick = click;
+        top.onkeydown = (e) => {
+            switch (e.key) {
+                case ' ':
+                case 'Enter':
+                    e.preventDefault();
+                    this._valueSet(selection.value);
+                    break;
+                case 'ArrowRight':
+                    e.stopPropagation();
+                    this._selectAdjacent(true);
+                    break;
+                case 'ArrowLeft':
+                    e.stopPropagation();
+                    this._selectAdjacent(false);
+                    break;
+            }
+        };
+        return { top, bot, index, selection };
     }
 
     protected _clearSelections() {
         this._body.replaceChildren();
     }
 
-    protected _setSelection() { }
-
-    /**Called when value is changed */
-    protected _valueUpdate(value: T) {
-
-    }
-    /**Called when value cleared */
-    protected _valueClear() {
+    protected _setSelection(selection: Selection<T>) {
+        selection.top.classList.add('selected');
+        selection.bot.classList.add('selected');
     }
 
-    /**Called when Value is changed */
-    protected _ValueUpdate(value: Value<T>) {
-
+    protected _clearSelection(selection: Selection<T>) {
+        selection.top.classList.remove('selected');
+        selection.bot.classList.remove('selected');
     }
-    /**Called when the form element is set to not use a Value anymore*/
-    protected _ValueClear() {
 
+    protected _focusSelection(selection: Selection<T>) {
+        selection.top.focus();
     }
+
 }
 defineElement(ToggleButton);

@@ -1,346 +1,198 @@
 import "./dropDown.scss"
-import { defineElement } from "@chocolatelibui/core";
-import { SelectorBase } from "../selectorBase";
+import { Base, defineElement } from "@chocolatelibui/core";
+import { SelectionBase, SelectorBase, SelectorBaseOptions, SelectorOption } from "../selectorBase";
 
+
+interface Selection<T> extends SelectionBase<T> {
+    line: HTMLDivElement
+}
+
+export interface DropDownOptions<T> extends SelectorBaseOptions<T> {
+    /**Default text displayed*/
+    default?: string,
+}
+
+class DropDownBox extends Base {
+    private _box: HTMLDivElement = document.createElement('div');
+    private _dropdown: DropDown<any> | undefined;
+    constructor() {
+        super();
+        this.appendChild(this._box);
+        this._box.tabIndex = 0;
+        this.onclick = () => {
+            this.closeMenu();
+        };
+        // this.addEventListener('focusout', (e) => {
+        //     if (e.relatedTarget === null) {
+        //         this.closeMenu();
+        //     }
+        // });
+        this.onwheel = (e) => {
+            e.preventDefault();
+        }
+        this._box.onwheel = (e) => {
+            e.stopPropagation();
+        }
+        this.onkeydown = (e) => {
+            switch (e.key) {
+                case ' ':
+                case 'Enter':
+                    this.closeMenu();
+                    break;
+                case 'Tab':
+                case 'ArrowUp':
+                case 'ArrowDown':
+                    //this.focusNext(e.shiftKey || e.code === 'ArrowUp');
+                    break;
+                case 'ArrowLeft':
+                    // if (!(this.parentElement instanceof Container)) {
+                    //     (<any>this.parentElement).focus();
+                    //     (<any>this.parentElement).closeDown();
+                    // }
+                    break;
+            }
+        };
+
+    }
+    /**Returns the name used to define the element*/
+    static elementName() { return 'dropdownbox' }
+    /**Returns the namespace override for the element*/
+    static elementNameSpace() { return 'chocolatelibui-form'; }
+
+    openMenu(box: HTMLDivElement, parent: DropDown<any>, ref: HTMLDivElement) {
+        this.classList.add('open');
+        this._box.replaceChildren(box);
+        let bounds = ref.getBoundingClientRect();
+        this._box.style.left = bounds.x + 'px';
+        this._box.style.top = bounds.y + 'px';
+        this._box.style.width = bounds.width + 'px';
+        this._dropdown = parent;
+        this._box.focus();
+
+    }
+
+    closeMenu() {
+        this.classList.remove('open');
+        if (this._dropdown) {
+            this._dropdown.focus();
+        }
+    }
+}
+defineElement(DropDownBox);
+let box = document.documentElement.appendChild(new DropDownBox);
 
 /**Dropdown box for selecting between multiple choices in a small space*/
-export class DropDown<T> extends SelectorBase<T> {
+export class DropDown<T> extends SelectorBase<T, Selection<T>> {
+    private _box: HTMLDivElement = document.createElement('div');
+    private _default: string = 'Select something'
+    private _icon: HTMLDivElement = document.createElement('div');
+    private _text: HTMLDivElement = document.createElement('div');
+
     /**Returns the name used to define the element*/
     static elementName() { return 'dropdown' }
 
     constructor() {
         super();
+        this._body.tabIndex = 0;
+        this._body.onclick = () => {
+            box.openMenu(this._box, this, this._body);
+        }
+        this._body.onkeydown = (e) => {
+            switch (e.key) {
+                case ' ':
+                case 'Enter':
+                    box.openMenu(this._box, this, this._body);
+                    break;
+                case 'ArrowDown':
+                case 'ArrowUp':
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this._selectAdjacent(e.key === 'ArrowDown');
+                    break;
+            }
+        };
+        let line = this._body.appendChild(document.createElement('div'));
+        line.appendChild(this._icon);
+        line.appendChild(this._text);
+        this._text.textContent = 'Select something';
     }
 
+    /**Sets options for the element*/
+    options(options: DropDownOptions<T>) {
+        super.options(options);
+        if (options.default) {
+            this.selections = options.selections;
+        }
+        return this;
+    }
 
-    // constructor() {
-    //     super();
-    //     /**
-    //      * @type {{}}
-    //      * @protected */
-    //     this.__options = {};
-    //     /**
-    //      * @type {HTMLDivElement}
-    //      * @protected */
-    //     this.__container = document.createElement('div');
-    //     this.appendChild(this.__container);
-    //     /**
-    //      * @type {HTMLDivElement}
-    //      * @protected */
-    //     this.__selector = document.createElement('div');
-    //     this.__container.appendChild(this.__selector);
-    //     this.__selector.onclick = (ev) => {
-    //         ev.preventDefault();
-    //         ev.stopPropagation();
-    //         this.open = !this.open;
-    //     };
-    //     this.__selector.setAttribute('tabindex', 0);
-    //     this.__selector.onkeydown = (e) => {
-    //         switch (e.key) {
-    //             case ' ': {
-    //                 this.open = true;
-    //                 break;
-    //             }
-    //             case 'ArrowDown': {
-    //                 if (this.__selected) {
-    //                     let check = this.__selected.nextSibling;
-    //                     while (check && check.disabled) {
-    //                         check = check.nextSibling;
-    //                     }
-    //                     if (check) {
-    //                         this.setByOption(check);
-    //                     }
-    //                 } else if (!this.__dropDown.children[0].disabled) {
-    //                     this.setByOption(this.__dropDown.children[0]);
-    //                 } else if (this.__dropDown.children.length > 1) {
-    //                     let check = this.__dropDown.children[0].nextSibling;
-    //                     while (check && check.disabled) {
-    //                         check = check.nextSibling;
-    //                     }
-    //                     if (check) {
-    //                         this.setByOption(check);
-    //                     }
-    //                 }
-    //                 break;
-    //             }
-    //             case 'ArrowUp': {
-    //                 if (this.__selected) {
-    //                     let check = this.__selected.previousSibling;
-    //                     while (check && check.disabled) {
-    //                         check = check.previousSibling;
-    //                     }
-    //                     if (check) {
-    //                         this.setByOption(check);
-    //                     }
-    //                 } else if (!this.__dropDown.children[this.__dropDown.children.length - 1].disabled) {
-    //                     this.setByOption(this.__dropDown.children[this.__dropDown.children.length - 1]);
-    //                 } else if (this.__dropDown.children.length > 1) {
-    //                     let check = this.__dropDown.children[this.__dropDown.children.length - 1].previousSibling;
-    //                     while (check && check.disabled) {
-    //                         check = check.previousSibling;
-    //                     }
-    //                     if (check) {
-    //                         this.setByOption(check);
-    //                     }
-    //                 }
-    //                 break;
-    //             }
-    //             default: { return; }
-    //         }
-    //         e.stopPropagation();
-    //         e.preventDefault();
-    //     };
-    //     /**
-    //      * @type {SVGElement}
-    //      * @protected */
-    //     this.__selIcon = document.createElementNS(nameSpace, 'svg');
-    //     this.__selector.appendChild(this.__selIcon);
-    //     /**
-    //      * @type {HTMLDivElement}
-    //      * @protected */
-    //     this.__selText = document.createElement('div');
-    //     this.__selector.appendChild(this.__selText);
-    //     this.__selector.appendChild(unfold_more());
-    //     /**
-    //      * @type {HTMLSpanElement}
-    //      * @protected */
-    //     this.__dropDown = document.createElement('span');
-    //     this.__container.appendChild(this.__dropDown);
-    //     this.__dropDown.setAttribute('tabindex', 0);
-    //     this.__dropDown.onblur = (ev) => {
-    //         if (ev.relatedTarget !== this.__selector) {
-    //             this.open = false;
-    //         }
-    //     };
-    //     this.__dropDown.onkeydown = (e) => {
-    //         e.stopPropagation();
-    //         e.preventDefault();
-    //         switch (e.key) {
-    //             case 'Escape': {
-    //                 this.open = false;
-    //                 this.__selector.focus();
-    //                 break;
-    //             }
-    //             case 'Enter':
-    //             case ' ': {
-    //                 this.open = false;
-    //                 this.setByOption(this.___next);
-    //                 this.__selector.focus();
-    //                 break;
-    //             }
-    //             case 'ArrowDown': {
-    //                 if (this.___next) {
-    //                     let check = this.___next.nextSibling;
-    //                     while (check && check.disabled) {
-    //                         check = check.nextSibling;
-    //                     }
-    //                     if (check) {
-    //                         this.__next = check;
-    //                     }
-    //                 } else if (!this.__dropDown.children[0].disabled) {
-    //                     this.__next = this.__dropDown.children[0];
-    //                 } else if (this.__dropDown.children.length > 1) {
-    //                     let check = this.__dropDown.children[0].nextSibling;
-    //                     while (check && check.disabled) {
-    //                         check = check.nextSibling;
-    //                     }
-    //                     if (check) {
-    //                         this.__next = check;
-    //                     }
-    //                 }
-    //                 break;
-    //             }
-    //             case 'ArrowUp': {
-    //                 if (this.___next) {
-    //                     let check = this.___next.previousSibling;
-    //                     while (check && check.disabled) {
-    //                         check = check.previousSibling;
-    //                     }
-    //                     if (check) {
-    //                         this.__next = check;
-    //                     }
-    //                 } else if (!this.__dropDown.children[this.__dropDown.children.length - 1].disabled) {
-    //                     this.__next = this.__dropDown.children[this.__dropDown.children.length - 1];
-    //                 } else if (this.__dropDown.children.length > 1) {
-    //                     let check = this.__dropDown.children[this.__dropDown.children.length - 1].previousSibling;
-    //                     while (check && check.disabled) {
-    //                         check = check.previousSibling;
-    //                     }
-    //                     if (check) {
-    //                         this.__next = check;
-    //                     }
-    //                 }
-    //                 break;
-    //             }
-    //         }
-    //     };
-    //     this.__dropDown.classList.add('h');
-    //     /**
-    //      * @type {boolean}
-    //      * @protected */
-    //     this.__open = false;
-    // }
+    /**Gets the default text displayed when nothing has been selected yet */
+    get default() {
+        return '';
+    }
 
-    // /**Options toggeler
-    //  * @param {DropDownOptions} options*/
-    // options(options) {
-    //     super.options(options)
-    //     if (typeof options.default === 'string') {
-    //         this.default = options.default;
-    //     } else {
-    //         this.default = 'Select Item';
-    //     }
-    // }
+    /**Sets the default text displayed when nothing has been selected yet */
+    set default(def: string) {
 
-    // /**Sets the next flag on an options used for keyboard usage
-    //  * @param {HTMLDivElement} val
-    //  * @private*/
-    // set __next(val) {
-    //     if (val instanceof HTMLDivElement && this.__dropDown.contains(val) != -1) {
-    //         if (this.___next) {
-    //             this.___next.classList.remove('next');
-    //         }
-    //         /**
-    //          * @type {HTMLDivElement}
-    //          * @protected */
-    //         this.___next = val;
-    //         this.___next.classList.add('next');
-    //     } else {
-    //         if (this.___next) {
-    //             this.___next.classList.remove('next');
-    //         }
-    //     }
-    // }
+    }
 
-    // /**Toggles wether the drop down is open
-    //  * @param {boolean} tog true is open false is close*/
-    // set open(tog) {
-    //     if (tog) {
-    //         this.__dropDown.classList.remove('h');
-    //         this.__dropDown.focus();
-    //         this.__next = null;
-    //     } else {
-    //         this.__dropDown.classList.add('h');
-    //     }
-    //     this.__open = Boolean(tog);
-    // }
+    protected _addSelection(selection: SelectorOption<T>, index: number) {
+        let line = document.createElement('div');
+        let icon = line.appendChild(document.createElement('div'));
+        if (selection.icon) {
+            icon.appendChild(selection.icon);
+        }
+        let text = line.appendChild(document.createElement('div'));
+        text.textContent = selection.text;
+        line.onclick = () => {
+            this._valueSet(selection.value);
+        };
+        line.tabIndex = 0;
+        line.onkeydown = (e) => {
+            switch (e.key) {
+                case ' ':
+                case 'Enter':
+                    e.preventDefault();
+                    this._valueSet(selection.value);
+                    break;
+                case 'ArrowDown':
+                    e.stopPropagation();
+                    this._selectAdjacent(true);
+                    break;
+                case 'ArrowUp':
+                    e.stopPropagation();
+                    this._selectAdjacent(false);
+                    break;
+            }
+        };
+        this._box.appendChild(line);
+        return { line, index, selection };
+    }
 
-    // /**Returns wether the dropdown is open/visible
-    //  * @returns {boolean}*/
-    // get open() {
-    //     return this.__open;
-    // }
+    protected _clearSelections() {
+        this._box.replaceChildren();
+    }
 
-    // /**This adds an option to the selector component 
-    //  * @param {string} text text for options
-    //  * @param {ComponentInternalValue} value value for options
-    //  * @param {SVGElement} symbol symbol to display
-    //  * @param {boolean} disabled set to true to make option unselectable
-    //  * @returns {HTMLElement} link to the option*/
-    // addOption(text, value, symbol = document.createElementNS(nameSpace, 'svg'), disabled) {
-    //     if (!(value in this.__options)) {
-    //         let option = this.__dropDown.appendChild(document.createElement('div'));
-    //         option.value = value;
-    //         option.symbol = option.appendChild(symbol);
-    //         option.text = option.appendChild(document.createElement('div'));
-    //         option.text.innerHTML = text;
-    //         if (disabled) {
-    //             option.classList.add('disabled');
-    //             option.disabled = true;
-    //         }
-    //         option.onclick = (e) => {
-    //             e.stopPropagation();
-    //             this.open = false;
-    //             this.setByOption(option);
-    //             this.__selector.focus();
-    //         };
-    //         this.__options[value] = option;
-    //         return option;
-    //     } else {
-    //         console.warn('Value already in dropdown');
-    //     }
-    // }
+    protected _setSelection(selection: Selection<T>) {
+        selection.line.classList.add('selected');
+        if (selection.selection.icon) {
+            this._icon.replaceChildren(selection.selection.icon?.cloneNode(true));
+        } else {
+            this._icon.replaceChildren();
+        }
+        this._text.textContent = selection.selection.text;
+    }
 
-    // /**Removes option from dropdown
-    //  * @param {HTMLElement|number|string} option */
-    // removeOption(option) {
-    //     //If value is passed instead of option element
-    //     if (!(option instanceof HTMLElement) && option in this.__options) {
-    //         option = this.__options[option];
-    //     }
-    //     delete this.__options[option.value];
-    //     this.__dropDown.removeChild(option);
-    // }
+    protected _clearSelection(selection: Selection<T>) {
+        selection.line.classList.remove('selected');
+    }
 
-    // /**Sets explaning text for component
-    //  * @param {string} text */
-    // set text(text) {
-    //     if (typeof text == 'string') {
-    //         if (!this.__text) {
-    //             /**
-    //              * @type {HTMLSpanElement}
-    //              * @protected */
-    //             this.__text = this.insertBefore(document.createElement('span'), this.firstChild);
-    //         }
-    //         this.__text.innerHTML = text;
-    //     } else if (this.__text) {
-    //         this.removeChild(this.__text);
-    //         delete this.__text;
-    //     }
-    // }
+    protected _focusSelection(selection: Selection<T>) {
+        selection
+    }
 
-    // /**Internal access call 
-    //  * @param {AccessTypes} a
-    //  * @private*/
-    // __onAccess(a) {
-    //     switch (a) {
-    //         case AccessTypes.READ: {
-    //             let items = this.querySelectorAll('*[tabindex]');
-    //             for (let i = 0, m = items.length; i < m; i++) { items[i].setAttribute('tabindex', -1); }
-    //             break;
-    //         }
-    //         case AccessTypes.WRITE: {
-    //             let items = this.querySelectorAll('*[tabindex]');
-    //             for (let i = 0, m = items.length; i < m; i++) { items[i].setAttribute('tabindex', 0); };
-    //             break;
-    //         }
-    //     }
-    // }
-
-    // /**Sets the text displaid when nothing is selected
-    //  * @param {string} text*/
-    // set default(text) {
-    //     if (!this.__selected) {
-    //         this.__selText.innerHTML = text;
-    //     }
-    // }
-
-    // /**Sets the value by using the options element
-    //  * @param {HTMLDivElement} elem */
-    // setByOption(elem) {
-    //     if (elem instanceof HTMLDivElement && this.__dropDown.contains(elem)) {
-    //         this.__setValue(elem.value);
-    //     }
-    // }
-
-    // /**Internal value setter
-    //  * @param {*} val 
-    //  * @private */
-    // __newValue(val) {
-    //     if (val in this.__options) {
-    //         val = this.__options[val];
-    //         if (this.__selected) {
-    //             this.__selected.classList.remove('sel');
-    //         }
-    //         /**
-    //          * @type {HTMLDivElement}
-    //          * @protected */
-    //         this.__selected = val;
-    //         this.__selected.classList.add('sel');
-    //         this.__selText.innerHTML = val.text.innerHTML;
-    //         let old = this.__selIcon;
-    //         this.__selector.replaceChild(this.__selIcon = (val.symbol ? val.symbol.cloneNode(true) : document.createElementNS(nameSpac, 'svg')), old);
-    //     }
-    // }
+    focus() {
+        this._body.focus();
+    }
 }
 defineElement(DropDown);

@@ -90,8 +90,8 @@ chocolatelibui-form-stepper {
         >svg {
             @include svgStepperButton;
 
-            &:first-child {
-                left: -$borderThickness;
+            &:nth-child(2) {
+                left: -$borderThickness ;
             }
 
             &:last-child {

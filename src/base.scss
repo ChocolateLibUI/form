@@ -7,6 +7,11 @@ $minWidth: 14rem;
 $minWidthTouch: $minWidth * 1.6;
 $height: 1.8rem;
 $touchHeight: 3rem;
+$scrollBarWidth: 0.5rem;
+
+//Padding
+$padding: 0.2rem;
+
 //Font
 $fontSize: 1rem;
 $touchFontSize: 1.6rem;
@@ -43,6 +48,8 @@ $shadowInFocusIn: $focusIn, $shadowIn;
 $backColor: var(--\@chocolatelibui\/form\/backColor);
 $hoverColor: var(--\@chocolatelibui\/form\/hoverColor);
 $textColor: var(--\@chocolatelibui\/form\/color);
+$selectedTextColor: var(--\@chocolatelibui\/form\/selectedColor);
+$unselectedTextColor: var(--\@chocolatelibui\/form\/unselectedColor);
 
 //Border
 $cornerRadius: 0.4rem;

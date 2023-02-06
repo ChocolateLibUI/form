@@ -12,11 +12,16 @@ chocolatelibui-form-togglebutton {
 
 
         >div {
-            color: $textColor;
-            fill: $textColor;
+            color: $unselectedTextColor;
+            fill: $unselectedTextColor;
             display: flex;
             justify-content: center;
             text-align: center;
+
+            &.selected {
+                color: $selectedTextColor;
+                fill: $selectedTextColor;
+            }
 
             &:nth-child(odd) {
                 position: relative;
@@ -25,12 +30,25 @@ chocolatelibui-form-togglebutton {
                 background-color: $backColor;
                 padding: 0.1rem;
                 border-block: $borderThickness solid $borderColor;
+                outline: none;
+
+                &.selected {
+                    background-color: $hoverColor;
+                }
+
+                &:focus-visible {
+                    z-index: 1;
+
+                    &::after {
+                        box-shadow: $focusOut;
+                    }
+                }
 
                 &::after {
                     content: '';
                     position: absolute;
                     box-shadow: $shadowOut;
-                    inset: 0;
+                    inset: -$borderThickness;
                     z-index: -1;
                 }
 

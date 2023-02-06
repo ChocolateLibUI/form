@@ -5,7 +5,6 @@ import { NoValueText } from "../../base";
 
 /**Slide Selector, displays all options in a slider*/
 export class NumberInput extends NumberBase {
-    //private _text: HTMLSpanElement;
     private _valueBox: HTMLSpanElement;
     private _legend: HTMLSpanElement;
 
@@ -14,7 +13,6 @@ export class NumberInput extends NumberBase {
 
     constructor() {
         super();
-        //this._text = this._body.appendChild(document.createElement('span'));
         this._valueBox = this._body.appendChild(document.createElement('span'));
         this._valueBox.contentEditable = 'true';
         this._valueBox.textContent = NoValueText;

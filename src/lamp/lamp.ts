@@ -25,8 +25,12 @@ export class Lamp extends FormElement<number | boolean> {
     /**Sets options for the lamp*/
     options(options: LampOptions) {
         super.options(options)
-        this.text = options.text;
-        this.icon = options.icon;
+        if (options.text) {
+            this.text = options.text;
+        }
+        if (options.icon) {
+            this.icon = options.icon;
+        }
         this.colors = options.colors;
         return this;
     }
@@ -77,14 +81,16 @@ export class Lamp extends FormElement<number | boolean> {
 
     /** Sets the background color of the lamp*/
     set colors(colors: BasicColors[] | undefined) {
-        colors;
         if (colors instanceof Array) {
             this._colors = colors;
         } else {
             this._colors = [BasicColors.Black];
         }
     }
-
+    /**Called when Value is changed */
+    protected _ValueUpdate(value: Value<number | boolean>) { value; }
+    /**Called when the form element is set to not use a Value anymore*/
+    protected _ValueClear() { }
     /**Called when value is changed */
     protected _valueUpdate(value: number | boolean) {
         let color = this._colors[Number(value)];

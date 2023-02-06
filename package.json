@@ -21,7 +21,6 @@
     "prepublishOnly": "yarn run test && yarn run build:lib && yarn run build:pages"
   },
   "devDependencies": {
-    "@chocolatelibui/icons": "^0.0.1",
     "cypress": "^11.2.0",
     "cypress-vite": "^1.2.1",
     "sass": "^1.57.1",
@@ -43,9 +42,10 @@
   },
   "homepage": "https://github.com/ChocolateLibUI/form#readme",
   "dependencies": {
+    "@chocolatelibui/icons": "^0.0.3",
     "@chocolatelib/colors": "^0.0.2",
     "@chocolatelib/value": "^0.0.11",
-    "@chocolatelibui/core": "^0.0.7",
-    "@chocolatelibui/theme": "^0.0.8"
+    "@chocolatelibui/core": "^0.0.10",
+    "@chocolatelibui/theme": "^0.0.9"
   }
 }

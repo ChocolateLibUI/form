@@ -4,8 +4,15 @@ import { material_action_3d_rotation_rounded, material_action_account_balance_ro
 import { Button, Lamp, Slider, DropDown, Switch, TextField, TitleField, Stepper, Progress, NumberInput, ToggleButton } from "../src"
 import { BasicColors, variables } from "../src/base"
 import { Value, ValueLimitedNumber } from "@chocolatelib/value";
+import { theme } from "@chocolatelibui/theme";
+import { SelectorOption } from "../src/selectors/selectorBase";
 
 variables.makeVariable('testBackground', 'TEST', '', grey['100'], grey['800'], 'Color', undefined);
+
+document.body.appendChild(new ToggleButton().options({
+    label: 'Theme',
+    value: theme,
+}));
 
 let valueValue = new Value(0);
 let aaaa = new ValueLimitedNumber(20, -14, 958, 0.1, [
@@ -27,27 +34,39 @@ setInterval(() => {
     unitCount++;
 }, 100);
 
+let test: SelectorOption<number>[] = (new Array<SelectorOption<number>>(22)).fill({ text: '', value: 0 }, 0, 22);
+for (let i = 0; i < test.length; i++) {
+    test[i] = {
+        text: String(i),
+        value: i,
+        icon: material_action_account_balance_rounded(),
+    }
+}
 
-let dropdown1 = document.body.appendChild(new DropDown().options({ label: 'Accumsan sit amet nulla' }));
+let dropdown1 = document.body.appendChild(new DropDown().options({
+    label: 'Accumsan sit amet nulla',
+    selections: test
+}));
+
 let toggleButton1 = document.body.appendChild(new ToggleButton().options({
     label: 'Accumsan sit amet nulla',
-    selection: [{
+    selections: [{
         icon: material_action_account_balance_rounded(),
-        name: 'Test1',
+        text: 'Test1',
         value: 1
     }
         , {
-        name: 'Accumsan sit amet nulla',
+        text: 'Accumsan sit amet nulla',
         value: 2
     }
         , {
         icon: material_action_account_balance_rounded(),
-        name: 'Accumsan sit amet nulla',
+        text: 'Accumsan sit amet nulla',
         value: 3
     }
         , {
         icon: material_action_account_balance_rounded(),
-        name: 'Test2',
+        text: 'Test2',
         value: 4
     }
     ]
@@ -55,23 +74,23 @@ let toggleButton1 = document.body.appendChild(new ToggleButton().options({
 }));
 let toggleButton2 = document.body.appendChild(new ToggleButton().options({
     label: 'Accumsan sit amet nulla',
-    selection: [{
+    selections: [{
         icon: material_action_account_balance_rounded(),
-        name: 'Test1',
+        text: 'Test1',
         value: 1
     }
         , {
-        name: 'Accumsan sit amet nulla',
+        text: 'Accumsan sit amet nulla',
         value: 2
     }
         , {
         icon: material_action_account_balance_rounded(),
-        name: 'Accumsan sit amet nulla',
+        text: 'Accumsan sit amet nulla',
         value: 3
     }
         , {
         icon: material_action_account_balance_rounded(),
-        name: 'Test2',
+        text: 'Test2',
         value: 4
     }
     ]

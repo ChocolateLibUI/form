@@ -11,7 +11,7 @@ export interface StepperBaseOptions extends NumberBaseOptions {
 }
 
 /**Base for stepper elements*/
-export class StepperBase extends NumberBase {
+export abstract class StepperBase extends NumberBase {
     protected _live: boolean = false;
     protected _iconDec: SVGSVGElement | undefined;
     protected _iconInc: SVGSVGElement | undefined;

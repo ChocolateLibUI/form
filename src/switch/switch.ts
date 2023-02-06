@@ -103,11 +103,11 @@ export class Switch extends FormElement<boolean> {
     /**Sets options for the toggleswitch*/
     options(options: ToggleSwitchOptions) {
         super.options(options)
-        if (options.icon) {
-            this.icon = options.icon;
-        }
         if (options.text) {
             this.text = options.text;
+        }
+        if (options.icon) {
+            this.icon = options.icon;
         }
         return this;
     }
@@ -151,7 +151,10 @@ export class Switch extends FormElement<boolean> {
             delete this._icon;
         }
     }
-
+    /**Called when Value is changed */
+    protected _ValueUpdate(value: Value<boolean>) { value; }
+    /**Called when the form element is set to not use a Value anymore*/
+    protected _ValueClear() { }
     /**Called when value is changed */
     protected _valueUpdate(value: boolean) {
         if (value) {

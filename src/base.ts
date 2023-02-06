@@ -6,12 +6,14 @@ import { name } from "../package.json";
 
 export let variables = initVariableRoot(name, 'Form Elements', '');
 variables.makeVariable('color', 'Text Color', 'Standard text color', grey['800'], grey['200'], 'Color', undefined);
-variables.makeVariable('labelColor', 'Label Color', 'Color of form element text label', grey['700'], grey['300'], 'Color', undefined);
+variables.makeVariable('selectedColor', 'Selected Text Color', 'Color of selected text', grey['900'], grey['50'], 'Color', undefined);
+variables.makeVariable('unselectedColor', 'Unselected Text Color', 'Color of unselected text', grey['600'], grey['400'], 'Color', undefined);
+variables.makeVariable('labelColor', 'Label Color', 'Color of label text', grey['700'], grey['300'], 'Color', undefined);
 variables.makeVariable('backColor', 'Body Color', 'Standard body color', grey['50'], grey['900'], 'Color', undefined);
 variables.makeVariable('hoverColor', 'Hover Color', 'Color of body at mouse hover', grey['400'], grey['700'], 'Color', undefined);
 variables.makeVariable('borderColor', 'Border Color', 'Standard border color', grey['700'], grey['500'], 'Color', undefined);
 variables.makeVariable('focusColor', 'Focus Color', 'Color added to selected element', orange['600'], orange['300'], 'Color', undefined);
-let colors = variables.makeSubGroup('colors', 'Colors', 'Base colors used by form elements')
+let colors = variables.makeSubGroup('colors', 'Colors', 'Basic colors used by form elements')
 colors.makeVariable('blackColor', 'Black', 'Basic Black', grey['800'], grey['900'], 'Color', undefined);
 colors.makeVariable('blackColorText', 'Basic Black Text Color', 'Text color for basic black background', grey['200'], grey['200'], 'Color', undefined);
 colors.makeVariable('greenColor', 'Green', 'Basic Green', green['300'], green['900'], 'Color', undefined);
@@ -108,17 +110,14 @@ export abstract class FormElement<ValueType> extends Base {
         }
     }
     /**Called when Value is changed */
-    protected _ValueUpdate(value: Value<ValueType>) {
-        value;
-    }
+    protected abstract _ValueUpdate(value: Value<ValueType>): void
     /**Called when the form element is set to not use a Value anymore*/
-    protected _ValueClear() { }
+    protected abstract _ValueClear(): void
     /**Called when value is changed */
-    protected _valueUpdate(value: ValueType) {
-        value;
-    }
+    protected abstract _valueUpdate(value: ValueType): void
     /**Called when value cleared */
-    protected _valueClear() { }
+    protected abstract _valueClear(): void
+
     /**Called to change value*/
     protected _valueSet(value: ValueType) {
         if (this._Value) {

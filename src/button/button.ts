@@ -189,7 +189,10 @@ export class Button extends FormElement<boolean> {
             delete this._color;
         }
     }
-
+    /**Called when Value is changed */
+    protected _ValueUpdate(value: Value<boolean>) { value; }
+    /**Called when the form element is set to not use a Value anymore*/
+    protected _ValueClear() { }
     /**Called when value is changed */
     protected _valueUpdate(value: Boolean) {
         if (value) {

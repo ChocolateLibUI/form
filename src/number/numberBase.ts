@@ -16,7 +16,7 @@ export interface NumberBaseOptions extends FormElementOptions<number> {
 }
 
 /**Base for number elements elements*/
-export class NumberBase extends FormElement<number> {
+export abstract class NumberBase extends FormElement<number> {
     /**Minimum and maximum value for element */
     protected _min: number = -Infinity;
     protected _max: number = Infinity;
@@ -49,7 +49,9 @@ export class NumberBase extends FormElement<number> {
         this.min = options.min;
         this.max = options.max;
         super.options(options)
-        this.unit = options.unit;
+        if (options.unit) {
+            this.unit = options.unit;
+        }
         return this;
     }
 
