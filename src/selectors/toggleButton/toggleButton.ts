@@ -31,6 +31,7 @@ export class ToggleButton<T> extends SelectorBase<T, Selection<T>> {
                 case ' ':
                 case 'Enter':
                     e.preventDefault();
+                    e.stopPropagation();
                     this._valueSet(selection.value);
                     break;
                 case 'ArrowRight':

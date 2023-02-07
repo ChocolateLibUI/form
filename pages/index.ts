@@ -13,6 +13,8 @@ document.body.appendChild(new ToggleButton().options({
     label: 'Theme',
     value: theme,
 }));
+document.body.appendChild(new DropDown().options({ value: theme, }));
+
 
 let valueValue = new Value(0);
 let aaaa = new ValueLimitedNumber(20, -14, 958, 0.1, [
@@ -46,6 +48,20 @@ for (let i = 0; i < test.length; i++) {
 let dropdown1 = document.body.appendChild(new DropDown().options({
     label: 'Accumsan sit amet nulla',
     selections: test
+}));
+
+let test2: SelectorOption<number>[] = (new Array<SelectorOption<number>>(42)).fill({ text: '', value: 0 }, 0, 42);
+for (let i = 0; i < test2.length; i++) {
+    test2[i] = {
+        text: String(i),
+        value: i,
+        icon: material_action_account_balance_rounded(),
+    }
+}
+
+let dropdown2 = document.body.appendChild(new DropDown().options({
+    label: 'Accumsan sit amet nulla',
+    selections: test2
 }));
 
 let toggleButton1 = document.body.appendChild(new ToggleButton().options({

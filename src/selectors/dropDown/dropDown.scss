@@ -13,105 +13,116 @@ chocolatelibui-form-dropdownbox {
     }
 
     >div {
-        box-sizing: border-box;
-        background-color: $backColor;
-        border: $border;
-        border-radius: $cornerRadius;
-        padding-left: $padding;
-        padding-right: $padding;
         position: fixed;
-        max-height: 80vh;
-        overflow-y: auto;
-        overflow-x: hidden;
-        scrollbar-width: thin;
-        overscroll-behavior: contain;
-        outline: none;
+        display: flex;
+        flex-direction: column;
 
         >div {
-            width: 100%;
-            display: table;
+            box-sizing: border-box;
+            background-color: $backColor;
+            border: $border;
+            border-radius: $cornerRadius;
+            padding-left: $padding;
+            padding-right: $padding;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: thin;
+            overscroll-behavior: contain;
+            outline: none;
 
             >div {
-                display: table-row;
-                color: $unselectedTextColor;
-                fill: $unselectedTextColor;
-                outline: none;
-                position: relative;
-
-                &.selected {
-                    color: $selectedTextColor;
-                    fill: $selectedTextColor;
-
-                    &::after {
-                        content: '';
-                        position: absolute;
-                        inset: 0;
-                        left: -$padding;
-                        right: -($padding + $scrollBarWidth);
-                        background-color: $hoverColor;
-                        z-index: -1;
-                    }
-                }
+                width: 100%;
+                display: table;
 
                 >div {
-                    display: table-cell;
-                    box-sizing: border-box;
-                    vertical-align: middle;
-                    height: $height;
+                    display: table-row;
+                    color: $unselectedTextColor;
+                    fill: $unselectedTextColor;
+                    outline: none;
+                    position: relative;
 
-                    &:first-child {
-                        padding: $padding;
-                        width: 0;
+                    &.selected {
+                        color: $selectedTextColor;
+                        fill: $selectedTextColor;
 
-                        >svg {
-                            height: $height - $padding * 2;
-                            display: block;
-                            box-sizing: border-box;
-                            width: auto;
+                        &::after {
+                            content: '';
+                            position: absolute;
+                            inset: 0;
+                            left: -$padding;
+                            right: -($padding + $scrollBarWidth);
+                            background-color: $hoverColor;
+                            z-index: -1;
                         }
                     }
 
-                    &:last-child {
-                        padding-left: $padding;
-                        padding-right: 0.4rem;
+                    >div {
+                        display: table-cell;
+                        box-sizing: border-box;
+                        vertical-align: middle;
+                        height: $height;
+                        position: relative;
+                        z-index: 1;
+
+                        &:first-child {
+                            padding: $padding;
+                            width: 0;
+
+                            >svg {
+                                height: $height - $padding * 2;
+                                display: block;
+                                box-sizing: border-box;
+                                width: auto;
+                            }
+
+                            &:empty {
+                                padding: 0;
+                                padding-left: $padding;
+                            }
+                        }
+
+                        &:last-child {
+                            padding-left: $padding;
+                            padding-right: 0.4rem;
+                        }
                     }
-                }
 
 
-                &:focus-visible {
-                    box-shadow: $shadowOutFocusOut;
-                }
+                    &:focus-visible {
+                        box-shadow: $shadowOutFocusOut;
+                    }
 
-                @media(pointer: fine) {
-                    &:hover::after {
-                        content: '';
-                        position: absolute;
-                        inset: 0;
-                        left: -$padding;
-                        right: -($padding + $scrollBarWidth);
-                        background-color: $hoverColor;
-                        z-index: -1;
+                    @media(pointer: fine) {
+                        &:hover::after {
+                            content: '';
+                            position: absolute;
+                            inset: 0;
+                            left: -$padding;
+                            right: -($padding + $scrollBarWidth);
+                            background-color: $hoverColor;
+                            z-index: 0;
+                        }
                     }
                 }
             }
-        }
 
-        &::-webkit-scrollbar {
-            width: $scrollBarWidth;
-        }
+            &::-webkit-scrollbar {
+                width: $scrollBarWidth;
+            }
 
-        &::-webkit-scrollbar-track {
-            background: none;
-            padding-top: $padding;
-        }
+            &::-webkit-scrollbar-track {
+                background: none;
+                padding-top: $padding;
+            }
 
-        &::-webkit-scrollbar-thumb {
-            background: $borderColor;
-            border-radius: 0.5rem;
-        }
+            &::-webkit-scrollbar-thumb {
+                background: $borderColor;
+                border-radius: 0.5rem;
+            }
 
-        &::-webkit-scrollbar-thumb:hover {
-            background: $hoverColor;
+            &::-webkit-scrollbar-thumb:hover {
+                background: $hoverColor;
+            }
         }
     }
 }
