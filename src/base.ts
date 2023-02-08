@@ -57,6 +57,8 @@ export abstract class FormElement<ValueType> extends Base {
     private _labelListener: Listener<string> | undefined
     /**Body of form element*/
     protected _body: HTMLDivElement = document.createElement('div');
+    /**Flag for when user has changed the value of the form element*/
+    readonly changed: boolean = false;
 
     constructor() {
         super();
@@ -84,6 +86,8 @@ export abstract class FormElement<ValueType> extends Base {
     }
     /**Changes value of form element*/
     set value(value: Value<ValueType> | ValueType | undefined) {
+        //@ts-expect-error
+        this.changed = false;
         if (this._valueListener) {
             this.dettachValue(this._valueListener);
             delete this._valueListener;
@@ -120,6 +124,8 @@ export abstract class FormElement<ValueType> extends Base {
 
     /**Called to change value*/
     protected _valueSet(value: ValueType) {
+        //@ts-expect-error
+        this.changed = true;
         if (this._Value) {
             this._Value.set = value;
         } else {

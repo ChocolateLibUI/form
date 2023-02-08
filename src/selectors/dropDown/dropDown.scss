@@ -73,6 +73,11 @@ chocolatelibui-form-dropdownbox {
                                 display: block;
                                 box-sizing: border-box;
                                 width: auto;
+
+
+                                .touch & {
+                                    height: $touchHeight - $padding * 4;
+                                }
                             }
 
                             &:empty {
@@ -84,6 +89,15 @@ chocolatelibui-form-dropdownbox {
                         &:last-child {
                             padding-left: $padding;
                             padding-right: 0.4rem;
+
+                            .touch & {
+                                font-size: $touchFontSize;
+                            }
+                        }
+
+
+                        .touch & {
+                            height: $touchHeight;
                         }
                     }
 
@@ -152,12 +166,20 @@ chocolatelibui-form-dropdown {
             }
         }
 
+        .touch & {
+            min-height: $touchHeight;
+        }
+
         >div {
             display: table-row;
             color: $textColor;
             fill: $textColor;
             outline: none;
             position: relative;
+
+            .touch & {
+                font-size: $touchFontSize;
+            }
 
             >div {
                 display: table-cell;
@@ -175,6 +197,10 @@ chocolatelibui-form-dropdown {
                         box-sizing: border-box;
                         display: block;
                         width: auto;
+
+                        .touch & {
+                            height: $touchHeight - $padding * 4;
+                        }
                     }
                 }
 

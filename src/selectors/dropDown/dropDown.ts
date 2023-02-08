@@ -22,11 +22,11 @@ class DropDownBox extends Base {
         this.onclick = () => {
             this.closeMenu();
         };
-        // this.addEventListener('focusout', (e) => {
-        //     if (e.relatedTarget === null) {
-        //         this.closeMenu();
-        //     }
-        // });
+        this.addEventListener('focusout', (e) => {
+            if (e.relatedTarget === null) {
+                this.closeMenu();
+            }
+        });
         this.onwheel = (e) => {
             e.preventDefault();
         }
@@ -36,8 +36,6 @@ class DropDownBox extends Base {
             }
         }
         this.onkeydown = (e) => {
-            console.warn(e.key);
-
             switch (e.key) {
                 case ' ':
                 case 'Enter':
@@ -110,6 +108,10 @@ export class DropDown<T> extends SelectorBase<T, Selection<T>> {
     private _icon: HTMLDivElement = document.createElement('div');
     private _text: HTMLDivElement = document.createElement('div');
     private _default: Text = document.createTextNode('Select something');
+    private _keyCombo: string = '';
+    private _keyIndex: number = 0;
+    private _keyTimeout: number = 0;
+    private _keyTimeoutIndex: number = 0;
 
     /**Returns the name used to define the element*/
     static elementName() { return 'dropdown' }
@@ -133,6 +135,32 @@ export class DropDown<T> extends SelectorBase<T, Selection<T>> {
                     e.stopPropagation();
                     this._selectAdjacent(e.key === 'ArrowDown');
                     break;
+            }
+            if (e.key.length === 1) {
+                const combo = (this._keyCombo += e.key).toLowerCase();
+                clearTimeout(this._keyTimeout);
+                clearTimeout(this._keyTimeoutIndex);
+                this._keyTimeout = setTimeout(() => { this._keyCombo = ''; }, 200);
+                this._keyTimeout = setTimeout(() => { this._keyIndex = 0; }, 2000);
+                let keyIndex = this._keyIndex;
+                for (let i = this._keyIndex; i < this._selections.length; i++) {
+                    const selection = this._selections[i].selection;
+                    if (selection.text.toLowerCase().startsWith(combo)) {
+                        this._valueSet(selection.value);
+                        this._keyIndex = i + 1;
+                        return;
+                    }
+                }
+                if (keyIndex) {
+                    for (let i = 0; i < keyIndex; i++) {
+                        const selection = this._selections[i].selection;
+                        if (selection.text.toLowerCase().startsWith(combo)) {
+                            this._valueSet(selection.value);
+                            this._keyIndex = i + 1;
+                            return;
+                        }
+                    }
+                }
             }
         };
         let line = this._body.appendChild(document.createElement('div'));

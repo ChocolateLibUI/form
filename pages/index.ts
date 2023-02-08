@@ -63,6 +63,20 @@ let dropdown2 = document.body.appendChild(new DropDown().options({
     label: 'Accumsan sit amet nulla',
     selections: test2
 }));
+let dropdown3 = document.body.appendChild(new DropDown().options({
+    label: 'Accumsan sit amet nulla',
+    selections: [
+        { text: 'Test1', value: 0 },
+        { text: 'asfd', value: 1 },
+        { text: 'vvv', value: 2 },
+        { text: 'bbbb', value: 3 },
+        { text: 'Test2', value: 4 },
+        { text: 'Tast3', value: 5 },
+        { text: 'kkkk', value: 6 },
+        { text: 'kiik', value: 7 },
+        { text: 'Te', value: 8 },
+    ]
+}));
 
 let toggleButton1 = document.body.appendChild(new ToggleButton().options({
     label: 'Accumsan sit amet nulla',

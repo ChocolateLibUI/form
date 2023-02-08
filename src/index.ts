@@ -1,5 +1,6 @@
 export { BasicColors } from "./base"
 export * from "./button/button";
+export * from "./input/color/colorInput";
 export * from "./lamp/lamp";
 export * from "./number/numberInput/numberInput";
 export * from "./number/progress/progress";

@@ -32,6 +32,21 @@ export abstract class SelectorBase<T, S extends SelectionBase<T>> extends FormEl
         }
         return this;
     }
+
+    /**Gets the selection options for the selector */
+    get selections() {
+        let selections: SelectorOption<T>[] = [];
+        for (let i = 0; i < this._selections.length; i++) {
+            const sel = this._selections[i].selection;
+            if (sel.icon) {
+                selections.push({ text: sel.text, value: sel.value, icon: <SVGSVGElement>sel.icon.cloneNode(true) })
+            } else {
+                selections.push({ text: sel.text, value: sel.value })
+            }
+        }
+        return selections;
+    }
+
     /**Sets the selection options for the selector */
     set selections(selections: SelectorOption<T>[] | undefined) {
         this._selectionValues = [];
