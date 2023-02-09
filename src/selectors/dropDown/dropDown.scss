@@ -204,9 +204,26 @@ chocolatelibui-form-dropdown {
                     }
                 }
 
-                &:last-child {
+                &:nth-child(2) {
                     padding-left: $padding;
                     padding-right: $padding;
+                }
+
+                &:last-child {
+                    padding: $padding;
+                    width: $height - $padding * 2;
+
+                    >svg {
+                        padding-left: $padding;
+                        height: $height - $padding * 2;
+                        box-sizing: border-box;
+                        display: block;
+                        width: auto;
+
+                        .touch & {
+                            height: $touchHeight - $padding * 4;
+                        }
+                    }
                 }
             }
         }

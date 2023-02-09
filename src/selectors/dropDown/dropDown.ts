@@ -1,6 +1,7 @@
 import "./dropDown.scss"
 import { Base, defineElement } from "@chocolatelibui/core";
 import { SelectionBase, SelectorBase, SelectorBaseOptions, SelectorOption } from "../selectorBase";
+import { material_navigation_unfold_less_rounded, material_navigation_unfold_more_rounded } from "@chocolatelibui/icons";
 
 
 interface Selection<T> extends SelectionBase<T> {
@@ -21,6 +22,11 @@ class DropDownBox extends Base {
         this._box.tabIndex = 0;
         this.onclick = () => {
             this.closeMenu();
+        };
+        this.onpointerup = (e) => {
+            if (e.target !== this) {
+                this.closeMenu();
+            }
         };
         this.addEventListener('focusout', (e) => {
             if (e.relatedTarget === null) {
@@ -76,25 +82,32 @@ class DropDownBox extends Base {
         this._box.replaceChildren(box);
         let bounds = ref.getBoundingClientRect();
         if (bounds.y + (bounds.height / 2) < window.innerHeight / 2) {
-            this._container.style.top = bounds.y + 'px';
+            this._container.style.top = bounds.y + bounds.height + 'px';
             this._container.style.bottom = '0.5rem';
+            this._container.style.flexDirection = 'column';
         } else {
             this._container.style.top = '0.5rem';
-            this._container.style.bottom = window.innerHeight - (bounds.y + bounds.height) + 'px';
+            this._container.style.bottom = (window.innerHeight - bounds.y) + 'px';
+            this._container.style.flexDirection = 'column-reverse';
         }
         this._container.style.left = bounds.x + 'px';
         this._container.style.width = bounds.width + 'px';
+
         this._dropdown = parent;
         if (selection) {
             selection.line.focus();
         } else {
             this._box.focus();
         }
+        //@ts-expect-error
+        parent._doOpen = true;
     }
 
     closeMenu() {
         this.classList.remove('open');
         if (this._dropdown) {
+            //@ts-expect-error
+            this._dropdown._doOpen = false;
             this._dropdown.focus();
         }
     }
@@ -108,6 +121,7 @@ export class DropDown<T> extends SelectorBase<T, Selection<T>> {
     private _icon: HTMLDivElement = document.createElement('div');
     private _text: HTMLDivElement = document.createElement('div');
     private _default: Text = document.createTextNode('Select something');
+    private _open: HTMLDivElement = document.createElement('div');
     private _keyCombo: string = '';
     private _keyIndex: number = 0;
     private _keyTimeout: number = 0;
@@ -119,7 +133,7 @@ export class DropDown<T> extends SelectorBase<T, Selection<T>> {
     constructor() {
         super();
         this._body.tabIndex = 0;
-        this._body.onclick = () => {
+        this._body.onpointerdown = () => {
             box.openMenu(this._box, this, this._body, this._selection);
         }
         this._body.onkeydown = (e) => {
@@ -167,6 +181,8 @@ export class DropDown<T> extends SelectorBase<T, Selection<T>> {
         line.appendChild(this._icon);
         line.appendChild(this._text);
         this._text.appendChild(this._default);
+        line.appendChild(this._open);
+        this._open.appendChild(material_navigation_unfold_more_rounded());
     }
 
     /**Sets options for the element*/
@@ -196,7 +212,7 @@ export class DropDown<T> extends SelectorBase<T, Selection<T>> {
         }
         let text = line.appendChild(document.createElement('div'));
         text.textContent = selection.text;
-        line.onclick = () => {
+        line.onpointerup = () => {
             this._valueSet(selection.value);
         };
         line.tabIndex = 0;
@@ -235,6 +251,14 @@ export class DropDown<T> extends SelectorBase<T, Selection<T>> {
 
     protected _focusSelection(selection: Selection<T>) {
         selection
+    }
+
+    protected set _doOpen(open: boolean) {
+        if (open) {
+            this._open.replaceChildren(material_navigation_unfold_less_rounded());
+        } else {
+            this._open.replaceChildren(material_navigation_unfold_more_rounded());
+        }
     }
 
     focus() {
