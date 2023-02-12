@@ -20,6 +20,7 @@ chocolatelibui-form-togglebutton {
             display: flex;
             justify-content: center;
             text-align: center;
+            box-sizing: border-box;
 
             &.selected {
                 color: $selectedTextColor;
@@ -34,10 +35,14 @@ chocolatelibui-form-togglebutton {
                 padding: $padding;
                 border-block: $borderThickness solid $borderColor;
                 outline: none;
-                min-height: $height - $padding * 2 - $borderThickness * 2;
+                min-height: $height;
 
                 &.selected {
                     background-color: $hoverColor;
+                }
+
+                .touch & {
+                    min-height: $touchHeight - $borderThickness * 2;
                 }
 
                 &:focus-visible {

@@ -1,5 +1,5 @@
 import { Listener, Value } from "@chocolatelib/value";
-import { Base, BaseOptions } from "@chocolatelibui/core";
+import { Base, BaseEvents, BaseOptions } from "@chocolatelibui/core";
 import { grey, orange, green, red, blue, yellow } from "@chocolatelib/colors"
 import { initVariableRoot } from "@chocolatelibui/theme"
 import { name } from "../package.json";
@@ -39,18 +39,22 @@ export interface FormElementOptions<T> extends BaseOptions {
     label?: string
 }
 
+interface FormElementEvents<T> extends BaseEvents {
+    valueChangeUser: T
+}
+
 /** Base class for form elements for shared properties and methods*/
-export abstract class FormElement<ValueType> extends Base {
+export abstract class FormElement<T> extends Base<FormElementEvents<T>> {
     /**Returns the name used to define the element*/
     static elementName() { return '@abstract@' }
     /**Returns the namespace override for the element*/
     static elementNameSpace() { return 'chocolatelibui-form'; }
     /**Stores local copy of form element value*/
-    protected _value: ValueType | undefined
+    protected _value: T | undefined
     /**Stores reference to Value when used*/
-    protected _Value: Value<ValueType> | undefined
+    protected _Value: Value<T> | undefined
     /**Listener for Value*/
-    private _valueListener: Listener<ValueType> | undefined
+    private _valueListener: Listener<T> | undefined
     /**Label container*/
     protected _label: HTMLSpanElement = document.createElement('span');
     /**Listener for label change*/
@@ -69,7 +73,7 @@ export abstract class FormElement<ValueType> extends Base {
     }
 
     /**Sets options for the element*/
-    options(options: FormElementOptions<ValueType>) {
+    options(options: FormElementOptions<T>) {
         super.options(options);
         if (typeof options.value !== 'undefined') {
             this.value = options.value;
@@ -85,7 +89,7 @@ export abstract class FormElement<ValueType> extends Base {
         return this._value;
     }
     /**Changes value of form element*/
-    set value(value: Value<ValueType> | ValueType | undefined) {
+    set value(value: Value<T> | T | undefined) {
         //@ts-expect-error
         this.changed = false;
         if (this._valueListener) {
@@ -114,16 +118,16 @@ export abstract class FormElement<ValueType> extends Base {
         }
     }
     /**Called when Value is changed */
-    protected abstract _ValueUpdate(value: Value<ValueType>): void
+    protected abstract _ValueUpdate(value: Value<T>): void
     /**Called when the form element is set to not use a Value anymore*/
     protected abstract _ValueClear(): void
     /**Called when value is changed */
-    protected abstract _valueUpdate(value: ValueType): void
+    protected abstract _valueUpdate(value: T): void
     /**Called when value cleared */
     protected abstract _valueClear(): void
 
     /**Called to change value*/
-    protected _valueSet(value: ValueType) {
+    protected _valueSet(value: T) {
         //@ts-expect-error
         this.changed = true;
         if (this._Value) {
@@ -132,6 +136,7 @@ export abstract class FormElement<ValueType> extends Base {
             this._valueUpdate(value);
             this._value = value
         }
+        this.events.emit('valueChangeUser', value);
     }
 
     /**Gets the current label of the element*/

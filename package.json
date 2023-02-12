@@ -46,6 +46,6 @@
     "@chocolatelib/colors": "^0.0.2",
     "@chocolatelib/value": "^0.0.11",
     "@chocolatelibui/core": "^0.0.10",
-    "@chocolatelibui/theme": "^0.0.9"
+    "@chocolatelibui/theme": "^0.0.10"
   }
 }

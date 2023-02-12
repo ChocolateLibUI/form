@@ -4,15 +4,25 @@ import { InputBase } from "../inputBase";
 
 /**Color selector*/
 export class ColorInput extends InputBase<string> {
-    private _valueBox: HTMLInputElement;
-
     /**Returns the name used to define the element*/
     static elementName() { return 'colorinput' }
 
     constructor() {
         super();
-        this._valueBox = this._body.appendChild(document.createElement('input'));
-        this._valueBox.type = 'color';
+        this._input.type = 'color';
+        this._input.onchange = () => {
+            this._valueSet(this._input.value);
+        }
+    }
+
+    /**Called when value is changed */
+    protected _valueUpdate(value: string) {
+        this._input.value = value;
+    }
+
+    /**Called when value cleared */
+    protected _valueClear() {
+        this._input.value = ''
     }
 }
 defineElement(ColorInput);

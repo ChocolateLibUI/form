@@ -4,6 +4,8 @@ import { Value } from "@chocolatelib/value";
 
 /**Base for number elements elements*/
 export abstract class InputBase<T> extends FormElement<T> {
+    protected _input: HTMLInputElement = this._body.appendChild(document.createElement('input'));
+
     /**Called when value is changed */
     protected _valueUpdate(value: T) { }
     /**Called when value cleared */

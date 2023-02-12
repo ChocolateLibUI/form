@@ -1,33 +1,22 @@
 import "./index.scss"
 import { grey } from "@chocolatelib/colors";
 import { material_action_3d_rotation_rounded, material_action_account_balance_rounded } from "@chocolatelibui/icons";
-import { Button, Lamp, Slider, DropDown, Switch, TextField, TitleField, Stepper, Progress, NumberInput, ToggleButton, ColorInput } from "../src"
+import { Button, Lamp, Slider, DropDown, Switch, TextField, TitleField, Stepper, Progress, NumberInput, ToggleButton, ColorInput, URLInput, DateTimeInput, IpInput, PasswordInput, PhoneInput, TextInput, DateTimeType } from "../src"
 import { BasicColors, variables } from "../src/base"
 import { Value, ValueLimitedNumber } from "@chocolatelib/value";
-import { theme } from "@chocolatelibui/theme";
+import { autoTouch, theme, touch } from "@chocolatelibui/theme";
 import { SelectorOption } from "../src/selectors/selectorBase";
 
 variables.makeVariable('testBackground', 'TEST', '', grey['100'], grey['800'], 'Color', undefined);
 
-document.body.appendChild(new ToggleButton().options({
-    label: 'Theme',
-    value: theme,
-}));
+
+document.body.appendChild(new Switch().options({ label: 'Touch', value: touch, }));
+document.body.appendChild(new DropDown().options({ label: 'Auto Touch', value: autoTouch, }));
+document.body.appendChild(new ToggleButton().options({ label: 'Theme', value: theme, }));
 document.body.appendChild(new DropDown().options({ value: theme, }));
 
-
 let valueValue = new Value(0);
-let aaaa = new ValueLimitedNumber(20, -14, 958, 0.1, [
-    {
-        func(val) {
-            return val > 40 && val < 80;
-        }, reason(val) {
-            return 'This fucking ' + val + ' is not fockin valid mate'
-        }, correction(val) {
-            return 40
-        },
-    }
-])
+let aaaa = new ValueLimitedNumber(20, -14, 958, 0.1, [{ func(val) { return val > 40 && val < 80; }, reason(val) { return 'This fucking ' + val + ' is not fockin valid mate' }, correction(val) { return 40 }, }])
 
 let unitCount = 0;
 let unitValue = new Value('unit');
@@ -37,9 +26,20 @@ setInterval(() => {
 }, 100);
 
 
-let colorInput = document.body.appendChild(new ColorInput().options({
-    label: 'Accumsan sit amet nulla',
-}));
+let colorInput = document.body.appendChild(new ColorInput().options({ label: 'Color Accumsan sit amet nulla' }));
+
+let dateInput = document.body.appendChild(new DateTimeInput().options({ label: 'Date Accumsan sit amet nulla', type: DateTimeType.DATE, value: new Date(Date.now()) }));
+let timeInput = document.body.appendChild(new DateTimeInput().options({ label: 'Time Accumsan sit amet nulla', type: DateTimeType.TIME, value: new Date(Date.now()) }));
+let dateTimeInput = document.body.appendChild(new DateTimeInput().options({ label: 'Date Time Accumsan sit amet nulla', type: DateTimeType.DATETIME, value: new Date(Date.now()) }));
+let dateValue = new Value(new Date());
+let dateInput2 = document.body.appendChild(new DateTimeInput().options({ label: 'Date Accumsan sit amet nulla', type: DateTimeType.DATE, value: dateValue }));
+let timeInput2 = document.body.appendChild(new DateTimeInput().options({ label: 'Time Accumsan sit amet nulla', type: DateTimeType.TIME, value: dateValue }));
+let dateTimeInput2 = document.body.appendChild(new DateTimeInput().options({ label: 'Date Time Accumsan sit amet nulla', type: DateTimeType.DATETIME, value: dateValue }));
+let ipInput = document.body.appendChild(new IpInput().options({ label: 'IP Accumsan sit amet nulla', }));
+let passwordInput = document.body.appendChild(new PasswordInput().options({ label: 'Password Accumsan sit amet nulla', }));
+let phoneInput = document.body.appendChild(new PhoneInput().options({ label: 'Phone Accumsan sit amet nulla', }));
+let textInput = document.body.appendChild(new TextInput().options({ label: 'Text Accumsan sit amet nulla', }));
+let urlInput = document.body.appendChild(new URLInput().options({ label: 'URL Accumsan sit amet nulla', }));
 
 
 let test: SelectorOption<number>[] = (new Array<SelectorOption<number>>(22)).fill({ text: '', value: 0 }, 0, 22);

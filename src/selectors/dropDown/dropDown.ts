@@ -43,6 +43,10 @@ class DropDownBox extends Base {
         }
         this.onkeydown = (e) => {
             switch (e.key) {
+                case 'Escape':
+                    this.closeMenu();
+                    e.stopPropagation();
+                    break;
                 case ' ':
                 case 'Enter':
                     e.stopPropagation();
@@ -133,8 +137,14 @@ export class DropDown<T> extends SelectorBase<T, Selection<T>> {
     constructor() {
         super();
         this._body.tabIndex = 0;
-        this._body.onpointerdown = () => {
+        this._body.onclick = () => {
             box.openMenu(this._box, this, this._body, this._selection);
+        }
+        this._body.onpointerdown = (e) => {
+            if (e.pointerType === 'mouse') {
+                box.openMenu(this._box, this, this._body, this._selection);
+                e.preventDefault();
+            }
         }
         this._body.onkeydown = (e) => {
             switch (e.key) {
