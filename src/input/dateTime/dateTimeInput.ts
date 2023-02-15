@@ -37,42 +37,48 @@ export class DateTimeInput<T extends Date | string | number> extends InputBase<T
         this._body.appendChild(material_action_calendar_month_rounded()).onclick = () => { this._input.showPicker(); };
         this._body.appendChild(material_action_schedule_rounded()).onclick = () => { this._input.showPicker(); };
         this._input.onchange = () => {
-            switch (this._mode) {
-                case DateTimeMode.DATE:
-                    this._valueSet(<any>new Date(this._input.value));
-                    break;
-                case DateTimeMode.STRING:
-                    this._valueSet(<any>this._input.value);
-                    break;
-                case DateTimeMode.NUMBER:
-                    this._valueSet(<any>(new Date(this._input.value)).getTime());
-                    break;
+            if (this._input.value) {
+                console.warn(this._input.value);
+                console.warn(this._input.valueAsDate);
+                console.warn(this._input.valueAsNumber);
+                switch (this._mode) {
+                    case DateTimeMode.DATE:
+                        this._valueSet(<any>new Date(this._input.valueAsNumber));
+                        break;
+                    case DateTimeMode.STRING:
+                        this._valueSet(<any>this._input.value);
+                        break;
+                    case DateTimeMode.NUMBER:
+                        this._valueSet(<any>this._input.valueAsNumber);
+                        break;
+                }
             }
-            console.warn(BigInt((new Date(this._input.value)).getTime()));
         }
     }
 
     /**Called when value is changed */
     protected _valueUpdate(value: T) {
+        let time: number;
         switch (typeof value) {
             case 'number':
-
+                time = value;
                 break;
             case 'string':
-
+                time = (new Date(value)).getTime();
                 break;
             case 'object':
+                time = value.getTime();
                 break;
         }
         switch (this._type) {
             case DateTimeType.DATE:
-                this._input.valueAsDate = (<Date>value);
+                this._input.valueAsNumber = time;
                 break;
             case DateTimeType.TIME:
-                this._input.valueAsDate = (<Date>value);
+                this._input.valueAsNumber = time;
                 break;
             case DateTimeType.DATETIME:
-                //this._input.valueAsDate = (<Date>value);
+                this._input.valueAsNumber = time;
                 break;
         }
     }

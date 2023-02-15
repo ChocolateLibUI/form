@@ -9,7 +9,6 @@ import { SelectorOption } from "../src/selectors/selectorBase";
 
 variables.makeVariable('testBackground', 'TEST', '', grey['100'], grey['800'], 'Color', undefined);
 
-
 document.body.appendChild(new Switch().options({ label: 'Touch', value: touch, }));
 document.body.appendChild(new DropDown().options({ label: 'Auto Touch', value: autoTouch, }));
 document.body.appendChild(new ToggleButton().options({ label: 'Theme', value: theme, }));
@@ -31,10 +30,17 @@ let colorInput = document.body.appendChild(new ColorInput().options({ label: 'Co
 let dateInput = document.body.appendChild(new DateTimeInput().options({ label: 'Date Accumsan sit amet nulla', type: DateTimeType.DATE, value: new Date(Date.now()) }));
 let timeInput = document.body.appendChild(new DateTimeInput().options({ label: 'Time Accumsan sit amet nulla', type: DateTimeType.TIME, value: new Date(Date.now()) }));
 let dateTimeInput = document.body.appendChild(new DateTimeInput().options({ label: 'Date Time Accumsan sit amet nulla', type: DateTimeType.DATETIME, value: new Date(Date.now()) }));
-let dateValue = new Value(new Date());
+let dateValue = new Value<Date | number>(new Date());
 let dateInput2 = document.body.appendChild(new DateTimeInput().options({ label: 'Date Accumsan sit amet nulla', type: DateTimeType.DATE, value: dateValue }));
 let timeInput2 = document.body.appendChild(new DateTimeInput().options({ label: 'Time Accumsan sit amet nulla', type: DateTimeType.TIME, value: dateValue }));
 let dateTimeInput2 = document.body.appendChild(new DateTimeInput().options({ label: 'Date Time Accumsan sit amet nulla', type: DateTimeType.DATETIME, value: dateValue }));
+let dateInput3 = document.body.appendChild(new DateTimeInput().options({
+    label: 'Date Time Accumsan sit amet nulla',
+    type: DateTimeType.DATE,
+    value: '01/01/01'
+}));
+
+
 let ipInput = document.body.appendChild(new IpInput().options({ label: 'IP Accumsan sit amet nulla', }));
 let passwordInput = document.body.appendChild(new PasswordInput().options({ label: 'Password Accumsan sit amet nulla', }));
 let phoneInput = document.body.appendChild(new PhoneInput().options({ label: 'Phone Accumsan sit amet nulla', }));
@@ -69,20 +75,7 @@ let dropdown2 = document.body.appendChild(new DropDown().options({
     label: 'Accumsan sit amet nulla',
     selections: test2
 }));
-let dropdown3 = document.body.appendChild(new DropDown().options({
-    label: 'Accumsan sit amet nulla',
-    selections: [
-        { text: 'Test1', value: 0 },
-        { text: 'asfd', value: 1 },
-        { text: 'vvv', value: 2 },
-        { text: 'bbbb', value: 3 },
-        { text: 'Test2', value: 4 },
-        { text: 'Tast3', value: 5 },
-        { text: 'kkkk', value: 6 },
-        { text: 'kiik', value: 7 },
-        { text: 'Te', value: 8 },
-    ]
-}));
+let dropdown3 = document.body.appendChild(new DropDown().options({ label: 'Accumsan sit amet nulla', selections: [{ text: 'Test1', value: 0 }, { text: 'asfd', value: 1 }, { text: 'vvv', value: 2 }, { text: 'bbbb', value: 3 }, { text: 'Test2', value: 4 }, { text: 'Tast3', value: 5 }, { text: 'kkkk', value: 6 }, { text: 'kiik', value: 7 }, { text: 'Te', value: 8 },] }));
 
 let toggleButton1 = document.body.appendChild(new ToggleButton().options({
     label: 'Accumsan sit amet nulla',
@@ -354,6 +347,7 @@ let lamp6 = document.body.appendChild(new Lamp().options({ text: 'Aenean et tort
 let lamp7 = document.body.appendChild(new Lamp().options({
     label: 'Accumsan sit amet nulla',
     icon: material_action_3d_rotation_rounded(),
+    value: new Value(1)
 }));
 let lamp8 = document.body.appendChild(new Lamp().options({
     label: 'Aenean et tortor at risus viverra adipiscing at in tellus integer feugiat scelerisque varius morbi enim nunc faucibus a pellentesque sit amet porttitor eget dolor morbi non arcu risus quis',

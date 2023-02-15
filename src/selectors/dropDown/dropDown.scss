@@ -29,6 +29,11 @@ chocolatelibui-form-dropdownbox {
             scrollbar-width: thin;
             overscroll-behavior: contain;
             outline: none;
+            touch-action: none;
+
+            &.scroll {
+                touch-action: auto;
+            }
 
             >div {
                 width: 100%;

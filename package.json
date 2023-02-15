@@ -42,10 +42,10 @@
   },
   "homepage": "https://github.com/ChocolateLibUI/form#readme",
   "dependencies": {
-    "@chocolatelibui/icons": "^0.0.3",
-    "@chocolatelib/colors": "^0.0.2",
-    "@chocolatelib/value": "^0.0.11",
-    "@chocolatelibui/core": "^0.0.10",
-    "@chocolatelibui/theme": "^0.0.10"
+    "@chocolatelibui/icons": "<1.0.0 || ^1.0.0",
+    "@chocolatelib/colors": "<1.0.0 || ^1.0.0",
+    "@chocolatelib/value": "<1.0.0 || ^1.0.0",
+    "@chocolatelibui/core": "<1.0.0 || ^1.0.0",
+    "@chocolatelibui/theme": "<1.0.0 || ^1.0.0"
   }
 }

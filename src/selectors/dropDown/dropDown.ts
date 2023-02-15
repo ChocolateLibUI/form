@@ -17,14 +17,33 @@ class DropDownBox extends Base {
     private _container: HTMLDivElement = this.appendChild(document.createElement('div'));
     private _box: HTMLDivElement = this._container.appendChild(document.createElement('div'));
     private _dropdown: DropDown<any> | undefined;
+    private _resizeListener = () => { this.closeMenu(); }
     constructor() {
         super();
         this._box.tabIndex = 0;
         this.onclick = () => {
             this.closeMenu();
         };
+        this.ontouchend = (e) => {
+            if (e.target === this) {
+                if (e.cancelable) {
+                    e.preventDefault();
+                }
+                e.stopPropagation();
+                this.closeMenu();
+            }
+        }
+        this.onpointerdown = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (e.pointerType === 'touch' && (e.target === this || e.target === this._container)) {
+                this.closeMenu();
+            }
+        };
         this.onpointerup = (e) => {
-            if (e.target !== this) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (e.target !== this && e.pointerType !== 'touch') {
                 this.closeMenu();
             }
         };
@@ -87,24 +106,26 @@ class DropDownBox extends Base {
         let bounds = ref.getBoundingClientRect();
         if (bounds.y + (bounds.height / 2) < window.innerHeight / 2) {
             this._container.style.top = bounds.y + bounds.height + 'px';
-            this._container.style.bottom = '0.5rem';
+            this._container.style.bottom = '1.5rem';
             this._container.style.flexDirection = 'column';
         } else {
-            this._container.style.top = '0.5rem';
+            this._container.style.top = '1.5rem';
             this._container.style.bottom = (window.innerHeight - bounds.y) + 'px';
             this._container.style.flexDirection = 'column-reverse';
         }
         this._container.style.left = bounds.x + 'px';
         this._container.style.width = bounds.width + 'px';
-
         this._dropdown = parent;
-        if (selection) {
-            selection.line.focus();
+
+        if (this._box.scrollHeight > this._box.clientHeight) {
+            this._box.classList.add('scroll');
         } else {
-            this._box.focus();
+            this._box.classList.remove('scroll');
         }
+        (selection ? selection.line : this._box).focus();
         //@ts-expect-error
         parent._doOpen = true;
+        this.ownerDocument.defaultView?.addEventListener('resize', this._resizeListener);
     }
 
     closeMenu() {
@@ -114,6 +135,7 @@ class DropDownBox extends Base {
             this._dropdown._doOpen = false;
             this._dropdown.focus();
         }
+        this.ownerDocument.defaultView?.removeEventListener('resize', this._resizeListener);
     }
 }
 defineElement(DropDownBox);
@@ -222,7 +244,7 @@ export class DropDown<T> extends SelectorBase<T, Selection<T>> {
         }
         let text = line.appendChild(document.createElement('div'));
         text.textContent = selection.text;
-        line.onpointerup = () => {
+        line.onpointerup = (e) => {
             this._valueSet(selection.value);
         };
         line.tabIndex = 0;

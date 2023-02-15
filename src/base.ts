@@ -34,13 +34,24 @@ export const enum BasicColors {
 
 export interface FormElementOptions<T> extends BaseOptions {
     /**Value for form element */
-    value?: Value<T> | T
+    value?: ValueLike<T> | T
     /**Text for label above form element */
     label?: string
 }
 
 interface FormElementEvents<T> extends BaseEvents {
     valueChangeUser: T
+}
+
+interface ValueLike<T> {
+    addListener(func: Listener<T>, run?: boolean): Listener<any>
+    removeListener(func: Listener<T>): Listener<any>
+    get get(): T | Promise<T>
+    set set(val: T)
+    compare(val: any): boolean | Promise<boolean>
+    get inUse(): boolean
+    hasListener(func: Listener<T>): boolean
+    toJSON(): T
 }
 
 /** Base class for form elements for shared properties and methods*/
@@ -52,7 +63,7 @@ export abstract class FormElement<T> extends Base<FormElementEvents<T>> {
     /**Stores local copy of form element value*/
     protected _value: T | undefined
     /**Stores reference to Value when used*/
-    protected _Value: Value<T> | undefined
+    protected _Value: ValueLike<T> | undefined
     /**Listener for Value*/
     private _valueListener: Listener<T> | undefined
     /**Label container*/
@@ -89,7 +100,7 @@ export abstract class FormElement<T> extends Base<FormElementEvents<T>> {
         return this._value;
     }
     /**Changes value of form element*/
-    set value(value: Value<T> | T | undefined) {
+    set value(value: ValueLike<T> | T | undefined) {
         //@ts-expect-error
         this.changed = false;
         if (this._valueListener) {
@@ -110,8 +121,8 @@ export abstract class FormElement<T> extends Base<FormElementEvents<T>> {
                 }
             });
         } else if (typeof value !== 'undefined') {
-            this._valueUpdate(value);
-            this._value = value;
+            this._valueUpdate(<T>value);
+            this._value = <T>value;
         } else {
             this._valueClear();
             delete this._value;
