@@ -22,7 +22,7 @@ export const enum DateTimeMode {
     NUMBER = 'number',
 }
 
-/**Color selector*/
+/**Date Input*/
 export class DateTimeInput<T extends Date | string | number> extends InputBase<T> {
     private _type: DateTimeType = DateTimeType.DATETIME;
     private _mode: DateTimeMode = DateTimeMode.DATE;
@@ -38,9 +38,6 @@ export class DateTimeInput<T extends Date | string | number> extends InputBase<T
         this._body.appendChild(material_action_schedule_rounded()).onclick = () => { this._input.showPicker(); };
         this._input.onchange = () => {
             if (this._input.value) {
-                console.warn(this._input.value);
-                console.warn(this._input.valueAsDate);
-                console.warn(this._input.valueAsNumber);
                 switch (this._mode) {
                     case DateTimeMode.DATE:
                         this._valueSet(<any>new Date(this._input.valueAsNumber));

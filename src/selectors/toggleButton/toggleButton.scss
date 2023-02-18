@@ -4,6 +4,7 @@ chocolatelibui-form-togglebutton {
     @include base;
 
     >div {
+        overflow-x: auto;
         -webkit-user-select: none;
         user-select: none;
         display: grid;

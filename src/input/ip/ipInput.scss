@@ -35,6 +35,7 @@ chocolatelibui-form-ipinput {
         }
 
         >input {
+            color: $textColor;
             display: block;
             outline: none;
             appearance: none;
@@ -42,6 +43,11 @@ chocolatelibui-form-ipinput {
             height: 100%;
             border: none;
             background-color: transparent;
+            font-size: $fontSize;
+
+            .touch & {
+                font-size: $touchFontSize;
+            }
         }
     }
 }

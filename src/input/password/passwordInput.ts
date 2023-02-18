@@ -9,7 +9,7 @@ export class PasswordInput extends InputBase<string> {
 
     constructor() {
         super();
-        this._input.type = 'url';
+        this._input.type = 'password';
     }
 }
 defineElement(PasswordInput);

@@ -101,16 +101,21 @@ class DropDownBox extends Base {
     static elementNameSpace() { return 'chocolatelibui-form'; }
 
     openMenu(box: HTMLDivElement, parent: DropDown<any>, ref: HTMLDivElement, selection?: Selection<any>) {
+        let innerHeight = this.ownerDocument.defaultView?.innerHeight || 0;
         this.classList.add('open');
         this._box.replaceChildren(box);
         let bounds = ref.getBoundingClientRect();
-        if (bounds.y + (bounds.height / 2) < window.innerHeight / 2) {
-            this._container.style.top = bounds.y + bounds.height + 'px';
-            this._container.style.bottom = '1.5rem';
+        if (bounds.y + (bounds.height / 2) < innerHeight / 2) {
+            let top = bounds.y + bounds.height;
+            this._container.style.top = top + 'px';
+            this._container.style.bottom = '';
+            this._container.style.height = innerHeight - top - 20 + 'px';
             this._container.style.flexDirection = 'column';
         } else {
-            this._container.style.top = '1.5rem';
-            this._container.style.bottom = (window.innerHeight - bounds.y) + 'px';
+            let bottom = innerHeight - bounds.y;
+            this._container.style.top = '';
+            this._container.style.bottom = bottom + 'px';
+            this._container.style.height = innerHeight - bottom - 20 + 'px';
             this._container.style.flexDirection = 'column-reverse';
         }
         this._container.style.left = bounds.x + 'px';
@@ -245,6 +250,11 @@ export class DropDown<T> extends SelectorBase<T, Selection<T>> {
         let text = line.appendChild(document.createElement('div'));
         text.textContent = selection.text;
         line.onpointerup = (e) => {
+            if (e.pointerType !== 'touch') {
+                this._valueSet(selection.value);
+            }
+        };
+        line.onclick = () => {
             this._valueSet(selection.value);
         };
         line.tabIndex = 0;

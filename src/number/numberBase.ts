@@ -85,9 +85,17 @@ export abstract class NumberBase extends FormElement<number> {
 
     protected _updateMinMax() {
         this._min = Math.max(this._minUsr, this._minVal);
-        this._minLegend.textContent = (this._min === -Infinity ? '' : 'Min:' + this._min.toFixed(this.decimals));
+        if (String(this._min).length > 5) {
+            this._minLegend.textContent = (this._min === -Infinity ? '' : 'Min:' + this._min.toPrecision(5));
+        } else {
+            this._minLegend.textContent = (this._min === -Infinity ? '' : 'Min:' + this._min.toFixed(this.decimals));
+        }
         this._max = Math.min(this._maxUsr, this._maxVal);
-        this._maxLegend.textContent = (this._max === Infinity ? '' : 'Max:' + this._max.toFixed(this.decimals));
+        if (String(this._max).length > 5) {
+            this._maxLegend.textContent = (this._max === Infinity ? '' : 'Max:' + this._max.toPrecision(5));
+        } else {
+            this._maxLegend.textContent = (this._max === Infinity ? '' : 'Max:' + this._max.toFixed(this.decimals));
+        }
         this._span = this._max - this._min;
     }
 
