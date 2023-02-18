@@ -1,4 +1,4 @@
-import { Listener, Value } from "@chocolatelib/value";
+import { Listener, Value, ValueLike } from "@chocolatelib/value";
 import { Base, BaseEvents, BaseOptions } from "@chocolatelibui/core";
 import { grey, orange, green, red, blue, yellow } from "@chocolatelib/colors"
 import { initVariableRoot } from "@chocolatelibui/theme"
@@ -41,17 +41,6 @@ export interface FormElementOptions<T> extends BaseOptions {
 
 interface FormElementEvents<T> extends BaseEvents {
     valueChangeUser: T
-}
-
-interface ValueLike<T> {
-    addListener(func: Listener<T>, run?: boolean): Listener<any>
-    removeListener(func: Listener<T>): Listener<any>
-    get get(): T | Promise<T>
-    set set(val: T)
-    compare(val: any): boolean | Promise<boolean>
-    get inUse(): boolean
-    hasListener(func: Listener<T>): boolean
-    toJSON(): T
 }
 
 /** Base class for form elements for shared properties and methods*/
