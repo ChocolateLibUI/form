@@ -1,6 +1,7 @@
 import "./text.scss"
 import { defineElement } from "@chocolatelibui/core";
 import { FormElement } from "../base";
+import { Value } from "@chocolatelib/value";
 
 /**Component for simple text */
 export class TextField extends FormElement<string> {
@@ -11,6 +12,15 @@ export class TextField extends FormElement<string> {
         super();
         this.appendChild(this._label);
     }
+
+    /**Called when Value is changed */
+    protected _ValueUpdate(value: Value<string>) { value; }
+    /**Called when the form element is set to not use a Value anymore*/
+    protected _ValueClear() { }
+    /**Called when value is changed */
+    protected _valueUpdate(value: string) { value; }
+    /**Called when value cleared */
+    protected _valueClear() { }
 }
 defineElement(TextField);
 
@@ -23,5 +33,14 @@ export class TitleField extends FormElement<string> {
         super();
         this.appendChild(this._label);
     }
+
+    /**Called when Value is changed */
+    protected _ValueUpdate(value: Value<string>) { value; }
+    /**Called when the form element is set to not use a Value anymore*/
+    protected _ValueClear() { }
+    /**Called when value is changed */
+    protected _valueUpdate(value: string) { value; }
+    /**Called when value cleared */
+    protected _valueClear() { }
 }
 defineElement(TitleField);

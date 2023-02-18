@@ -1,27 +1,27 @@
 import { Listener, Value } from "@chocolatelib/value";
-import { Base, BaseOptions } from "@chocolatelibui/core";
+import { Base, BaseEvents, BaseOptions } from "@chocolatelibui/core";
 import { grey, orange, green, red, blue, yellow } from "@chocolatelib/colors"
 import { initVariableRoot } from "@chocolatelibui/theme"
 import { name } from "../package.json";
 
 export let variables = initVariableRoot(name, 'Form Elements', '');
 variables.makeVariable('color', 'Text Color', 'Standard text color', grey['800'], grey['200'], 'Color', undefined);
-variables.makeVariable('labelColor', 'Label Color', 'Color of form element text label', grey['700'], grey['300'], 'Color', undefined);
+variables.makeVariable('selectedColor', 'Selected Text Color', 'Color of selected text', grey['900'], grey['50'], 'Color', undefined);
+variables.makeVariable('unselectedColor', 'Unselected Text Color', 'Color of unselected text', grey['600'], grey['400'], 'Color', undefined);
+variables.makeVariable('labelColor', 'Label Color', 'Color of label text', grey['700'], grey['300'], 'Color', undefined);
 variables.makeVariable('backColor', 'Body Color', 'Standard body color', grey['50'], grey['900'], 'Color', undefined);
 variables.makeVariable('hoverColor', 'Hover Color', 'Color of body at mouse hover', grey['400'], grey['700'], 'Color', undefined);
-variables.makeVariable('borderColor', 'Border Color', 'Standard border color', grey['700'], grey['300'], 'Color', undefined);
+variables.makeVariable('borderColor', 'Border Color', 'Standard border color', grey['700'], grey['500'], 'Color', undefined);
 variables.makeVariable('focusColor', 'Focus Color', 'Color added to selected element', orange['600'], orange['300'], 'Color', undefined);
-let colors = variables.makeSubGroup('colors', 'Colors', 'Base colors used by form elements')
-colors.makeVariable('blackColor', 'Black', 'Basic Black', grey['600'], grey['300'], 'Color', undefined);
+let colors = variables.makeSubGroup('colors', 'Colors', 'Basic colors used by form elements')
+colors.makeVariable('blackColor', 'Black', 'Basic Black', grey['800'], grey['900'], 'Color', undefined);
+colors.makeVariable('blackColorText', 'Basic Black Text Color', 'Text color for basic black background', grey['200'], grey['200'], 'Color', undefined);
 colors.makeVariable('greenColor', 'Green', 'Basic Green', green['300'], green['900'], 'Color', undefined);
 colors.makeVariable('redColor', 'Red', 'Basic Red', red['300'], red['900'], 'Color', undefined);
 colors.makeVariable('blueColor', 'Blue', 'Basic Blue', blue['300'], blue['900'], 'Color', undefined);
 colors.makeVariable('yellowColor', 'Yellow', 'Basic Yellow', yellow['300'], yellow['900'], 'Color', undefined);
 
-// registerVariable('componentUnselectedBorderColor', grey['700'], grey['300']);
-// registerVariable('componentUnselectedTextColor', grey['600'], grey['400']);
-// registerVariable('componentUnselectedSymbolColor', grey['600'], grey['400']);
-// registerVariable('componentUnselectedBackGroundColor', grey['300'], grey['800']);
+export const NoValueText = '-';
 
 /**Defines all possible background colors for the button*/
 export const enum BasicColors {
@@ -34,32 +34,59 @@ export const enum BasicColors {
 
 export interface FormElementOptions<T> extends BaseOptions {
     /**Value for form element */
-    value?: Value<T> | T
+    value?: ValueLike<T> | T
     /**Text for label above form element */
     label?: string
 }
 
+interface FormElementEvents<T> extends BaseEvents {
+    valueChangeUser: T
+}
+
+interface ValueLike<T> {
+    addListener(func: Listener<T>, run?: boolean): Listener<any>
+    removeListener(func: Listener<T>): Listener<any>
+    get get(): T | Promise<T>
+    set set(val: T)
+    compare(val: any): boolean | Promise<boolean>
+    get inUse(): boolean
+    hasListener(func: Listener<T>): boolean
+    toJSON(): T
+}
+
 /** Base class for form elements for shared properties and methods*/
-export abstract class FormElement<ValueType> extends Base {
+export abstract class FormElement<T> extends Base<FormElementEvents<T>> {
     /**Returns the name used to define the element*/
     static elementName() { return '@abstract@' }
     /**Returns the namespace override for the element*/
     static elementNameSpace() { return 'chocolatelibui-form'; }
     /**Stores local copy of form element value*/
-    protected _value: ValueType | undefined
+    protected _value: T | undefined
     /**Stores reference to Value when used*/
-    private _Value: Value<ValueType> | undefined
+    protected _Value: ValueLike<T> | undefined
     /**Listener for Value*/
-    private _valueListener: Listener<ValueType> | undefined
+    private _valueListener: Listener<T> | undefined
     /**Label container*/
     protected _label: HTMLSpanElement = document.createElement('span');
     /**Listener for label change*/
     private _labelListener: Listener<string> | undefined
+    /**Body of form element*/
+    protected _body: HTMLDivElement = document.createElement('div');
+    /**Flag for when user has changed the value of the form element*/
+    readonly changed: boolean = false;
+
+    constructor() {
+        super();
+        this.appendChild(this._label);
+        this.appendChild(this._body);
+        this._body.oncontextmenu = (e) => { e.preventDefault(); }
+        this._body.ondragstart = (e) => { e.preventDefault(); }
+    }
 
     /**Sets options for the element*/
-    options(options: FormElementOptions<ValueType>) {
+    options(options: FormElementOptions<T>) {
         super.options(options);
-        if (options.value) {
+        if (typeof options.value !== 'undefined') {
             this.value = options.value;
         }
         if (options.label) {
@@ -73,7 +100,9 @@ export abstract class FormElement<ValueType> extends Base {
         return this._value;
     }
     /**Changes value of form element*/
-    set value(value: Value<ValueType> | ValueType | undefined) {
+    set value(value: ValueLike<T> | T | undefined) {
+        //@ts-expect-error
+        this.changed = false;
         if (this._valueListener) {
             this.dettachValue(this._valueListener);
             delete this._valueListener;
@@ -81,6 +110,7 @@ export abstract class FormElement<ValueType> extends Base {
         }
         if (typeof value === 'object' && value instanceof Value) {
             this._Value = value;
+            this._ValueUpdate(value);
             this._valueListener = this.attachValue(value, (val) => {
                 if (value) {
                     this._valueUpdate(val);
@@ -90,29 +120,34 @@ export abstract class FormElement<ValueType> extends Base {
                     delete this._value;
                 }
             });
-        } else if (value) {
-            this._valueUpdate(value);
-            this._value = value;
+        } else if (typeof value !== 'undefined') {
+            this._valueUpdate(<T>value);
+            this._value = <T>value;
         } else {
             this._valueClear();
             delete this._value;
         }
     }
+    /**Called when Value is changed */
+    protected abstract _ValueUpdate(value: Value<T>): void
+    /**Called when the form element is set to not use a Value anymore*/
+    protected abstract _ValueClear(): void
     /**Called when value is changed */
-    protected _valueUpdate(value: ValueType) {
-        value;
-    }
+    protected abstract _valueUpdate(value: T): void
     /**Called when value cleared */
-    protected _valueClear() { }
+    protected abstract _valueClear(): void
 
     /**Called to change value*/
-    protected _valueSet(value: ValueType) {
+    protected _valueSet(value: T) {
+        //@ts-expect-error
+        this.changed = true;
         if (this._Value) {
             this._Value.set = value;
         } else {
             this._valueUpdate(value);
             this._value = value
         }
+        this.events.emit('valueChangeUser', value);
     }
 
     /**Gets the current label of the element*/
@@ -139,55 +174,4 @@ export abstract class FormElement<ValueType> extends Base {
             this._label.innerHTML = '';
         }
     }
-}
-
-
-
-
-// /**This describes how an option object should look
-//  * @typedef {Object} SelectorComponentOption
-//  * @property {string} text text to display for option
-//  * @property {*} value value to use for option
-//  * @property {SVGElement} symbol symbol for option
-//  * @property {boolean} disabled set to true to make option unselectable
-//  * 
-//  * Defines base options for components with multiple options
-//  * @typedef {Object} SelectorComponentInternalOptions
-//  * @property {[SelectorComponentOption]} options value to use for component
-//  * 
-//  * Defines base options for components with multiple options
-//  * @typedef {ValueComponentOptions & SelectorComponentInternalOptions} SelectorComponentOptions */
-
-/** Base class for form elements of multi selector type*/
-export class FormSelector extends FormElement<any> {
-    // /**Options setting
-    //  * @param {SelectorComponentOptions} options*/
-    // options(options) {
-    //     if (options.options) { this.selectorOptions = options.options; }
-    //     super.options(options);
-    // }
-
-    // /**This adds an option to the selector component 
-    //  * @param {string} text text for options
-    //  * @param {ComponentInternalValue} value value for options
-    //  * @param {SVGElement} symbol symbol to display
-    //  * @param {boolean} disabled set to true to make option unselectable
-    //  * @returns {HTMLElement} link to the option*/
-    // addOption(text, value, symbol, disabled) { }
-
-    // /**This removes an option to the selector component 
-    //  * @param {HTMLElement} option*/
-    // removeOption(option) { }
-
-    // /**This sets the options of the selector with an array
-    //  * @param {[SelectorComponentOption]} opts*/
-    // set selectorOptions(opts) {
-    //     for (let i = 0, m = opts.length; i < m; i++) {
-    //         this.addOption(opts[i].text, opts[i].value, opts[i].symbol, opts[i].disabled);
-    //     }
-    // }
-
-    // /**Sets the value by using the options element
-    //  * @param {HTMLDivElement} elem */
-    // setByOption(elem) { }
 }

@@ -1,12 +1,7 @@
 @import "../base.scss";
 
 chocolatelibui-form-lamp {
-    display: flex;
-    flex-direction: column;
-
-    >span {
-        @include label;
-    }
+    @include base;
 
     >div {
         display: flex;
@@ -82,6 +77,14 @@ chocolatelibui-form-lamp {
 
         &[color="black"] {
             background-color: $blackColor;
+
+            >span {
+                color: $blackColorText;
+            }
+
+            >svg {
+                fill: $blackColorText;
+            }
         }
 
         &[color="green"] {

@@ -1,13 +1,7 @@
 @import "../base.scss";
 
 chocolatelibui-form-button {
-    display: flex;
-    flex-direction: column;
-
-
-    >span {
-        @include label;
-    }
+    @include base;
 
     >div {
         display: flex;
@@ -21,36 +15,28 @@ chocolatelibui-form-button {
         user-select: none;
         min-height: $height;
         min-width: min-content;
-
-        .touch & {
-            min-height: $touchHeight;
-        }
-
-        &:focus {
-            outline: none;
-        }
+        outline: none;
 
         &.active {
             box-shadow: $shadowOutActive;
+        }
+
+        &:focus-visible {
+            box-shadow: $shadowOutFocusOut;
+
+            &.active {
+                box-shadow: $shadowOutActiveFocusOut;
+            }
         }
 
         @media(pointer: fine) {
             &:hover {
                 background-color: $hoverColor;
             }
-
-            &:focus-visible {
-                box-shadow: $shadowOutFocusOut;
-
-                &.active {
-                    box-shadow: $shadowOutActiveFocusOut;
-                }
-            }
         }
 
-
-        .anim & {
-            transition: min-height var(--sizeTransitionType) var(--sizeTransitionTime), box-shadow ease 200ms, border-color var(--colorTransitionType) var(--colorTransitionTime), background-color var(--colorTransitionType) var(--colorTransitionTime);
+        .touch & {
+            min-height: $touchHeight;
         }
 
         >svg {
@@ -67,10 +53,6 @@ chocolatelibui-form-button {
                 height: $touchHeight;
                 max-width: $touchHeight + 1rem;
                 padding: 0.5rem;
-            }
-
-            .anim & {
-                transition: fill var(--colorTransitionType) var(--colorTransitionTime), height var(--sizeTransitionType) var(--sizeTransitionTime), max-width var(--sizeTransitionType) var(--sizeTransitionTime);
             }
         }
 
@@ -92,15 +74,19 @@ chocolatelibui-form-button {
             &:empty {
                 display: none;
             }
-
-            .anim & {
-                transition: color var(--colorTransitionType) var(--colorTransitionTime);
-            }
         }
 
 
         &[color="black"] {
             background-color: $blackColor;
+
+            >span {
+                color: $blackColorText;
+            }
+
+            >svg {
+                fill: $blackColorText;
+            }
         }
 
         &[color="green"] {

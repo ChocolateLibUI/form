@@ -1,12 +1,7 @@
 @import "../base.scss";
 
 chocolatelibui-form-switch {
-    display: flex;
-    flex-direction: column;
-
-    >span {
-        @include label;
-    }
+    @include base;
 
     >div {
         display: flex;
@@ -29,26 +24,23 @@ chocolatelibui-form-switch {
             border-radius: $height;
             width: $height * 2;
             height: $height;
+            outline: none;
+            cursor: grab;
 
+            &.on {
+                background-color: $greenColor;
 
-            .touch & {
-                width: $touchHeight * 2;
-                height: $touchHeight;
-            }
+                &::after {
+                    left: $height;
 
-            &:focus {
-                outline: none;
-            }
-
-            @media(pointer: fine) {
-                &:focus-visible {
-                    box-shadow: $shadowInFocusOut;
-                    z-index: 2;
+                    .touch & {
+                        left: $touchHeight;
+                    }
                 }
             }
 
-            .anim & {
-                transition: height var(--sizeTransitionType) var(--sizeTransitionTime), width var(--sizeTransitionType) var(--sizeTransitionTime), border-radius var(--sizeTransitionType) var(--sizeTransitionTime), background-color var(--colorTransitionType) var(--colorTransitionTime), box-shadow var(--colorTransitionType) var(--colorTransitionTime);
+            &.active {
+                cursor: grabbing;
             }
 
             &::after {
@@ -72,16 +64,14 @@ chocolatelibui-form-switch {
                 }
             }
 
-            &.on {
-                background-color: $greenColor;
+            .touch & {
+                width: $touchHeight * 2;
+                height: $touchHeight;
+            }
 
-                &::after {
-                    left: $height;
-
-                    .touch & {
-                        left: $touchHeight;
-                    }
-                }
+            &:focus-visible {
+                box-shadow: $shadowInFocusOut;
+                z-index: 2;
             }
         }
 
@@ -110,7 +100,7 @@ chocolatelibui-form-switch {
             padding: 0.1rem 0.1rem 0.1rem 0.1rem;
             color: $textColor;
 
-            &:empty() {
+            &:empty {
                 display: none;
             }
 

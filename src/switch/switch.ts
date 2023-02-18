@@ -12,11 +12,10 @@ interface ToggleSwitchOptions extends FormElementOptions<boolean> {
 
 /**Toggle Switch, switches between on and off*/
 export class Switch extends FormElement<boolean> {
-    private _body: HTMLDivElement;
-    private _switch: HTMLDivElement;
+    private _switch: HTMLDivElement = this._body.appendChild(document.createElement('div'));
+    private _text: HTMLSpanElement = this._body.appendChild(document.createElement('span'));
     private _icon: SVGSVGElement | undefined;
     private _preventClick: boolean = false;
-    private _text: HTMLSpanElement;
     private _textListener: Listener<string> | undefined
 
     /**Returns the name used to define the element*/
@@ -24,13 +23,7 @@ export class Switch extends FormElement<boolean> {
 
     constructor() {
         super();
-        this.appendChild(this._label);
-        this._body = this.appendChild(document.createElement('div'));
-        this._body.oncontextmenu = (e) => { e.preventDefault(); };
-        this._switch = this._body.appendChild(document.createElement('div'));
         this._switch.setAttribute('tabindex', '0');
-        this._text = this._body.appendChild(document.createElement('span'));
-
         this._switch.onkeydown = (e) => {
             switch (e.key) {
                 case 'Enter':
@@ -55,50 +48,48 @@ export class Switch extends FormElement<boolean> {
         };
 
         this._switch.onpointerdown = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            this._switch.focus();
-            this._switch.setPointerCapture(e.pointerId);
-            let hasMoved = false;
-            this._switch.onpointermove = (ev) => {
-                ev.preventDefault();
-                ev.stopPropagation();
-                if (hasMoved) {
-                    let box = this._switch.getBoundingClientRect();
-                    let midCord = box.x + box.width / 2;
-                    if (ev.clientX > midCord) {
-                        if (!this._value) {
-                            this._valueSet(true);
+            if (e.button === 0) {
+                e.stopPropagation();
+                this._switch.classList.add('active');
+                this._switch.setPointerCapture(e.pointerId);
+                let hasMoved = false;
+                this._switch.onpointermove = (ev) => {
+                    ev.stopPropagation();
+                    if (hasMoved) {
+                        let box = this._switch.getBoundingClientRect();
+                        let midCord = box.x + box.width / 2;
+                        if (ev.clientX > midCord) {
+                            if (!this._value) {
+                                this._valueSet(true);
+                            }
+                        } else {
+                            if (this._value) {
+                                this._valueSet(false);
+                            }
                         }
-                    } else {
-                        if (this._value) {
-                            this._valueSet(false);
-                        }
+                    } else if (Math.abs(e.clientX - ev.clientX) > 10 || Math.abs(e.clientY - ev.clientY) > 10) {
+                        hasMoved = true;
                     }
-                } else if (Math.abs(e.clientX - ev.clientX) > 10 || Math.abs(e.clientY - ev.clientY) > 10) {
-                    hasMoved = true;
-                }
-            };
+                };
 
-            this._switch.onpointerup = (ev) => {
-                ev.preventDefault();
-                ev.stopPropagation();
-                if (!hasMoved) {
-                    this._valueSet(!this._value);
+                this._switch.onpointerup = (ev) => {
+                    ev.stopPropagation();
+                    this._switch.classList.remove('active');
+                    if (!hasMoved) {
+                        this._valueSet(!this._value);
+                    }
+                    this._switch.releasePointerCapture(ev.pointerId);
+                    this._switch.onpointerup = null;
+                    this._switch.onpointermove = null;
                 }
-                this._switch.releasePointerCapture(ev.pointerId);
-                this._switch.onpointerup = null;
-                this._switch.onpointermove = null;
             }
         }
 
         this._switch.onclick = (e) => {
-            e.preventDefault();
             e.stopPropagation();
         }
 
         this._body.onclick = (e) => {
-            e.preventDefault();
             e.stopPropagation();
             if (this._preventClick) {
                 this._preventClick = false;
@@ -112,11 +103,11 @@ export class Switch extends FormElement<boolean> {
     /**Sets options for the toggleswitch*/
     options(options: ToggleSwitchOptions) {
         super.options(options)
-        if (options.icon) {
-            this.icon = options.icon;
-        }
         if (options.text) {
             this.text = options.text;
+        }
+        if (options.icon) {
+            this.icon = options.icon;
         }
         return this;
     }
@@ -160,7 +151,10 @@ export class Switch extends FormElement<boolean> {
             delete this._icon;
         }
     }
-
+    /**Called when Value is changed */
+    protected _ValueUpdate(value: Value<boolean>) { value; }
+    /**Called when the form element is set to not use a Value anymore*/
+    protected _ValueClear() { }
     /**Called when value is changed */
     protected _valueUpdate(value: boolean) {
         if (value) {

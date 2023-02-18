@@ -18,8 +18,7 @@ interface ButtonOptions extends FormElementOptions<boolean> {
 
 /**Button for clicking*/
 export class Button extends FormElement<boolean> {
-    private _body: HTMLDivElement;
-    private _text: HTMLSpanElement;
+    private _text: HTMLSpanElement = this._body.appendChild(document.createElement('span'));
     private _textListener: Listener<string> | undefined
     private _icon: SVGSVGElement | undefined;
     private _click: (() => void) | undefined;
@@ -31,32 +30,46 @@ export class Button extends FormElement<boolean> {
 
     constructor() {
         super();
-        this.appendChild(this._label);
-        this._body = this.appendChild(document.createElement('div'));
-        this._body.oncontextmenu = (e) => { e.preventDefault(); };
         this._body.setAttribute('tabindex', '0');
-        this._text = this._body.appendChild(document.createElement('span'));
-        this._body.onpointerdown = (e) => {
-            e.stopPropagation();
-            if (e.pointerType == 'touch') {
-                e.preventDefault();
+        this._body.onclick = () => {
+            if (this._click) {
+                this._click();
             }
-            this._body.setPointerCapture(e.pointerId);
+        }
+        this._body.onpointerdown = (e) => {
+            if (e.pointerType !== 'touch' && e.button === 0) {
+                e.stopPropagation();
+                this._body.setPointerCapture(e.pointerId);
+                if (!this._toggle) {
+                    this._valueSet(true);
+                }
+                this._body.onpointerup = (ev) => {
+                    ev.stopPropagation();
+                    this._body.releasePointerCapture(ev.pointerId);
+                    if (this._toggle) {
+                        this._valueSet(!this._value);
+                    } else {
+                        this._valueSet(false);
+                    }
+                    this._body.onpointerup = null;
+                }
+            }
+        }
+        this._body.ontouchstart = (e) => {
+            e.stopPropagation();
             if (!this._toggle) {
                 this._valueSet(true);
             }
-            this._body.onpointerup = (ev) => {
+            this._body.ontouchend = (ev) => {
                 ev.stopPropagation();
-                this._body.releasePointerCapture(ev.pointerId);
-                if (this._toggle) {
-                    this._valueSet(!this._value);
-                } else {
-                    this._valueSet(false);
+                if (ev.targetTouches.length === 0) {
+                    if (this._toggle) {
+                        this._valueSet(!this._value);
+                    } else {
+                        this._valueSet(false);
+                    }
+                    this._body.ontouchend = null;
                 }
-                if (this._click) {
-                    this._click();
-                }
-                this._body.onpointerup = null;
             }
         }
         this._body.onkeydown = (e) => {
@@ -176,7 +189,10 @@ export class Button extends FormElement<boolean> {
             delete this._color;
         }
     }
-
+    /**Called when Value is changed */
+    protected _ValueUpdate(value: Value<boolean>) { value; }
+    /**Called when the form element is set to not use a Value anymore*/
+    protected _ValueClear() { }
     /**Called when value is changed */
     protected _valueUpdate(value: Boolean) {
         if (value) {

@@ -1,6 +1,6 @@
 {
   "name": "@chocolatelibui/form",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -21,7 +21,6 @@
     "prepublishOnly": "yarn run test && yarn run build:lib && yarn run build:pages"
   },
   "devDependencies": {
-    "@chocolatelibui/icons": "^0.0.1",
     "cypress": "^11.2.0",
     "cypress-vite": "^1.2.1",
     "sass": "^1.57.1",
@@ -43,9 +42,10 @@
   },
   "homepage": "https://github.com/ChocolateLibUI/form#readme",
   "dependencies": {
-    "@chocolatelib/colors": "^0.0.2",
-    "@chocolatelib/value": "^0.0.10",
-    "@chocolatelibui/core": "^0.0.7",
-    "@chocolatelibui/theme": "^0.0.3"
+    "@chocolatelib/colors": "<1.0.0 || ^1.0.0",
+    "@chocolatelib/value": "<1.0.0 || ^1.0.0",
+    "@chocolatelibui/core": "<1.0.0 || ^1.0.0",
+    "@chocolatelibui/icons": "<1.0.0 || ^1.0.0",
+    "@chocolatelibui/theme": "<1.0.0 || ^1.0.0"
   }
 }

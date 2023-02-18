@@ -14,8 +14,7 @@ interface LampOptions extends FormElementOptions<number | boolean> {
 
 /**Lamp for clicking*/
 export class Lamp extends FormElement<number | boolean> {
-    private _body: HTMLDivElement;
-    private _text: HTMLSpanElement;
+    private _text: HTMLSpanElement = this._body.appendChild(document.createElement('span'));
     private _textListener: Listener<string> | undefined
     private _icon: SVGSVGElement | undefined;
     private _colors: BasicColors[] = [];
@@ -23,19 +22,15 @@ export class Lamp extends FormElement<number | boolean> {
     /**Returns the name used to define the element*/
     static elementName() { return 'lamp' }
 
-    constructor() {
-        super();
-        this.appendChild(this._label);
-        this._body = this.appendChild(document.createElement('div'));
-        this._body.oncontextmenu = (e) => { e.preventDefault(); };
-        this._text = this._body.appendChild(document.createElement('span'));
-    }
-
     /**Sets options for the lamp*/
     options(options: LampOptions) {
         super.options(options)
-        this.text = options.text;
-        this.icon = options.icon;
+        if (options.text) {
+            this.text = options.text;
+        }
+        if (options.icon) {
+            this.icon = options.icon;
+        }
         this.colors = options.colors;
         return this;
     }
@@ -86,14 +81,16 @@ export class Lamp extends FormElement<number | boolean> {
 
     /** Sets the background color of the lamp*/
     set colors(colors: BasicColors[] | undefined) {
-        colors;
         if (colors instanceof Array) {
             this._colors = colors;
         } else {
             this._colors = [BasicColors.Black];
         }
     }
-
+    /**Called when Value is changed */
+    protected _ValueUpdate(value: Value<number | boolean>) { value; }
+    /**Called when the form element is set to not use a Value anymore*/
+    protected _ValueClear() { }
     /**Called when value is changed */
     protected _valueUpdate(value: number | boolean) {
         let color = this._colors[Number(value)];
