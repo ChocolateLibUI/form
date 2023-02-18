@@ -100,7 +100,7 @@ chocolatelibui-form-switch {
             padding: 0.1rem 0.1rem 0.1rem 0.1rem;
             color: $textColor;
 
-            &:empty() {
+            &:empty {
                 display: none;
             }
 
