@@ -1,6 +1,16 @@
 body {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    background-color: var(--\@chocolatelibui\/form\/testBackground);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background-color: var(--\@chocolatelibui\/form\/testBackground);
+  padding: 1rem;
+  margin: 0;
+}
+
+chocolatelibui-form-test {
+  background-color: red;
+  height: 3rem;
+  border-radius: 0.3rem;
+  padding: 0.5rem;
+  box-sizing: border-box;
 }
